@@ -63,7 +63,7 @@ hcloud:
             - ::/0
 
   server:
-    state: absent
+    state: present
     type: cax11
     image: ubuntu-24.04
     backup: false

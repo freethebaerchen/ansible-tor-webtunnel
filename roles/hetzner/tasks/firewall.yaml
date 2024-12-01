@@ -1,0 +1,11 @@
+---
+
+- name: "Create Hetzner Cloud Firewalls."
+  hetzner.hcloud.hcloud_firewall:
+    name: "{{ fw.name }}"
+    rules:  "{{ fw.rules }}"
+    state: "{{ fw.state }}"
+  loop: "{{ hcloud.firewalls }}"
+  loop_control:
+    loop_var: fw
+    label: "{{ fw.name }}"

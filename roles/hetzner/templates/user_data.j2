@@ -1,0 +1,12 @@
+#cloud-config
+users:
+{% for admin in admins %}
+  - name: {{ admin.name }}
+    groups: sudo
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+    {% for key in admin.vars['public-keys'] %}
+      - {{ key.key }}
+    {% endfor %}
+{% endfor %}

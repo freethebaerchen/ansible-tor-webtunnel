@@ -1,0 +1,18 @@
+---
+
+- name: Ensure package updates are installed
+  apt:
+    upgrade: dist
+
+- name: Check if reboot is required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required
+
+- name: Reboot if required
+  reboot:
+    msg: "Reboot initiated by Ansible for package updates"
+    pre_reboot_delay: 10
+    post_reboot_delay: 10
+    reboot_timeout: 45
+  when: reboot_required.stat.exists

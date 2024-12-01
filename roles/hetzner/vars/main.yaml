@@ -1,0 +1,7 @@
+servers:
+  - name: bridge-nbg-0
+    location: nbg1
+  #- name: bridge-fsn-0
+  #  location: fsn1
+  #- name: bridge-hel-0
+  #  location: hel1

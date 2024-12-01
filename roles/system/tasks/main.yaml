@@ -1,0 +1,10 @@
+---
+
+- name: Include ssh
+  ansible.builtin.include_tasks: ssh.yaml
+
+- name: Include general
+  ansible.builtin.include_tasks: general.yaml
+
+- name: Include dist-upgrade
+  ansible.builtin.include_tasks: dist-upgrade.yaml

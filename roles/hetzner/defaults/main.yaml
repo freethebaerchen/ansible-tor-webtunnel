@@ -1,0 +1,75 @@
+hcloud:
+
+  sshkey:
+    - name: "jochen@MacBook"
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5"
+      state: present
+
+  firewalls:
+    - name: firewall-default
+      state: present
+      rules:
+
+        - description: ssh
+          direction: in
+          protocol: tcp
+          port: 22
+          source_ips:
+            - 0.0.0.0/0
+            - ::/0
+        - description: icmp
+          direction: in
+          protocol: icmp
+          source_ips:
+            - 0.0.0.0/0
+            - ::/0
+        - description: tcp
+          direction: out
+          protocol: tcp
+          port: any
+          destination_ips:
+            - 0.0.0.0/0
+            - ::/0
+        - description: udp
+          direction: out
+          protocol: udp
+          port: any
+          destination_ips:
+            - 0.0.0.0/0
+            - ::/0
+        - description: icmp
+          direction: out
+          protocol: icmp
+          destination_ips:
+            - 0.0.0.0/0
+            - ::/0
+
+    - name: firewall-web
+      state: present
+      rules:
+        - description: http
+          direction: in
+          protocol: tcp
+          port: 80
+          source_ips:
+            - 0.0.0.0/0
+            - ::/0
+        - description: https
+          direction: in
+          protocol: tcp
+          port: 443
+          source_ips:
+            - 0.0.0.0/0
+            - ::/0
+
+  server:
+    state: absent
+    type: cax11
+    image: ubuntu-24.04
+    backup: false
+    public_ipv4_enabled: false
+    public_ipv6_enabled: true
+    firewalls:
+       - firewall-default
+       - firewall-web
+    volumes: []

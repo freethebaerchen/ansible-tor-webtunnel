@@ -1,0 +1,75 @@
+- name: "Configure sshd - disallow root login"
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+
+- name: "Configure sshd - disable password authentication"
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+
+- name: "Add admin users"
+  user:
+    name: "{{ item.name }}"
+    groups:
+      - "sudo"
+    append: yes
+  loop: "{{ admins }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "Add normal users"
+  user:
+    name: "{{ item.name }}"
+    append: yes
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Create .ssh directory
+  file:
+    path: "/home/{{ item.name }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0700"
+  loop: "{{ admins }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Add SSH public keys for admins
+  authorized_key:
+    user: "{{ item.0.name }}"
+    key: "{{ item.1.key }}"
+  with_subelements:
+    - "{{ admins }}"
+    - vars.public-keys
+
+- name: Add SSH public keys for normal users
+  authorized_key:
+    user: "{{ item.0.name }}"
+    key: "{{ item.1.key }}"
+  with_subelements:
+    - "{{ users }}"
+    - vars.public-keys
+
+- name: "Add sudoers config for sudo group"
+  copy:
+    content: |
+      %sudo   ALL=(ALL)   NOPASSWD:ALL
+    dest: /etc/sudoers.d/sudo
+    mode: 0440
+
+- name: Set /bin/bash as default shell for admins
+  command: usermod -s /bin/bash {{ item.name }}
+  loop: "{{ admins }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Set /bin/bash as default shell for users
+  command: usermod -s /bin/bash {{ item.name }}
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"

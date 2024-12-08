@@ -72,7 +72,7 @@ You will find the following lines:
 Your Tor server's identity key fingerprint is '<YourNicknameID> someFinGerpRinT1234'
 Your Tor bridge's hashed identity key fingerprint is '<YourNicknameID> someoTheRFinGerpRinT1234'
 Your Tor server's identity key ed25519 fingerprint is '<YourNicknameID> someeD25519FinGerpRinT1234'
-You can check the status of your bridge relay at https://bridges.torproject.org/status?id=S0M31DF0RY0URR3L4Y
+You can check the status of your bridge relay at https://bridges.torproject.org/status?id=S0M31DF0RY0UR8R1DG3
 ```
 
 The link in the last line will not show a status until you ran the relay for some time.

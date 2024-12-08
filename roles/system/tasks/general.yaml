@@ -8,11 +8,11 @@
   block:
 
     - name: Update apt package list
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
 
     - name: Install required packages
-      apt:
+      ansible.builtin.apt:
         name:
           - unattended-upgrades
           - apt-transport-https
@@ -25,20 +25,21 @@
           - htop
           - nano
           - unzip
+          - golang
         state: present
 
     - name: Generate /etc/hosts file
-      template:
+      ansible.builtin.template:
         src: "{{ role_path }}/templates/hosts.j2"
         dest: /etc/hosts
 
     - name: Enable unattended upgrades
-      apt:
+      ansible.builtin.apt:
         upgrade: dist
         update_cache: yes
 
     - name: Configure unattended-upgrades
-      copy:
+      ansible.builtin.copy:
         content: |
           Unattended-Upgrade::Origins-Pattern {
             "o=Ubuntu,a=stable";

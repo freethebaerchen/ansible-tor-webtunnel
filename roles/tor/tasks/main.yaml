@@ -1,23 +1,11 @@
 ---
 
-- name: Add Torproject deb Repository
-  ansible.builtin.apt_repository:
-    filename: tor-project
-    repo: deb https://deb.torproject.org/torproject.org buster main
-
-- name: Add Torproject deb-src Repository
-  ansible.builtin.apt_repository:
-    filename: tor-project
-    repo: deb-src https://deb.torproject.org/torproject.org buster main
-
-- name: Fetch Apt-Key
-  ansible.builtin.apt_key:
-    url: https://deb.torproject.org
-    file: torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc
-
-- name: Install sepcific software
-  ansible.builtin.apt:
-    name:
-      - tor
-      - obfs4proxy
-    state: present
+- name: Include nginx
+  ansible.builtin.include_tasks: nginx.yaml
+  tags:
+    - nginx
+    - certbot
+    - certificate
+    
+- name: Include webtunnel
+  ansible.builtin.include_tasks: webtunnel.yaml

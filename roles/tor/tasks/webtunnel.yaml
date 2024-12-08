@@ -1,0 +1,55 @@
+---
+
+- name: Get WebSocket Bridge source code
+  ansible.builtin.git:
+    repo: https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/webtunnel
+    dest: /tmp/webtunnel
+
+- name: Build WebSocket Bridge
+  ansible.builtin.shell:
+    cmd: "go build -o /usr/local/bin/webtunnel"
+    chdir: /tmp/webtunnel/main/server
+    creates: /usr/local/bin/webtunnel
+
+- name: Add Tor GPG key
+  ansible.builtin.apt_key:
+    url: "https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc"
+    state: present
+    keyring: "/usr/share/keyrings/tor-archive-keyring.gpg"
+
+- name: Add Tor repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org stable main"
+    state: present
+    filename: tor
+
+- name: Add Tor repository-src
+  ansible.builtin.apt_repository:
+    repo: "deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org stable main"
+    state: present
+    filename: tor
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - tor
+      - deb.torproject.org-keyring
+    state: present
+    update_cache: true
+
+- name: Configure WebSocket Bridge
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/torrc.j2"
+    dest: /etc/tor/torrc
+  loop: "{{ servers }}"
+  when: inventory_hostname == item.name
+  notify: Restart tor
+
+- name: Configure tor apparmor
+  ansible.builtin.blockinfile:
+    path: /etc/apparmor.d/system_tor
+    insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
+    block: '  /usr/local/bin/webtunnel ix,'
+
+- name: Reload apparmor
+  ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor

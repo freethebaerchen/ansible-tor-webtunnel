@@ -18,7 +18,7 @@
     user_data: "{{ lookup('file', 'files/user_data.yaml') }}"
     upgrade_disk: false
     backups: false
-    enable_ipv4: "{{ hcloud.server.public_ipv4_enabled }}"
+    enable_ipv4: "{{ item.ipv4 }}"
     enable_ipv6: "{{ hcloud.server.public_ipv6_enabled }}"
     delete_protection: false
     rebuild_protection: false

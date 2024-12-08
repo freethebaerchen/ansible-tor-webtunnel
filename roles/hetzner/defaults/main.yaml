@@ -1,7 +1,7 @@
 hcloud:
 
   sshkey:
-    - name: "jochen@MacBook"
+    - name: "fallback-key"
       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5"
       state: present
 
@@ -67,7 +67,6 @@ hcloud:
     type: cax11
     image: ubuntu-24.04
     backup: false
-    public_ipv4_enabled: false
     public_ipv6_enabled: true
     firewalls:
        - firewall-default

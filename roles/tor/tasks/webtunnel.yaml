@@ -37,12 +37,21 @@
     state: present
     update_cache: true
 
+- name: Check if torrc contains 'Nickname {{ tor.nickname }}'
+  ansible.builtin.shell: |
+    if grep -q "Nickname Baerchen" /etc/tor/torrc; then
+      echo "true";
+    else
+      echo "false";
+    fi
+  register: nickname_check
+
 - name: Configure WebSocket Bridge
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: /etc/tor/torrc
   loop: "{{ servers }}"
-  when: inventory_hostname == item.name
+  when: inventory_hostname == item.name and not nickname_check
   notify: Restart tor
 
 - name: Configure tor apparmor

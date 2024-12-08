@@ -7,3 +7,35 @@ admins:
         - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y jochen@Handy"
 
 users: []
+
+servers:
+  - name: bridge-nbg-0
+    location: nbg1
+    ipv4: false
+    domain: jokester.cloud
+    id: 1
+    reverse_proxy: true
+    reverse_proxy_url: kochenjessler.de
+  #- name: bridge-fsn-0
+  #  location: fsn1
+  #  ipv4: true
+  #  domain: jochenkessler.de
+  #  id: 2
+  #  reverse_proxy: true
+  #  reverse_proxy_url: kochenjessler.de
+  #- name: bridge-hel-0
+  #  location: hel1
+  #  ipv4: true
+  #  domain: kochenjessler.de
+  #  id: 3
+
+hcloud:
+  sshkey:
+    - name: "fallback-key"
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5"
+      state: present
+
+email: jochen@tapesandpips.com
+
+tor:
+  nickname: Baerchen

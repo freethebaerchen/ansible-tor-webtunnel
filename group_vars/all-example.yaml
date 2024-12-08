@@ -1,0 +1,34 @@
+admins:
+  - name: username
+    vars:
+      public-keys:
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 username@some-domain"
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPAjVNV2L+9Eq+pHpvz4P6JKAJctb0y5f4Z7ieUqFsPC username@some-domain"
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y username@some-domain"
+
+users: []
+
+servers:
+  - name: bridge-nbg-0
+    location: nbg1
+    ipv4: false
+    domain: example.com
+  - name: bridge-fsn-0
+    location: fsn1
+    ipv4: false
+    domain: example.net
+  - name: bridge-hel-0
+    location: hel1
+    ipv4: false
+    domain: example.org
+
+hcloud:
+  sshkey:
+    - name: "fallback-key"
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5"
+      state: present
+
+email: user@example.com
+
+tor:
+  nickname: somenickname

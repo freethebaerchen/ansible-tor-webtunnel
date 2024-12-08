@@ -8,6 +8,3 @@ ExtORPort auto
 ContactInfo {{ email | replace('@', '[at]') | replace('.', '[dot]') }}
 Nickname {{ tor.nickname }}{{ item.id }}
 SocksPort 0
-{% if not item.ipv4 %}
-IPv6Only
-{% endif %}

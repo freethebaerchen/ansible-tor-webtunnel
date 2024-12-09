@@ -47,31 +47,34 @@ You need a device, that is able to run Docker.
 3. Create a [API-Token](https://docs.hetzner.cloud/#getting-started) with read/write privileges
 4. Save the API-Token in a secure place, e.g. BitWarden
 
-## Non-Hetzner servers
-1. Forget the (Hetzner) steps before this one.
-2. Copy the [example inventory.ini](inventory.ini.example) to inventory.ini
-3. Modify the entry to your fit
-4. 
-
 ### Other
 1. A (sub)domain per server
 2. The code for a website (per server)
 Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [group-vars/all.yaml](group-vars/all.yaml).
 Set the reverse-proxy value to true and configure the domain you want to reverse proxy to as value for the reverse_proxy_url variable.
 
+## Non-Hetzner servers
+1. Forget the (Hetzner) steps before this one.
+2. Copy the [example inventory.ini](inventory.ini.example) to inventory.ini
+3. Modify the entry or entries to your fit
+
 ## preparation of the code
 1. Copy the [group-vars example file](group-vars/all-example.yaml) to the [group-vars](group-vars) named all.yaml\
     1.1 Change the username\
     1.2 Change the public key(s)\
     1.3 Modify the servers to your fit\
-        1.3.1 The ID needs to be set, for the identifier of the or bridge. The name in the end will be <tor.nickname><id>, so with the default values it will be somenickname1, somenickname2, ...\
-    1.4 Exchange the example domains with your actual domains\
-    1.5 Change the SSH-Key. This will be the key, that is added for the root-User to the Hetzner instance and in the HCloud Console in Security/SSH-Keys\
-    1.6 Change the E-Mail you want to use for the certificate request AND as contact address for the bridge\
+    1.4 Change the SSH-Key. This will be the key, that is added for the root-User to the Hetzner instance and in the HCloud Console in Security/SSH-Keys\
+    1.5 Change the E-Mail you want to use for the certificate request AND as contact address for the bridge\
     Info: For the bridge address the @ and . symbol will be replaced with [at] and [dot]\
-    1.7 Change the tor.nickname to a your fit
+    1.6 Change the tor.nickname to a your fit
 2. Copy the [env file](.env) to .env.local\
     2.1 Exchange the comment with your HCloud API-Token from the [prerequisites](#hetzner) step
+
+3. Copy the [example host_var file](host_vars/your-bridge-0.yaml) to host_vars/<name-in-inventory.ini>.yaml
+4. Modify the variables, so they match your configuration
+    4.1 The ID needs to be set, for the identifier of the or bridge. The name in the end will be <tor.nickname><id>, so with the default values it will be somenickname1, somenickname2, ...\
+    4.2 Exchange the example domains with your actual domains\
+    4.3 Configure if nginx should be reverse-proxy to another site.
 
 ## executing ansible
 1. ```./ansible-playbook.sh playbook.yaml (--tags hetzner)```

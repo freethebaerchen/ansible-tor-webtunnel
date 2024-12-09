@@ -25,6 +25,7 @@
           - htop
           - nano
           - unzip
+          - figlet
           - golang
         state: present
 

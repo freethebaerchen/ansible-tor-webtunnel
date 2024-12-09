@@ -2,13 +2,9 @@
 
 - name: Generate new motd file
   ansible.builtin.shell:
-    cmd: figlet {{ tor.nickname }}{{ item.id }} > /etc/motd
-  loop: "{{ servers }}"
-  when: inventory_hostname == item.name
+    cmd: figlet {{ tor.nickname }}{{ id }} > /etc/motd
 
 - name: Add domain to new motd file
   ansible.builtin.lineinfile:
     path: /etc/motd
-    line: "{{ item.domain }}"
-  loop: "{{ servers }}"
-  when: inventory_hostname == item.name
+    line: "{{ domain }}"

@@ -50,8 +50,6 @@
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: /etc/tor/torrc
-  loop: "{{ servers }}"
-  when: inventory_hostname == item.name and not nickname_check
   notify: Restart tor
 
 - name: Configure tor apparmor

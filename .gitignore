@@ -6,4 +6,4 @@ roles/hetzner/files/*
 !roles/hetzner/files/.gitkeep
 inventory.ini
 host_vars/*
-!host_vars/your-bridge-0.yaml
+!host_vars/your-bridge-*-0.yaml

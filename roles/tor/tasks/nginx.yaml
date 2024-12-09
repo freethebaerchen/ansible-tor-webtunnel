@@ -46,9 +46,7 @@
 
     - name: Request certificates
       ansible.builtin.shell: |
-        certbot certonly --agree-tos --email {{ email }} --non-interactive --webroot -w /var/www/certbot -d {{ item.domain }} --cert-name {{ item.domain }}
-      loop: "{{ servers }}"
-      when: inventory_hostname == item.name
+        certbot certonly --agree-tos --email {{ email }} --non-interactive --webroot -w /var/www/certbot -d {{ domain }} --cert-name {{ domain }}
 
     - name: Create cron job for certbot renewal
       cron:
@@ -76,8 +74,6 @@
         dest: /etc/nginx/sites-available/https.conf
         owner: root
         group: root
-      loop: "{{ servers }}"
-      when: inventory_hostname == item.name and not https_conf.stat.exists
 
     - name: Link https.conf to sites-enabled
       ansible.builtin.file:

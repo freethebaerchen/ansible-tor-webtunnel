@@ -3,9 +3,9 @@ ORPort 127.0.0.1:auto
 AssumeReachable 1
 ServerTransportPlugin webtunnel exec /usr/local/bin/webtunnel
 ServerTransportListenAddr webtunnel 127.0.0.1:15000
-ServerTransportOptions webtunnel url=https://{{ item.domain }}/{{ random_string.stdout }}
+ServerTransportOptions webtunnel url=https://{{ domain }}/{{ random_string.stdout }}
 ExtORPort auto
 ContactInfo {{ email | replace('@', '[at]') | replace('.', '[dot]') }}
-Nickname {{ tor.nickname }}{{ item.id }}
+Nickname {{ tor.nickname }}{{ id }}
 SocksPort 0
 AssumeReachable 1

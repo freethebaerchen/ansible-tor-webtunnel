@@ -1,10 +1,10 @@
 server {
     listen [::]:443 ssl http2;
     listen 443 ssl http2;
-    server_name {{ item.domain }};
+    server_name {{ domain }};
 
-    ssl_certificate /etc/letsencrypt/live/{{ item.domain }}/cert.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ item.domain }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ domain }}/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ domain }}/privkey.pem;
 
     ssl_session_timeout 15m;
 
@@ -21,8 +21,8 @@ server {
     add_header Strict-Transport-Security "max-age=63072000" always;
 
 	location / {
-{% if item.reverse_proxy %}
-        proxy_pass https://{{ item.reverse_proxy_url }};
+{% if reverse_proxy %}
+        proxy_pass https://{{ reverse_proxy_url }};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

@@ -1,1 +1,1 @@
-your-bridge-0 ansible_host=ipv6.or.ipv4.or.fqdn ansible_user=youruser
+your-bridge--fsn0 ansible_host=ipv6.or.ipv4.or.fqdn ansible_user=youruser

@@ -9,23 +9,15 @@ admins:
 users: []
 
 servers:
-  - name: bridge-nbg-0
+  - name: your-bridge-nbg-0
     location: nbg1
     ipv4: false
-    domain: example.com
-    reverse_proxy: false
-  - name: bridge-fsn-0
+  - name: your-bridge-fsn-0
     location: fsn1
     ipv4: false
-    domain: example.net
-    reverse_proxy: true
-    reverse_proxy_url: example.com
-  - name: bridge-hel-0
+  - name: your-bridge-hel-0
     location: hel1
     ipv4: false
-    domain: example.org
-    reverse_proxy: true
-    reverse_proxy_url: example.com
 
 hcloud:
   sshkey:

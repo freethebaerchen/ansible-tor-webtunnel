@@ -1,6 +1,12 @@
 # Setup for a Tor WebTunnel Bridge with Ansible in Hetzner Cloud
 [Official Documentation of the Tor-Project](https://community.torproject.org/relay/setup/webtunnel/)
 
+## Consideration
+Please consider not hosting you bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) reccomends, to use another hoster for bridges/relays.
+If you are not able to provide other VMs or servers you can still host the relays in Hetzner Cloud, since it is better to host here, than to not contibute to the Tor project.
+
+If you have servers at another provider or want to create servers at another provder, you can follow [these instructions](non-hetzner-servers).
+
 ## General information
 The anible project sets up the HCloud servers with the [ansbile hcloud colection](https://docs.ansible.com/ansible/latest/collections/hetzner/hcloud/index.html).\
 The project is set up, so the Ansible control node is dockerized. This means, there is no need to setup ansible or a Python3 venv.
@@ -21,6 +27,10 @@ If you dont want this, as it is not needed for the fetching of the WebSocket Bri
 ```
 
 ## Prerequisites
+### Network connection
+This project aims on NOT being behind a NAT.
+The server(s) need their own IPv4 and/or IPv6.
+
 ### SSH
 At least one (ed25519) SSH-Key is needed.\
 If you need help generating one, run the following command:
@@ -36,6 +46,12 @@ You need a device, that is able to run Docker.
 2. Create a HCloud project
 3. Create a [API-Token](https://docs.hetzner.cloud/#getting-started) with read/write privileges
 4. Save the API-Token in a secure place, e.g. BitWarden
+
+## Non-Hetzner servers
+1. Forget the (Hetzner) steps before this one.
+2. Copy the [example inventory.ini](inventory.ini.example) to inventory.ini
+3. Modify the entry to your fit
+4. 
 
 ### Other
 1. A (sub)domain per server

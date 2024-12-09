@@ -1,2 +1,9 @@
 tmp
 .env.local
+group_vars/*
+!group_vars/*.yaml.example
+roles/hetzner/files/*
+!roles/hetzner/files/.gitkeep
+inventory.ini
+host_vars/*
+!host_vars/your-bridge-0.yaml

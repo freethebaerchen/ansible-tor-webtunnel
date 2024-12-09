@@ -2,9 +2,12 @@
 
 - name: Create SSH-Key
   ansible.builtin.include_tasks: ssh_key.yaml
+  when: lookup('env', 'HCLOUD_TOKEN') != ''
 
 - name: Create Firewall
   ansible.builtin.include_tasks: firewall.yaml
+  when: lookup('env', 'HCLOUD_TOKEN') != ''
 
 - name: Create Server
   ansible.builtin.include_tasks: server.yaml
+  when: lookup('env', 'HCLOUD_TOKEN') != ''

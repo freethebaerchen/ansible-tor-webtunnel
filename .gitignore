@@ -7,3 +7,4 @@ roles/hetzner/files/*
 inventory.ini
 host_vars/*
 !host_vars/your-bridge-*-0.yaml
+roles/tor/files/connection-strings.txt

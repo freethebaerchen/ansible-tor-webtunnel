@@ -7,7 +7,7 @@ def get_fingerprint_from_file(file_path):
     try:
         with open(file_path, "r") as file:
             for line in file:
-                if "Your Tor bridge's hashed identity key fingerprint is" in line:
+                if "Your Tor server's identity key fingerprint is" in line:
                     match = re.search(r"[A-F0-9]{40}", line)
                     if match:
                         return match.group(0)

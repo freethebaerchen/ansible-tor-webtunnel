@@ -7,10 +7,9 @@ def get_fingerprint_from_file(file_path):
     try:
         with open(file_path, "r") as file:
             for line in file:
-                if "Your Tor server's identity key fingerprint is" in line:
-                    match = re.search(r"[A-F0-9]{40}", line)
-                    if match:
-                        return match.group(0)
+                match = re.search(r"([A-F0-9]{40})", line)
+                if match:
+                    return match.group(1)
     except FileNotFoundError:
         print(f"Error: File not found - {file_path}")
     except Exception as e:
@@ -34,15 +33,15 @@ def get_url_from_file(file_path):
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            syslog_path=dict(type='str', required=True),
+            fingerprint_path=dict(type='str', required=True),
             torrc_path=dict(type='str', required=True)
         )
     )
 
-    syslog_path = module.params['syslog_path']
+    fingerprint_path = module.params['fingerprint_path']
     torrc_path = module.params['torrc_path']
 
-    fingerprint = get_fingerprint_from_file(syslog_path)
+    fingerprint = get_fingerprint_from_file(fingerprint_path)
     if not fingerprint:
         module.fail_json(msg="Fingerprint not found.")
 
@@ -53,7 +52,7 @@ def main():
     if not url:
         module.fail_json(msg="URL not found.")
 
-    output = f"webtunnel 10.0.{third_octet}.{fourth_octet}:443 {fingerprint} url={url} ver=0.0.1"
+    output = f"webtunnel 10.0.{third_octet}.{fourth_octet}:443 {fingerprint} {url} ver=0.0.1"
     module.exit_json(changed=False, stdout=output, url=url, fingerprint=fingerprint)
 
 if __name__ == "__main__":

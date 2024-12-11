@@ -37,20 +37,23 @@
     state: present
     update_cache: true
 
-- name: Check if torrc contains 'Nickname {{ tor.nickname }}'
-  ansible.builtin.shell: |
-    if grep -q "Nickname Baerchen" /etc/tor/torrc; then
-      echo "true";
-    else
-      echo "false";
-    fi
-  register: nickname_check
+#- name: Check if torrc contains 'Nickname {{ tor.nickname }}'
+#  ansible.builtin.shell: |
+#    if grep -q "Nickname Baerchen" /etc/tor/torrc; then
+#      echo "true";
+#    else
+#      echo "false";
+#    fi
+#  register: nickname_check
 
 - name: Configure WebSocket Bridge
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: /etc/tor/torrc
   notify: Restart tor
+  vars:
+    webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
+  #when: not nickname_check
 
 - name: Configure tor apparmor
   ansible.builtin.blockinfile:
@@ -61,18 +64,28 @@
 - name: Reload apparmor
   ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
 
-- name: Wait for the fingerprint to appear in syslog
-  wait_for:
-    path: /var/log/syslog
-    search_regex: "Your Tor bridge's hashed identity key fingerprint is"
-    timeout: 300
+- name: Restart tor
+  ansible.builtin.service:
+    name: tor
+    state: restarted
+
+- name: Wait until fingerprint file exists
+  ansible.builtin.wait_for:
+    path: /var/lib/tor/fingerprint
     state: present
+    timeout: 300
 
 - name: Get the connection strings for testing
   get-connection-string:
-    syslog_path: /var/log/syslog
+    fingerprint_path:  /var/lib/tor/fingerprint
     torrc_path: /etc/tor/torrc
   register: connection_string
+
+- name: Delete existing connection strings file
+  ansible.builtin.file:
+    path: "{{ role_path }}/files/connection-strings.txt"
+    state: absent
+  delegate_to: localhost
 
 - name: Write connection strings to a file
   ansible.builtin.lineinfile:

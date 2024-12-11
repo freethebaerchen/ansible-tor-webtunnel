@@ -74,7 +74,7 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 4. Modify the variables, so they match your configuration
     4.1 The ID needs to be set, for the identifier of the or bridge. The name in the end will be <tor.nickname><id>, so with the default values it will be somenickname1, somenickname2, ...\
     4.2 Exchange the example domains with your actual domains\
-    4.3 Configure if nginx should be reverse-proxy to another site.
+    4.3 Configure if caddy should be reverse-proxy to another site.
 
 ## executing ansible
 1. ```./ansible-playbook.sh playbook.yaml (--tags hetzner)```

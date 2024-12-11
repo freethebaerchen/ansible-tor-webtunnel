@@ -1,11 +1,9 @@
 ---
 
-- name: Include nginx
-  ansible.builtin.include_tasks: nginx.yaml
+- name: Include caddy
+  ansible.builtin.include_tasks: caddy.yaml
   tags:
-    - nginx
-    - certbot
-    - certificate
-    
+    - caddy
+
 - name: Include webtunnel
   ansible.builtin.include_tasks: webtunnel.yaml

@@ -24,7 +24,6 @@
       ansible.builtin.package:
         name: 
           - caddy
-        update_cache: yes
 
     - name: Generate Caddyfile
       ansible.builtin.template:

@@ -37,7 +37,6 @@
         name:
           - deb.torproject.org-keyring
         state: present
-        update_cache: true
 
     - name: Configure tor apparmor
       ansible.builtin.blockinfile:
@@ -53,7 +52,6 @@
     name:
       - tor
     state: present
-    update_cache: true
 
 - name: Configure WebSocket Bridge
   ansible.builtin.template:

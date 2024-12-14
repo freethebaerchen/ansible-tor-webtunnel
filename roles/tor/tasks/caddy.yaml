@@ -37,8 +37,12 @@
 
     - name: Set caddy-users
       community.general.sysrc:
-        name: caddy_user={{ caddy.user }}
+        name: caddy_user
+        value: "{{ caddy.user }}"
+        state: value_present
       
     - name: Set caddy-users
       community.general.sysrc:
-        name: caddy_group={{ caddy.group }}
+        name: caddy_group
+        value: "{{ caddy.group }}"
+        state: value_present

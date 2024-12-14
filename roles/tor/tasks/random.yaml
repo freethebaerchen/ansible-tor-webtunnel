@@ -9,6 +9,7 @@
     - name: Generate random string with 24 characters
       ansible.builtin.shell: echo $(cat /dev/urandom | tr -cd "qwertyuiopasdfghjklzxcvbnmMNBVCXZLKJHGFDSAQWERTUIOP0987654321"|head -c 24)
       register: random_string
+      delegate_to: localhost
 
     - name: Check if random string exists
       ansible.builtin.stat:

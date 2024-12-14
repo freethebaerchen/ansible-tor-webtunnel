@@ -1,5 +1,23 @@
 ---
 
+- name: Load OS-specific vars
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_distribution }}.yaml'
+        - '{{ ansible_os_family }}.yaml'
+        - main.yaml
+      paths:
+        - '{{ role_path }}/vars'
+
+- name: Include random
+  ansible.builtin.include_tasks: random.yaml
+  tags:
+    - random
+    - string
+    - random-string
+
 - name: Include caddy
   ansible.builtin.include_tasks: caddy.yaml
   tags:

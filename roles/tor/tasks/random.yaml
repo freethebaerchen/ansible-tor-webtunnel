@@ -1,0 +1,25 @@
+---
+
+- name: Block for getting random string
+  tags:
+    - random
+    - string
+    - random-string
+  block:
+    - name: Generate random string with 24 characters
+      ansible.builtin.shell: echo $(cat /dev/urandom | tr -cd "qwertyuiopasdfghjklzxcvbnmMNBVCXZLKJHGFDSAQWERTUIOP0987654321"|head -c 24)
+      register: random_string
+
+    - name: Check if random string exists
+      ansible.builtin.stat:
+        path: "{{ role_path }}/files/{{ inventory_hostname }}.txt"
+      register: random_string_file
+      delegate_to: localhost
+
+    - name: Create files with the random strings
+      ansible.builtin.lineinfile:
+        path: "{{ role_path }}/files/{{ inventory_hostname }}.txt"
+        line: "{{ random_string.stdout }}"
+        create: yes
+      delegate_to: localhost
+      when: not random_string_file.stat.exists

@@ -11,58 +11,57 @@
     chdir: /tmp/webtunnel/main/server
     creates: /usr/local/bin/webtunnel
 
-- name: Add Tor GPG key
-  ansible.builtin.apt_key:
-    url: "https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc"
-    state: present
-    keyring: "/usr/share/keyrings/tor-archive-keyring.gpg"
+- name: Block for OS-Familiy: Debian
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Add Tor GPG key
+      ansible.builtin.apt_key:
+        url: "https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc"
+        state: present
+        keyring: "/usr/share/keyrings/tor-archive-keyring.gpg"
 
-- name: Add Tor repository
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org stable main"
-    state: present
-    filename: tor
+    - name: Add Tor repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org stable main"
+        state: present
+        filename: tor
 
-- name: Add Tor repository-src
-  ansible.builtin.apt_repository:
-    repo: "deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org stable main"
-    state: present
-    filename: tor
+    - name: Add Tor repository-src
+      ansible.builtin.apt_repository:
+        repo: "deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org stable main"
+        state: present
+        filename: tor
+
+    - name: Install required (deb) packages
+      ansible.builtin.package:
+        name:
+          - deb.torproject.org-keyring
+        state: present
+        update_cache: true
+
+    - name: Configure tor apparmor
+      ansible.builtin.blockinfile:
+        path: /etc/apparmor.d/system_tor
+        insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
+        block: '  /usr/local/bin/webtunnel ix,'
+    
+    - name: Reload apparmor
+      ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
 
 - name: Install required packages
-  ansible.builtin.apt:
+  ansible.builtin.package:
     name:
       - tor
-      - deb.torproject.org-keyring
     state: present
     update_cache: true
-
-#- name: Check if torrc contains 'Nickname {{ tor.nickname }}'
-#  ansible.builtin.shell: |
-#    if grep -q "Nickname Baerchen" /etc/tor/torrc; then
-#      echo "true";
-#    else
-#      echo "false";
-#    fi
-#  register: nickname_check
 
 - name: Configure WebSocket Bridge
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
-    dest: /etc/tor/torrc
+    dest: "{{ system.etc }}/tor/torrc"
   notify: Restart tor
   vars:
     webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
-  #when: not nickname_check
-
-- name: Configure tor apparmor
-  ansible.builtin.blockinfile:
-    path: /etc/apparmor.d/system_tor
-    insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
-    block: '  /usr/local/bin/webtunnel ix,'
-
-- name: Reload apparmor
-  ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
 
 - name: Restart tor
   ansible.builtin.service:
@@ -77,8 +76,8 @@
 
 - name: Get the connection strings for testing
   get-connection-string:
-    fingerprint_path:  /var/lib/tor/fingerprint
-    torrc_path: /etc/tor/torrc
+    fingerprint_path: /var/lib/tor/fingerprint
+    torrc_path: "{{ system.etc }}/tor/torrc"
   register: connection_string
 
 - name: Delete existing connection strings file

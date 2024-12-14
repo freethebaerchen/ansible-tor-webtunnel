@@ -1,6 +1,6 @@
 ---
 - name: Block for setting up the webroot
-  when: not reverse_proxy
+  when: not reverse_proxy and deploy_webroot
   block:
     - name: Create /var/www folder
       ansible.builtin.file:
@@ -8,14 +8,14 @@
         state: directory
         owner: root
         group: root
-    
+
     - name: Create /var/www/html folder
       ansible.builtin.file:
         path: "{{ dir.webroot }}"
         state: directory
         owner: caddy
         group: caddy
-    
+
     - name: Copy index.html
       ansible.builtin.copy:
         src: "{{ role_path }}/files/index.html"
@@ -23,7 +23,7 @@
         owner: caddy
         group: caddy
       notify: Reload caddy
-    
+
     - name: Copy bear.svg
       ansible.builtin.copy:
         src: "{{ role_path }}/files/bear.svg"

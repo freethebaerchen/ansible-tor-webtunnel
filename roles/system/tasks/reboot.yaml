@@ -1,9 +1,5 @@
 ---
 
-- name: Ensure package updates are installed
-  ansible.builtin.apt:
-    upgrade: dist
-
 - name: Check if reboot is required
   ansible.builtin.stat:
     path: /var/run/reboot-required

@@ -1,35 +1,38 @@
+---
+
 - name: "Configure sshd - disallow root login"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PermitRootLogin"
     line: "PermitRootLogin no"
 
 - name: "Configure sshd - disable password authentication"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PasswordAuthentication"
     line: "PasswordAuthentication no"
 
 - name: "Add admin users"
-  user:
+  ansible.builtin.user:
     name: "{{ item.name }}"
     groups:
-      - "sudo"
+      - "{{ root.group }}"
     append: yes
+    shell: "{{ system.shell }}"
   loop: "{{ admins }}"
   loop_control:
     label: "{{ item.name }}"
 
 - name: "Add normal users"
-  user:
+  ansible.builtin.user:
     name: "{{ item.name }}"
-    append: yes
+    shell: "{{ system.shell }}"
   loop: "{{ users }}"
   loop_control:
     label: "{{ item.name }}"
 
 - name: Create .ssh directory
-  file:
+  ansible.builtin.file:
     path: "/home/{{ item.name }}/.ssh"
     state: directory
     owner: "{{ item.name }}"
@@ -40,7 +43,7 @@
     label: "{{ item.name }}"
 
 - name: Add SSH public keys for admins
-  authorized_key:
+  ansible.builtin.authorized_key:
     user: "{{ item.0.name }}"
     key: "{{ item.1.key }}"
   with_subelements:
@@ -48,7 +51,7 @@
     - vars.public-keys
 
 - name: Add SSH public keys for normal users
-  authorized_key:
+  ansible.builtin.authorized_key:
     user: "{{ item.0.name }}"
     key: "{{ item.1.key }}"
   with_subelements:
@@ -56,20 +59,8 @@
     - vars.public-keys
 
 - name: "Add sudoers config for sudo group"
-  copy:
+  ansible.builtin.copy:
     content: |
       %sudo   ALL=(ALL)   NOPASSWD:ALL
     dest: /etc/sudoers.d/sudo
     mode: 0440
-
-- name: Set /bin/bash as default shell for admins
-  command: usermod -s /bin/bash {{ item.name }}
-  loop: "{{ admins }}"
-  loop_control:
-    label: "{{ item.name }}"
-
-- name: Set /bin/bash as default shell for users
-  command: usermod -s /bin/bash {{ item.name }}
-  loop: "{{ users }}"
-  loop_control:
-    label: "{{ item.name }}"

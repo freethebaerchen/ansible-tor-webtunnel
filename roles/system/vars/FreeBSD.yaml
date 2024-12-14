@@ -1,0 +1,10 @@
+---
+root:
+  user: root
+  group: wheel
+
+sudoers:
+  path: /usr/local/etc/sudoers.d
+
+system:
+  shell: /usr/local/bin/bash

@@ -1,0 +1,6 @@
+Unattended-Upgrade::Origins-Pattern {
+  "o=Ubuntu,a=stable";
+  "o=Ubuntu,a=stable-security";
+  "o=Ubuntu,a=stable-updates";
+};
+Unattended-Upgrade::Automatic-Reboot "true";

@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# Define variables
+ZFS_POOL="zroot"   # Change this to the name of your ZFS pool
+ZFS_DATASET="${ZFS_POOL}/ROOT/default"  # The ZFS dataset for root filesystem
+SNAPSHOT_TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+SNAPSHOT_NAME="pre_update_${SNAPSHOT_TIMESTAMP}"
+KEEP_SNAPSHOTS=7  # Number of snapshots to keep
+
+# Ensure the script is run as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root!"
+    exit 1
+fi
+
+# Step 1: Create ZFS Snapshot
+echo "Creating ZFS snapshot..."
+if zfs snapshot "${ZFS_DATASET}@${SNAPSHOT_NAME}"; then
+    echo "Snapshot ${ZFS_DATASET}@${SNAPSHOT_NAME} created successfully."
+else
+    echo "Failed to create snapshot. Exiting."
+    exit 1
+fi
+
+# Step 2: Prune old snapshots
+echo "Pruning old snapshots..."
+SNAPSHOT_LIST=$(zfs list -t snapshot -o name -s creation | grep "^${ZFS_DATASET}@" | tail -n +$((KEEP_SNAPSHOTS + 1)))
+
+if [ -n "${SNAPSHOT_LIST}" ]; then
+    echo "Removing the following old snapshots:"
+    echo "${SNAPSHOT_LIST}"
+    echo "${SNAPSHOT_LIST}" | xargs -n1 zfs destroy
+else
+    echo "No old snapshots to remove."
+fi
+
+# Step 3: Fetch updates
+echo "Fetching updates..."
+if freebsd-update fetch; then
+    echo "Updates fetched successfully."
+else
+    echo "Failed to fetch updates. Exiting."
+    exit 1
+fi
+
+# Step 4: Install updates
+echo "Installing updates..."
+if freebsd-update install; then
+    echo "Updates installed successfully."
+elif freebsd-update fetch | grep -q "No updates needed"; then
+    echo "No updates to install. System is already up-to-date."
+else
+    echo "Failed to install updates. Exiting."
+    exit 1
+fi
+
+echo "System updated, ZFS snapshot created, and old snapshots pruned."

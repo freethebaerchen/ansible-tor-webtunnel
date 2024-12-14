@@ -5,7 +5,10 @@ root:
 
 caddy:
   user: caddy
+  group: caddy
 
 system:
   etc: /etc
   shell: /bin/bash
+  tor:
+    fingerprint: /var/lib/tor/fingerprint

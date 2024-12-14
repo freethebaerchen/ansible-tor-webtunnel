@@ -1,3 +1,4 @@
 domain: example.net
+id: 1
 reverse_proxy: true
 reverse_proxy_url: example.com

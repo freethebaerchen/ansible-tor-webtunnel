@@ -54,7 +54,7 @@
         src: /usr/bin/pthon3
         dest: /usr/local/bin/python3
         state: link
-      remote_src: true
+        remote_src: true
 
 - name: Block for OS-Specific tasks (FreeBSD)
   when: ansible_os_family == "FreeBSD"

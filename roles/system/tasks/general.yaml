@@ -51,10 +51,9 @@
 
     - name: Symlink pyhton bin to /usr/local/bin
       ansible.builtin.file:
-        src: /usr/bin/pthon3
+        src: /usr/bin/python3
         dest: /usr/local/bin/python3
         state: link
-        remote_src: true
 
 - name: Block for OS-Specific tasks (FreeBSD)
   when: ansible_os_family == "FreeBSD"

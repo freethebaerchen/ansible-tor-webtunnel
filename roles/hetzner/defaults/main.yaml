@@ -68,6 +68,7 @@ hcloud:
     image: ubuntu-24.04
     backup: false
     public_ipv6_enabled: true
+    public_ipv4_enabled: true
     firewalls:
        - firewall-default
        - firewall-web

@@ -11,13 +11,10 @@ users: []
 servers:
   - name: your-bridge-nbg-0
     location: nbg1
-    ipv4: false
   - name: your-bridge-fsn-0
     location: fsn1
-    ipv4: false
   - name: your-bridge-hel-0
     location: hel1
-    ipv4: false
 
 hcloud:
   sshkey:

@@ -3,9 +3,9 @@
 
 ## Consideration
 Please consider not hosting you bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) reccomends, to use another hoster for bridges/relays.
-If you are not able to provide other VMs or servers you can still host the relays in Hetzner Cloud, since it is better to host here, than to not contibute to the Tor project.
+If you are not able to provide other VMs or servers you can still host the relays in Hetzner Cloud, since it is better to host there, than to not contibute to the Tor project.
 
-If you have servers at another provider or want to create servers at another provder, you can follow [these instructions](non-hetzner-servers).
+If you have servers at another provider or want to create servers there and follow [these instructions](non-hetzner-servers).
 
 ## General information
 The anible project sets up the HCloud servers with the [ansbile hcloud colection](https://docs.ansible.com/ansible/latest/collections/hetzner/hcloud/index.html).\

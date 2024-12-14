@@ -9,11 +9,8 @@
     - name: Install required packages
       ansible.builtin.package:
         name:
-          - apt-transport-https
-          - ca-certificates
           - curl
           - wget
-          - gpg
           - coreutils
           - git
           - htop
@@ -22,9 +19,7 @@
           - bash
           - unzip
           - figlet
-          - golang
         state: present
-        update_cache: yes
 
     - name: Generate /etc/hosts file
       ansible.builtin.template:
@@ -34,10 +29,14 @@
 - name: Block for OS-Specific updates
   when: ansible_os_family == "Debian"
   block:
-    - name: Install unattended-upgrades
+    - name: Install OS-specific packages (Debian)
       ansible.builtin.package:
         name:
+          - apt-transport-https
+          - ca-certificates
           - unattended-upgrades
+          - gpg
+          - golang
         state: present
 
     - name: Run dist-upgrade
@@ -53,8 +52,14 @@
 - name: Block for OS-Specific updates
   when: ansible_os_family == "FreeBSD"
   block:
-    - name: Run freebsd-update (fetch)
-      ansible.builtin.shell: freebsd-update fetch
+    - name: Install OS-specific packages (FreeBSD)
+      ansible.builtin.package:
+        name:
+          - go
+        state: present
+
+    - name: Run freebsd-update (cron)
+      ansible.builtin.shell: freebsd-update cron
 
     - name: Run freebsd-update (install)
       ansible.builtin.shell: freebsd-update install

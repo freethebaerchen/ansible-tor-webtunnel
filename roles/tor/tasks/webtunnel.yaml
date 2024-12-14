@@ -69,13 +69,13 @@
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:
-    path: /var/lib/tor/fingerprint
+    path: "{{ system.tor.fingerprint }}"
     state: present
     timeout: 300
 
 - name: Get the connection strings for testing
   get-connection-string:
-    fingerprint_path: /var/lib/tor/fingerprint
+    fingerprint_path: "{{ system.tor.fingerprint }}"
     torrc_path: "{{ system.etc }}/tor/torrc"
   register: connection_string
 

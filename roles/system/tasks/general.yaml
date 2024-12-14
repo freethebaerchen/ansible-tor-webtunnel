@@ -31,46 +31,46 @@
         src: "{{ role_path }}/templates/hosts.j2"
         dest: /etc/hosts
 
-    - name: Block for OS-Specific updates
-      when: ansible_os_family == "Debian"
-      block:
-        - name: Install unattended-upgrades
-          ansible.builtin.package:
-            name:
-              - unattended-upgrades
-            state: present
+- name: Block for OS-Specific updates
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Install unattended-upgrades
+      ansible.builtin.package:
+        name:
+          - unattended-upgrades
+        state: present
 
-        - name: Run dist-upgrade
-          ansible.builtin.apt:
-            upgrade: dist
-            update_cache: yes
+    - name: Run dist-upgrade
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
 
-        - name: Configure unattended-upgrades
-          ansible.builtin.copy:
-            src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-            dest: "{{ system.etc }}/apt/apt.conf.d/50unattended-upgrades"
+    - name: Configure unattended-upgrades
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+        dest: "{{ system.etc }}/apt/apt.conf.d/50unattended-upgrades"
 
-      - name: Block for OS-Specific updates
-        when: ansible_os_family == "FreeBSD"
-        block:
-          - name: Run freebsd-update (fetch)
-            ansible.builtin.shell: freebsd-update fetch
+- name: Block for OS-Specific updates
+  when: ansible_os_family == "FreeBSD"
+  block:
+    - name: Run freebsd-update (fetch)
+      ansible.builtin.shell: freebsd-update fetch
 
-          - name: Run freebsd-update (install)
-            ansible.builtin.shell: freebsd-update install
+    - name: Run freebsd-update (install)
+      ansible.builtin.shell: freebsd-update install
 
-          - name: Copy unattended-upgrade to server
-            ansible.builtin.copy:
-              src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-              dest: /usr/local/bin/unattended-upgrades
-              owner: "{{ root.user }}"
-              group: "{{ root.group }}"
+    - name: Copy unattended-upgrade to server
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+        dest: /usr/local/bin/unattended-upgrades
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
 
-          - name: Create crontab entry for upgrades
-              ansible.builtin.cron:
-                name: "Fetch and install updates"
-                minute: "0"
-                hour: "14"
-                job: "/usr/local/bin/unattended-upgrades"
-                mailto: "root"
-                state: present
+    - name: Create crontab entry for upgrades
+        ansible.builtin.cron:
+          name: "Fetch and install updates"
+          minute: "0"
+          hour: "14"
+          job: "/usr/local/bin/unattended-upgrades"
+          mailto: "root"
+          state: present

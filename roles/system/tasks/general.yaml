@@ -68,6 +68,8 @@
 
     - name: Run "dist"-upgrade
       ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      register: upgrade_result
+      changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:

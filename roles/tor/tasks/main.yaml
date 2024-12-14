@@ -25,3 +25,5 @@
 
 - name: Include webtunnel
   ansible.builtin.include_tasks: webtunnel.yaml
+  tags:
+    - fingerprint

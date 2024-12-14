@@ -45,14 +45,12 @@ def main():
     if not fingerprint:
         module.fail_json(msg="Fingerprint not found.")
 
-    third_octet = random.randint(2, 253)
-    fourth_octet = random.randint(2, 253)
 
     url = get_url_from_file(torrc_path)
     if not url:
         module.fail_json(msg="URL not found.")
 
-    output = f"webtunnel 10.0.{third_octet}.{fourth_octet}:443 {fingerprint} {url} ver=0.0.1"
+    output = f"webtunnel 10.0.0.161:443 {fingerprint} {url} ver=0.0.1"
     module.exit_json(changed=False, stdout=output, url=url, fingerprint=fingerprint)
 
 if __name__ == "__main__":

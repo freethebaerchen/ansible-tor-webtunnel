@@ -43,9 +43,11 @@
         path: /etc/apparmor.d/system_tor
         insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
         block: '  /usr/local/bin/webtunnel ix,'
+      register: apparomor
 
     - name: Reload apparmor
       ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
+      when: apparomor.changed
 
 - name: Install required packages
   ansible.builtin.package:
@@ -53,19 +55,21 @@
       - tor
     state: present
 
-- name: Configure WebSocket Bridge
+- name: Configure WebSocket Bridge (torrc)
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: "{{ system.etc }}/tor/torrc"
   notify: Restart tor
   vars:
     webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
+  register: torrc
 
 - name: Restart tor
   ansible.builtin.service:
     name: tor
     state: restarted
     enabled: yes
+  when: torrc.changed
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:
@@ -73,21 +77,19 @@
     state: present
     timeout: 300
 
-- name: Get the connection strings for testing
+- name: Get the connection strings for testing in Tor Browser
   get-connection-string:
     fingerprint_path: "{{ system.tor.fingerprint }}"
     torrc_path: "{{ system.etc }}/tor/torrc"
   register: connection_string
 
-- name: Create connection strings file
-  ansible.builtin.file:
-    path: "{{ role_path }}/files/connection-strings.txt"
-    state: touch
-  delegate_to: localhost
+- name: Debug
+  debug:
+    var: connection_strings.stdout_lines
 
 - name: Write connection strings to a file
   ansible.builtin.lineinfile:
     path: "{{ role_path }}/files/connection-strings.txt"
     line: "{{ item }}"
-  with_items: "{{ connection_string.stdout }}"
+  with_items: "{{ connection_string.stdout_lines }}"
   delegate_to: localhost

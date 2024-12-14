@@ -11,7 +11,7 @@
     chdir: /tmp/webtunnel/main/server
     creates: /usr/local/bin/webtunnel
 
-- name: Block for OS-Familiy: Debian
+- name: Block for OS-Familiy Debian
   when: ansible_os_family == "Debian"
   block:
     - name: Add Tor GPG key

@@ -65,7 +65,7 @@
   ansible.builtin.service:
     name: tor
     state: restarted
-    ebaled: yes
+    enabled: yes
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

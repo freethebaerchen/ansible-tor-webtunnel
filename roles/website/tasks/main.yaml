@@ -32,7 +32,7 @@
         group: caddy
       notify: Reload caddy
 
-    - name: Copy bear.svg
+    - name: Copy robots.txt
       ansible.builtin.copy:
         src: "{{ role_path }}/files/robots.txt"
         dest: "{{ dir.webroot }}"

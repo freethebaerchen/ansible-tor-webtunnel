@@ -1,12 +1,9 @@
 {{ domain }} {
-    reverse_proxy /{{ webtunnel_path }} 127.0.0.1:15000
-}
-
-:443 {
 {% if reverse_proxy %}
-	reverse_proxy https://{{ reverse_proxy_url }}:443
+        reverse_proxy * {{ reverse_proxy_url }}:443
 {% else %}
-	root * /var/www/html
-	file_server
+        root * {{ dir.webroot }}
+        file_server browse
 {% endif %}
+        reverse_proxy /{{ webtunnel_path }} 127.0.0.1:15000
 }

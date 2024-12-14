@@ -1,9 +1,6 @@
 ---
 
 - name: Block for setting up caddy (OS-Family Debian)
-  tags:
-    - debian
-    - ubuntu
   when: ansible_os_family == "Debian"
   block:
     - name: Add the Caddy repository key
@@ -17,6 +14,20 @@
         state: present
         filename: caddy-stable
 
+- name: Block for OS-spcific tasks (FreeBSD)
+  when: ansible_os_family == "FreeBSD"
+  block:
+    - name: Set caddy-users
+      community.general.sysrc:
+        name: caddy_user
+        value: "{{ caddy.user }}"
+        state: value_present
+      
+    - name: Set caddy-users
+      community.general.sysrc:
+        name: caddy_group
+        value: "{{ caddy.group }}"
+        state: value_present
 
 - name: Block for all OS-Families
   block:
@@ -34,15 +45,3 @@
       notify: Restart caddy
       vars:
         webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
-
-    - name: Set caddy-users
-      community.general.sysrc:
-        name: caddy_user
-        value: "{{ caddy.user }}"
-        state: value_present
-      
-    - name: Set caddy-users
-      community.general.sysrc:
-        name: caddy_group
-        value: "{{ caddy.group }}"
-        state: value_present

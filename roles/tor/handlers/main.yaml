@@ -11,3 +11,9 @@
     name: caddy
     state: restarted
     enabled: true
+
+- name: Restart portacl
+  ansible.builtin.service:
+    name: portacl
+    state: restarted
+    enabled: true

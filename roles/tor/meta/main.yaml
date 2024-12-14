@@ -1,0 +1,5 @@
+---
+
+dependencies:
+  - role: website
+    when: not reverse_proxy

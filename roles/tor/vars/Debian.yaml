@@ -3,6 +3,9 @@ root:
   user: root
   group: root
 
+caddy:
+  user: caddy
+
 system:
   etc: /etc
   shell: /bin/bash

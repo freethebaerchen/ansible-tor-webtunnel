@@ -3,6 +3,10 @@ root:
   user: root
   group: wheel
 
+caddy:
+  user: www
+  group: www
+
 system:
   etc: /usr/local/etc
   shell: /usr/local/bin/bash

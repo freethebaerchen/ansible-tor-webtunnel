@@ -2,3 +2,7 @@
 root:
   user: root
   group: wheel
+
+caddy:
+  user: www
+  group: www

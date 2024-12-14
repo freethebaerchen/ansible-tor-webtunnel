@@ -44,7 +44,7 @@
         path: /etc/apparmor.d/system_tor
         insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
         block: '  /usr/local/bin/webtunnel ix,'
-    
+
     - name: Reload apparmor
       ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
 
@@ -67,6 +67,7 @@
   ansible.builtin.service:
     name: tor
     state: restarted
+    ebaled: yes
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

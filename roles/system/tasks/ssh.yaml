@@ -61,6 +61,6 @@
 - name: "Add sudoers config for sudo group"
   ansible.builtin.copy:
     content: |
-      %sudo   ALL=(ALL)   NOPASSWD:ALL
-    dest: /etc/sudoers.d/sudo
+      %{{ root.group }}   ALL=(ALL)   NOPASSWD:ALL
+    dest: "{{ system.etc }}/sudoers.d/sudo"
     mode: 0440

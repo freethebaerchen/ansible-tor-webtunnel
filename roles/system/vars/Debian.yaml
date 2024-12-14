@@ -3,8 +3,6 @@ root:
   user: root
   group: root
 
-sudoers:
-  path: /etc/sudoers.d
-
 system:
+  etc: /etc
   shell: /bin/bash

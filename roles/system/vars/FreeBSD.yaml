@@ -3,8 +3,6 @@ root:
   user: root
   group: wheel
 
-sudoers:
-  path: /usr/local/etc/sudoers.d
-
 system:
+  etc: /usr/local/etc
   shell: /usr/local/bin/bash

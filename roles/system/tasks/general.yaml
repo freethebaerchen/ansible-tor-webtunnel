@@ -48,7 +48,7 @@
         - name: Configure unattended-upgrades
           ansible.builtin.copy:
             src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-            dest: /etc/apt/apt.conf.d/50unattended-upgrades
+            dest: "{{ system.etc }}"/apt/apt.conf.d/50unattended-upgrades"
 
       - name: Block for OS-Specific updates
         when: ansible_os_family == "FreeBSD"

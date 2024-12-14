@@ -67,10 +67,10 @@
         group: "{{ root.group }}"
 
     - name: Create crontab entry for upgrades
-        ansible.builtin.cron:
-          name: "Fetch and install updates"
-          minute: "0"
-          hour: "14"
-          job: "/usr/local/bin/unattended-upgrades"
-          mailto: "root"
-          state: present
+      ansible.builtin.cron:
+        name: "Fetch and install updates"
+        minute: "0"
+        hour: "14"
+        job: "/usr/local/bin/unattended-upgrades"
+        mailto: "root"
+        state: present

@@ -26,10 +26,10 @@
         src: "{{ role_path }}/templates/hosts.j2"
         dest: /etc/hosts
 
-- name: Block for OS-Specific updates
+- name: Block for OS-Specific tasks (Debian)
   when: ansible_os_family == "Debian"
   block:
-    - name: Install OS-specific packages (Debian)
+    - name: Install OS-specific packages
       ansible.builtin.package:
         name:
           - apt-transport-https
@@ -49,7 +49,13 @@
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
         dest: "{{ system.etc }}/apt/apt.conf.d/50unattended-upgrades"
 
-- name: Block for OS-Specific updates
+    - name: Symlink pyhton bin to /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/bin/pthon3
+        dest: /usr/local/bin/python3
+        state: link
+
+- name: Block for OS-Specific tasks (FreeBSD)
   when: ansible_os_family == "FreeBSD"
   block:
     - name: Install OS-specific packages (FreeBSD)

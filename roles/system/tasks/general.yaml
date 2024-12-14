@@ -58,18 +58,16 @@
           - go
         state: present
 
-    - name: Run freebsd-update (cron)
-      ansible.builtin.shell: freebsd-update cron
-
-    - name: Run freebsd-update (install)
-      ansible.builtin.shell: freebsd-update install
-
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
         dest: /usr/local/bin/unattended-upgrades
+        mode: 0755
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
+
+    - name: Run "dist"-upgrade
+      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -77,5 +75,4 @@
         minute: "0"
         hour: "14"
         job: "/usr/local/bin/unattended-upgrades"
-        mailto: "root"
         state: present

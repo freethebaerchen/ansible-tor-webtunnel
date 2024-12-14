@@ -36,7 +36,7 @@ fi
 
 # Step 3: Fetch updates
 echo "Fetching updates..."
-if freebsd-update fetch; then
+if freebsd-update fetch --not-running-from-cron; then
     echo "Updates fetched successfully."
 else
     echo "Failed to fetch updates. Exiting."
@@ -47,7 +47,7 @@ fi
 echo "Installing updates..."
 if freebsd-update install; then
     echo "Updates installed successfully."
-elif freebsd-update fetch | grep -q "No updates needed"; then
+elif freebsd-update fetch --not-running-from-cron | grep -q "No updates needed"; then
     echo "No updates to install. System is already up-to-date."
 else
     echo "Failed to install updates. Exiting."

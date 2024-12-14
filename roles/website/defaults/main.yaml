@@ -2,3 +2,6 @@
 
 dir:
   webroot: /var/www/html
+
+website:
+  no_index: true

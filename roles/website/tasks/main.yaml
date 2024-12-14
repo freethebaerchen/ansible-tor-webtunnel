@@ -31,3 +31,12 @@
         owner: caddy
         group: caddy
       notify: Reload caddy
+
+    - name: Copy bear.svg
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/robots.txt"
+        dest: "{{ dir.webroot }}"
+        owner: caddy
+        group: caddy
+      notify: Reload caddy
+      when: website.no_index

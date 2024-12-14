@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 from ansible.module_utils.basic import AnsibleModule
 import re
 import random

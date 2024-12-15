@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Log file
+LOG_FILE="/var/log/auto-upgrade.log"
+
+# Update repositories
+echo "[$(date)] Updating repositories..." >> "$LOG_FILE"
+apk update >> "$LOG_FILE" 2>&1
+
+# Perform the upgrade
+echo "[$(date)] Upgrading packages..." >> "$LOG_FILE"
+apk upgrade --available >> "$LOG_FILE" 2>&1
+
+# Cleanup (optional)
+echo "[$(date)] Cleaning up..." >> "$LOG_FILE"
+apk cache clean >> "$LOG_FILE" 2>&1
+
+echo "[$(date)] Upgrade process completed." >> "$LOG_FILE"

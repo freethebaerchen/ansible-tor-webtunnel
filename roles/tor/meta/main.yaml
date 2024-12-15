@@ -1,5 +1,0 @@
----
-
-dependencies:
-  - role: website
-    when: not reverse_proxy and deploy_webroot

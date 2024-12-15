@@ -84,3 +84,47 @@
         hour: "14"
         job: "/usr/local/bin/unattended-upgrades"
         state: present
+
+- name: Block for OS-Specific tasks (Alpine)
+  when: ansible_os_family == "Alpine"
+  block:
+    - name: Enable community repository
+      ansible.builtin.lineinfile:
+        path: /etc/apk/repositories
+        regexp: '^#(.*\/community)'
+        line: '\1'
+        backrefs: yes
+
+    - name: Install OS-specific packages
+      ansible.builtin.package:
+        name:
+          - go
+          - cronie
+        state: present
+
+    - name: Symlink pyhton bin to /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/bin/python3
+        dest: /usr/local/bin/python3
+        state: link
+
+    - name: Copy unattended-upgrade to server
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+        dest: /usr/local/bin/unattended-upgrades
+        mode: 0755
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Run "dist"-upgrade
+      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      register: upgrade_result
+      changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
+
+    - name: Create crontab entry for upgrades
+      ansible.builtin.cron:
+        name: "Fetch and install updates"
+        minute: "0"
+        hour: "14"
+        job: "/usr/local/bin/unattended-upgrades"
+        state: present

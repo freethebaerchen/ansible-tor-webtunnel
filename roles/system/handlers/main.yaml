@@ -1,4 +1,11 @@
-- name: "Restart ssh"
+- name: Restart ssh
   service:
     name: ssh
     state: restarted
+    enabled: true
+
+- name: Restart crond
+  ansible.builtin.service:
+    name: crond
+    state: restarted
+    enabled: true

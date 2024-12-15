@@ -13,12 +13,10 @@
           - wget
           - coreutils
           - git
-          - htop
           - sudo
           - nano
           - bash
           - unzip
-          - figlet
         state: present
 
     - name: Generate /etc/hosts file
@@ -37,6 +35,7 @@
           - unattended-upgrades
           - gpg
           - golang
+          - htop
         state: present
 
     - name: Run dist-upgrade
@@ -62,6 +61,7 @@
       ansible.builtin.package:
         name:
           - go
+          - htop
         state: present
 
     - name: Copy unattended-upgrade to server
@@ -128,3 +128,36 @@
         hour: "14"
         job: "/usr/local/bin/unattended-upgrades"
         state: present
+
+- name: Block for OS-Specific tasks (RedHat)
+  when: ansible_os_family == "RedHat"
+  block:
+
+    - name: Import GPG key for EPEL
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9
+
+    - name: Install OS-specific packages
+      ansible.builtin.package:
+        name: 
+          - dnf-command(copr)
+          - golang
+          - dnf-automatic
+          - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+        state: present
+
+    - name: Symlink pyhton bin to /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/bin/python3
+        dest: /usr/local/bin/python3
+        state: link
+
+    - name: Copy unattended-upgrade to server
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+        dest: "{{ system.etc }}/dnf/automatic.conf"
+        mode: 0755
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+      notify: Restart dnf-automatic

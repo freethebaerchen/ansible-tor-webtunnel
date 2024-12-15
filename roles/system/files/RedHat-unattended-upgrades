@@ -1,0 +1,23 @@
+[commands]
+upgrade_type = default
+random_sleep = 0
+network_online_timeout = 60
+download_updates = yes
+apply_updates = yes
+reboot = when-needed
+reboot_command = "shutdown -r +5 'Rebooting after applying package updates'"
+
+[emitters]
+emit_via = stdio
+
+[email]
+email_from = root@example.com
+email_to = root
+email_host = localhost
+
+[command_email]
+email_from = root@example.com
+email_to = root
+
+[base]
+debuglevel = 1

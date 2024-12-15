@@ -1,10 +1,30 @@
 ---
 
-- name: Generate new motd file
-  ansible.builtin.shell:
-    cmd: figlet {{ tor.nickname }}{{ id }} > /etc/motd
+- name: Check if motd-file exists
+  ansible.builtin.stat:
+    path: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
+  register: motd_file
+  delegate_to: localhost
 
-- name: Add domain to new motd file
-  ansible.builtin.lineinfile:
-    path: /etc/motd
-    line: "{{ domain }}"
+- name: Block for generating motd
+  when: not motd_file.stat.exists
+  block:
+    - name: Generate new motd file
+      ansible.builtin.shell:
+        cmd: figlet {{ tor.nickname }}{{ id }} > "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
+      register: figlet
+      delegate_to: localhost
+
+    - name: Add domain to new motd file
+      ansible.builtin.lineinfile:
+        path: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
+        line: "{{ domain }}"
+      delegate_to: localhost
+
+    - name: Copy motd-file to host
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
+        dest: /etc/motd
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: 0644

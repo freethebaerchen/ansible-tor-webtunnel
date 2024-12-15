@@ -9,3 +9,9 @@
     name: crond
     state: restarted
     enabled: true
+
+- name: Restart dnf-automatic
+  ansible.builtin.service:
+    name: dnf-automatic.timer
+    state: restarted
+    enabled: true

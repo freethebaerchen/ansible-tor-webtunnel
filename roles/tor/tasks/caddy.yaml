@@ -67,6 +67,13 @@
         - /var/log/caddy
         - /var/run/caddy
 
+- name: Block for OS-spcific tasks (RedHat)
+  when: ansible_os_family == "RedHat"
+  block:
+    - name: Enable the Caddy COPR repository
+      ansible.builtin.shell:
+        cmd: dnf copr enable @caddy/caddy -y
+
 - name: Block for all OS-Families
   block:
     - name: Install caddy

@@ -9,3 +9,5 @@ host_vars/*
 !host_vars/your-bridge-*-0.yaml
 roles/tor/files/*
 !roles/tor/files/.gitkeep
+roles/system/files/*
+!roles/system/files/*-unattended-upgrades

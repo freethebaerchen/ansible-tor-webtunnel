@@ -26,6 +26,8 @@ If you dont want this, as it is not needed for the fetching of the WebSocket Bri
         dest: /etc/hosts
 ```
 
+This Project supports, as of right now, Debian-based, Alpine-based and FreeBSD-based distributions.
+
 ## Prerequisites
 ### Network connection
 This project aims on NOT being behind a NAT.

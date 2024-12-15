@@ -1,29 +1,5 @@
 ---
 
-- name: Block for all hosts
-  tags:
-      - general
-      - system
-      - setup
-  block:
-    - name: Install required packages
-      ansible.builtin.package:
-        name:
-          - curl
-          - wget
-          - coreutils
-          - git
-          - sudo
-          - nano
-          - bash
-          - unzip
-        state: present
-
-    - name: Generate /etc/hosts file
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/hosts.j2"
-        dest: /etc/hosts
-
 - name: Block for OS-Specific tasks (Debian)
   when: ansible_os_family == "Debian"
   block:
@@ -161,3 +137,27 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify: Restart dnf-automatic
+
+- name: Block for all hosts
+  tags:
+      - general
+      - system
+      - setup
+  block:
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - curl
+          - wget
+          - coreutils
+          - git
+          - sudo
+          - nano
+          - bash
+          - unzip
+        state: present
+
+    - name: Generate /etc/hosts file
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/hosts.j2"
+        dest: /etc/hosts

@@ -26,7 +26,9 @@ If you dont want this, as it is not needed for the fetching of the WebSocket Bri
         dest: /etc/hosts
 ```
 
+## OS Support
 This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5) and FreeBSD-based (FreeBSD 14) distributions.
+If you want to run the WebTunnel on Alpine, you either need to allow root login and specify the ansible_user root OR you need to install sudo before running the playbook.
 
 ## Prerequisites
 ### Network connection

@@ -65,7 +65,7 @@ hcloud:
   server:
     state: present
     type: cax11
-    image: centos-stream-9 #ubuntu-24.04
+    image: ubuntu-24.04
     backup: false
     public_ipv6_enabled: true
     public_ipv4_enabled: true

@@ -27,8 +27,13 @@ If you dont want this, as it is not needed for the fetching of the WebSocket Bri
 ```
 
 ## OS Support
-This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9) and FreeBSD-based (FreeBSD 14) distributions.
-If you want to run the WebTunnel on Alpine, you either need to allow root login and specify the ansible_user root OR you need to install sudo before running the playbook.
+This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9), OpenSUSE-based (OpenSUSE Leap 15.6) and FreeBSD-based (FreeBSD 14) distributions.
+
+### OS specialties
+#### Alpine
+You either need to allow root login and specify the `ansible_user root` OR you need to install sudo before running the playbook.
+#### OpenSUSE
+You need to install `python312` and make the binary-file (`/usr/bin/python3`) link to `/usr/bin/python3.12`
 
 ## Prerequisites
 ### Network connection

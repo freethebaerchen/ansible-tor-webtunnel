@@ -121,6 +121,7 @@
           - golang
           - dnf-automatic
           - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+          - htop
         state: present
 
     - name: Symlink pyhton bin to /usr/local/bin
@@ -137,6 +138,57 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify: Restart dnf-automatic
+
+- name: Block for OS-Specific tasks (Suse)
+  when: ansible_os_family == "Suse"
+  block:
+    - name: Install OS-specific packages
+      ansible.builtin.package:
+        name: 
+          - go
+          - htop
+          - python312
+          - cronie
+        state: present
+
+    - name: Check /usr/bin/python3
+      ansible.builtin.stat:
+        path: /usr/bin/python3
+      register: python_binary
+
+    - name: Set python3.12 as default
+      ansible.builtin.file:
+        src: /usr/bin/python3.12
+        dest: /usr/bin/python3
+        state: link
+      when: not python_binary.stat.lnk_source == "/usr/bin/python3.12"
+
+    - name: Symlink pyhton bin to /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/bin/python3
+        dest: /usr/local/bin/python3
+        state: link
+
+    - name: Copy unattended-upgrade to server
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+        dest: /usr/local/bin/unattended-upgrades
+        mode: 0755
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Run "dist"-upgrade
+      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      register: upgrade_result
+      changed_when: not '"Nothing to do." in upgrade_result.stdout_lines'
+
+    - name: Create crontab entry for upgrades
+      ansible.builtin.cron:
+        name: "Fetch and install updates"
+        minute: "0"
+        hour: "14"
+        job: "/usr/local/bin/unattended-upgrades"
+        state: present
 
 - name: Block for all hosts
   tags:

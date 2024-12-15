@@ -31,12 +31,11 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: Create .ssh directory
+- name: Create .ssh directory for admins
   ansible.builtin.file:
     path: "/home/{{ item.name }}/.ssh"
     state: directory
     owner: "{{ item.name }}"
-    group: "{{ item.name }}"
     mode: "0700"
   loop: "{{ admins }}"
   loop_control:
@@ -49,6 +48,16 @@
   with_subelements:
     - "{{ admins }}"
     - vars.public-keys
+
+- name: Create .ssh directory for normal users
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    mode: "0700"
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Add SSH public keys for normal users
   ansible.builtin.authorized_key:

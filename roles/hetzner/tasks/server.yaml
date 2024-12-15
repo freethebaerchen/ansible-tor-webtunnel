@@ -3,28 +3,31 @@
 - name: Render cloud-init user_data from template
   template:
     src: templates/user_data.j2
-    dest: "{{ role_path }}/files/user_data.yaml"
+    dest: "{{ role_path }}/files/{{ item.image }}-user_data.yaml"
   delegate_to: localhost
   vars:
-    root_group: "{{ 'sudo' if hcloud.server.image in ['ubuntu-20.04', 'ubuntu-22.04', 'ubuntu-24.04', 'debian-10', 'debian-11', 'debian-12'] else 'wheel' }}"
+    root_group: "{{ 'sudo' if item.image in ['ubuntu-20.04', 'ubuntu-22.04', 'ubuntu-24.04', 'debian-10', 'debian-11', 'debian-12'] else 'wheel' }}"
+  loop: "{{ hcloud.servers }}"
+  loop_control:
+    loop_var: item
 
 - name: Bring Server into defined state
   hetzner.hcloud.server:
     name: "{{ item.name }}"
     server_type: "{{ hcloud.server.type }}"
-    image: "{{ hcloud.server.image }}"
+    image: "{{ item.image }}"
     state: "{{ hcloud.server.state }}"
     location: "{{ item.location }}"
     ssh_keys: "{{ hcloud.sshkey[0].name }}"
     firewalls: "{{ hcloud.server.firewalls }}"
-    user_data: "{{ lookup('file', 'files/user_data.yaml') }}"
+    user_data: "{{ lookup('file', role_path + '/files/' + item.image + '-user_data.yaml') }}"
     upgrade_disk: false
     backups: false
     enable_ipv4: "{{ hcloud.server.public_ipv4_enabled }}"
     enable_ipv6: "{{ hcloud.server.public_ipv6_enabled }}"
     delete_protection: false
     rebuild_protection: false
-  loop: "{{ servers }}"
+  loop: "{{ hcloud.servers }}"
   loop_control:
     loop_var: item
 

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Define variables
+LOG_FILE="/var/log/opensuse-upgrade.log"
+LOCK_FILE="/var/run/opensuse-upgrade.lock"
+
+# Exit if another instance is running
+if [ -e "$LOCK_FILE" ]; then
+    echo "Upgrade script is already running. Exiting." >> "$LOG_FILE"
+    exit 1
+fi
+
+# Create a lock file
+touch "$LOCK_FILE"
+
+# Ensure lock file is removed on exit
+trap "rm -f $LOCK_FILE" EXIT
+
+echo "===== Upgrade started: $(date) =====" >> "$LOG_FILE"
+
+# Refresh repositories
+zypper --non-interactive refresh >> "$LOG_FILE" 2>&1
+
+# Perform a system upgrade
+zypper --non-interactive update >> "$LOG_FILE" 2>&1
+
+# Log completion
+echo "===== Upgrade completed: $(date) =====" >> "$LOG_FILE"

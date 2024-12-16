@@ -153,6 +153,7 @@
           - nano
           - bash
           - unzip-6.0p17
+          - htop
         state: present
 
     - name: Copy unattended-upgrade to server

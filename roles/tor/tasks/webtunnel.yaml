@@ -49,6 +49,30 @@
       ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
       when: apparomor.changed
 
+- name: Block for OS-Familiy OpenBSD
+  when: ansible_os_family == "OpenBSD"
+  block:
+    - name: Ensure tor login class configuration in /etc/login.conf
+      ansible.builtin.blockinfile:
+        path: /etc/login.conf
+        block: |
+          tor:\
+              :openfiles-max=13500:\
+              :tc=daemon:
+    
+    - name: Iincrease kern.maxfiles
+      ansible.builtin.lineinfile:
+        path: "{{ system.etc }}/sysctl.conf"
+        line: "kern.maxfiles=16000"
+        create: yes
+
+    - name: Apply kern.maxfiles
+      ansible.posix.sysctl:
+        name: kern.maxfiles
+        value: 16000
+        state: present
+        reload: yes
+
 - name: Install required packages
   ansible.builtin.package:
     name:

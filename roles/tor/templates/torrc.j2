@@ -1,3 +1,6 @@
+{% if ansible_os_family == "OpenBSD" %}
+RunAsDaemon 1
+{% endif %}
 BridgeRelay 1
 ORPort 127.0.0.1:auto
 AssumeReachable 1

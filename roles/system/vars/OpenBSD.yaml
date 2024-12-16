@@ -5,4 +5,5 @@ root:
 
 system:
   etc: /etc
-  shell: /bin/bash
+  shell: /usr/local/bin/bash
+  sudoers_file: sudoers

@@ -71,5 +71,5 @@
   ansible.builtin.copy:
     content: |
       %{{ root.group }}   ALL=(ALL)   NOPASSWD:ALL
-    dest: "{{ system.etc }}/sudoers.d/sudo"
+    dest: "{{ system.etc }}/{{ system.sudoers_file }}"
     mode: 0440

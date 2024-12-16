@@ -6,3 +6,4 @@ root:
 system:
   etc: /usr/local/etc
   shell: /usr/local/bin/bash
+  sudoers_file: sudoers.d/sudo

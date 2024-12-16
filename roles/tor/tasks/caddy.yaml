@@ -87,6 +87,8 @@
         dest: "{{ system.etc }}/caddy/Caddyfile"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
-      notify: Restart caddy
+      notify:
+        - Start caddy 
+        - Restart caddy
       vars:
         webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"

@@ -59,7 +59,7 @@ You need a device, that is able to run Docker.
 ### Other
 1. A (sub)domain per server
 2. The code for a website (per server)\
-Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [host-vars/example.yaml](host-vars/your-bridge-fsn-0.yaml).
+Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [host_vars/example.yaml](host_vars/your-bridge-fsn-0.yaml).
 Set the reverse-proxy value to true and configure the domain you want to reverse proxy to as value for the reverse_proxy_url variable.
 
 ## Non-Hetzner servers
@@ -68,7 +68,7 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 3. Modify the entry or entries to your fit
 
 ## preparation of the code
-1. Copy the [group-vars example file](group-vars/all-example.yaml) to the [group-vars](group-vars) named all.yaml\
+1. Copy the [group_vars example file](group_vars/all-example.yaml) to the [group_vars](group_vars) named all.yaml\
     1.1 Change the username\
     1.2 Change the public key(s)\
     1.3 Modify the servers to your fit\
@@ -107,5 +107,5 @@ The link in the last line will not show a status until you ran the relay for som
 Please don't stress. Some status will show up.
 
 ## Additional information
-If you add more servers, you need to copy and paste one of the servers in the [group-vars](group-vars/all-example.yaml).
+If you add more servers, you need to copy and paste one of the servers in the [group_vars](group_vars/all-example.yaml).
 Change the variables to your fit and count the id one up.

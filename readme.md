@@ -58,8 +58,8 @@ You need a device, that is able to run Docker.
 
 ### Other
 1. A (sub)domain per server
-2. The code for a website (per server)
-Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [group-vars/all.yaml](group-vars/all.yaml).
+2. The code for a website (per server)\
+Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [host-vars/example.yaml](host-vars/your-bridge-fsn-0.yaml).
 Set the reverse-proxy value to true and configure the domain you want to reverse proxy to as value for the reverse_proxy_url variable.
 
 ## Non-Hetzner servers

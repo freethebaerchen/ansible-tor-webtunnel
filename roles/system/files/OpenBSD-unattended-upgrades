@@ -1,0 +1,28 @@
+#!/bin/sh
+# Script for unattended upgrades on OpenBSD
+
+# Define log file
+LOG_FILE="/var/log/unattended-upgrades.log"
+exec >> "$LOG_FILE" 2>&1
+
+echo "=== Unattended Upgrade started: $(date) ==="
+
+# Step 1: Apply base system patches
+echo "Running syspatch..."
+syspatch
+
+# Step 2: Upgrade installed packages
+UPDATES=$(pkg_add -un)
+if [ -n "$UPDATES" ]; then
+    echo "Updating packages..."
+    echo "$UPDATES"
+    pkg_add -u
+else
+    echo "No packages to update."
+fi
+
+# Step 3: Clean up old package versions
+echo "Cleaning up old packages..."
+pkg_delete -a
+
+echo "=== Unattended Upgrade completed: $(date) ==="

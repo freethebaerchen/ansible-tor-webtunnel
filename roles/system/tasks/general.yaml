@@ -108,7 +108,6 @@
 - name: Block for OS-Specific tasks (RedHat)
   when: ansible_os_family == "RedHat"
   block:
-
     - name: Import GPG key for EPEL
       ansible.builtin.rpm_key:
         state: present
@@ -138,6 +137,37 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify: Restart dnf-automatic
+
+- name: Block for OS-Specific tasks (OpenBSD)
+  when: ansible_os_family == "OpenBSD"
+  block:
+    - name: Install OS-specific packages
+      ansible.builtin.package:
+        name:
+          - go
+          - cronie
+        state: present
+
+    - name: Copy unattended-upgrade to server
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+        dest: /usr/local/bin/unattended-upgrades
+        mode: 0755
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Run "dist"-upgrade
+      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      register: upgrade_result
+      changed_when: '"Updating packages..." in upgrade_result.stdout_lines'
+
+    - name: Create crontab entry for upgrades
+      ansible.builtin.cron:
+        name: "Fetch and install updates"
+        minute: "0"
+        hour: "14"
+        job: "/usr/local/bin/unattended-upgrades"
+        state: present
 
 - name: Block for OS-Specific tasks (Suse)
   when: ansible_os_family == "Suse"

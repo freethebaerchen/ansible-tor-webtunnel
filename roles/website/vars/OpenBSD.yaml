@@ -1,0 +1,8 @@
+---
+root:
+  user: root
+  group: wheel
+
+caddy:
+  user: _caddy
+  group: _caddy

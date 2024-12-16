@@ -27,7 +27,7 @@ If you dont want this, as it is not needed for the fetching of the WebSocket Bri
 ```
 
 ## OS Support
-This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9), OpenSUSE-based (OpenSUSE Leap 15.6) and FreeBSD-based (FreeBSD 14) distributions.
+This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9), OpenSUSE-based (OpenSUSE Leap 15.6), OpenBSD-based (OpenBSD 7.6) and FreeBSD-based (FreeBSD 14) distributions.
 
 ### OS specialties
 #### Alpine

@@ -23,6 +23,7 @@
       ansible.builtin.copy:
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
         dest: "{{ system.etc }}/apt/apt.conf.d/50unattended-upgrades"
+      when: unattended_upgrades
 
     - name: Symlink pyhton bin to /usr/local/bin
       ansible.builtin.file:
@@ -60,6 +61,7 @@
         hour: "14"
         job: "/usr/local/bin/unattended-upgrades"
         state: present
+      when: unattended_upgrades
 
 - name: Block for OS-Specific tasks (Alpine)
   when: ansible_os_family == "Alpine"
@@ -104,6 +106,7 @@
         hour: "14"
         job: "/usr/local/bin/unattended-upgrades"
         state: present
+      when: unattended_upgrades
 
 - name: Block for OS-Specific tasks (RedHat)
   when: ansible_os_family == "RedHat"
@@ -137,6 +140,7 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify: Restart dnf-automatic
+      when: unattended_upgrades
 
 - name: Block for OS-Specific tasks (OpenBSD)
   when: ansible_os_family == "OpenBSD"
@@ -227,6 +231,46 @@
         hour: "14"
         job: "/usr/local/bin/unattended-upgrades"
         state: present
+      when: unattended_upgrades
+
+- name: Block for OS-Specific tasks (Archlinux)
+  when: ansible_os_family == "Archlinux"
+  block:
+    - name: Install OS-specific packages
+      ansible.builtin.package:
+        name:
+          - go
+          - htop
+          - cronie
+        state: present
+
+    - name: Symlink pyhton bin to /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/bin/python3
+        dest: /usr/local/bin/python3
+        state: link
+
+    - name: Copy unattended-upgrade to server
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+        dest: /usr/local/bin/unattended-upgrades
+        mode: 0755
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Run "dist"-upgrade
+      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      register: upgrade_result
+      changed_when: not '"there is nothing to do" in upgrade_result.stdout_lines'
+
+    - name: Create crontab entry for upgrades
+      ansible.builtin.cron:
+        name: "Fetch and install updates"
+        minute: "0"
+        hour: "14"
+        job: "/usr/local/bin/unattended-upgrades"
+        state: present
+      when: unattended_upgrades
 
 - name: Block for all hosts (except OpenBSD)
   when: ansible_os_family != "OpenBSD"

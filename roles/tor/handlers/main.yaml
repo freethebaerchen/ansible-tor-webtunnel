@@ -23,3 +23,7 @@
     name: portacl
     state: restarted
     enabled: true
+
+- name: Reload daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes

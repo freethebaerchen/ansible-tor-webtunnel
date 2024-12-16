@@ -73,6 +73,27 @@
         state: present
         reload: yes
 
+- name: Block for OS-Family Archlinux
+  when: ansible_os_family == "Archlinux"
+  block:
+    - name: Modify tor service file
+      ansible.builtin.blockinfile:
+        path: "{{ system.etc }}/systemd/system/multi-user.target.wants/tor.service"
+        block: |
+          User=tor
+          LimitNOFILE=65536
+        insertafter: '^\[Service\]'
+      notify: Reload daemon
+
+    - name: Set Limits in security/limits.conf
+      ansible.builtin.blockinfile:
+        path: "{{ system.etc }}/security/limits.conf"
+        block: |
+          tor     soft    nofile    65536
+          tor     hard    nofile    65536
+          @tor    soft    nofile    65536
+          @tor    hard    nofile    65536
+
 - name: Install required packages
   ansible.builtin.package:
     name:
@@ -97,13 +118,13 @@
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:
-    path: "{{ system.tor.fingerprint }}"
+    path: "{{ system.tor.directory }}/fingerprint"
     state: present
     timeout: 300
 
 - name: Get the connection strings for testing in Tor Browser
   get-connection-string:
-    fingerprint_path: "{{ system.tor.fingerprint }}"
+    fingerprint_path: "{{ system.tor.directory }}/fingerprint"
     torrc_path: "{{ system.etc }}/tor/torrc"
   register: connection_string
 

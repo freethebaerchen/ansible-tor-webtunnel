@@ -11,4 +11,4 @@ system:
   etc: /usr/local/etc
   shell: /usr/local/bin/bash
   tor:
-    fingerprint: /var/db/tor/fingerprint
+    directory: /var/db/tor

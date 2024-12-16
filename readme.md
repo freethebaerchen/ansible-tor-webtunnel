@@ -26,6 +26,11 @@ If you dont want this, as it is not needed for the fetching of the WebSocket Bri
         dest: /etc/hosts
 ```
 
+# NO-RISK-NO-FUN
+Against all recommendations are unattended-upgrades for the supported Operating Systems configured.
+For Debian-based distros it's pretty uncritical, but for the rest, do it at your own risk.
+You can disable them by setting `unattended_upgrades: no`or `unattended_upgrades: false` in the [host_vars]
+
 ## OS Support
 This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9), OpenSUSE-based (OpenSUSE Leap 15.6), OpenBSD-based (OpenBSD 7.6) and FreeBSD-based (FreeBSD 14) distributions.
 

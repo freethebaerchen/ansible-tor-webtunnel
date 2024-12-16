@@ -88,10 +88,10 @@
     webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
   register: torrc
 
-- name: Restart tor
+- name: Start tor
   ansible.builtin.service:
     name: tor
-    state: restarted
+    state: started
     enabled: yes
   when: torrc.changed
 

@@ -76,13 +76,15 @@
 - name: Block for OS-Family Archlinux
   when: ansible_os_family == "Archlinux"
   block:
-    - name: Modify tor service file
-      ansible.builtin.blockinfile:
+    - name: Ensure User=tor and LimitNOFILE=65536 under [Service]
+      ansible.builtin.lineinfile:
         path: "{{ system.etc }}/systemd/system/multi-user.target.wants/tor.service"
-        block: |
-          User=tor
-          LimitNOFILE=65536
+        regexp: '^User=|^LimitNOFILE='
+        line: "{{ item }}"
         insertafter: '^\[Service\]'
+      loop:
+        - 'User=tor'
+        - 'LimitNOFILE=65536'
       notify: Reload daemon
 
     - name: Set Limits in security/limits.conf

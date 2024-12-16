@@ -34,6 +34,8 @@ This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-base
 You either need to allow root login and specify the `ansible_user root` OR you need to install sudo before running the playbook.
 #### OpenSUSE
 You need to install `python312` and make the binary-file (`/usr/bin/python3`) link to `/usr/bin/python3.12`
+#### OpenBSD (at least in Hetzner Cloud)
+You need to install the python(3) package with `pkg_add -r python`
 
 ## Prerequisites
 ### Network connection

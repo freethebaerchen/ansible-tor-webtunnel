@@ -14,7 +14,7 @@
 - name: Bring Server into defined state
   hetzner.hcloud.server:
     name: "{{ item.name }}"
-    server_type: "{{ hcloud.server.type }}"
+    server_type: "{{ item.type }}"
     image: "{{ item.image }}"
     state: "{{ hcloud.server.state }}"
     location: "{{ item.location }}"
@@ -30,20 +30,3 @@
   loop: "{{ hcloud.servers }}"
   loop_control:
     loop_var: item
-
-#- name: Bring Server into defined state (CentOS)
-#  hetzner.hcloud.server:
-#    name: "bridge-centos-0"
-#    server_type: "{{ hcloud.server.type }}"
-#    image: "{{ hcloud.server.image }}"
-#    state: "{{ hcloud.server.state }}"
-#    location: fsn1
-#    ssh_keys: "{{ hcloud.sshkey[0].name }}"
-#    firewalls: "{{ hcloud.server.firewalls }}"
-#    user_data: "{{ lookup('file', 'files/user_data.yaml') }}"
-#    upgrade_disk: false
-#    backups: false
-#    enable_ipv4: "{{ hcloud.server.public_ipv4_enabled }}"
-#    enable_ipv6: "{{ hcloud.server.public_ipv6_enabled }}"
-#    delete_protection: false
-#    rebuild_protection: false#

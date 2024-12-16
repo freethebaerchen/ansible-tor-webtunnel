@@ -16,10 +16,16 @@ hcloud:
   servers:
     - name: your-bridge-nbg-0
       location: nbg1
+      image: ubuntu-24.04
+      type: cax11
     - name: your-bridge-fsn-0
       location: fsn1
+      image: ubuntu-24.04
+      type: cax11
     - name: your-bridge-hel-0
       location: hel1
+      image: ubuntu-24.04
+      type: cax11
 
 email: user@example.com
 

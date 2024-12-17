@@ -1,0 +1,66 @@
+---
+
+- name: Block for all OS-Families
+  block:
+    - name: Install nginx and certbot
+      ansible.builtin.package:
+        name: 
+          - nginx
+          - certbot
+
+    - name: Create certbot webroot
+      ansible.builtin.file:
+        path: "{{ dir.certbot }}"
+        state: directory
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+
+    - name: Remove nginx default configuration
+      ansible.builtin.file:
+        path: "{{ system.etc }}/nginx/{{ item }}/default"
+        state: absent
+      loop:
+        - sites-enabled
+        - sites-available
+
+    - name: Generate nginx (http) config
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/nginx-http.conf.j2"
+        dest: "{{ system.etc }}/nginx/sites-available/http.conf"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+      register: nginx_http
+
+    - name: Symlink http.conf to sites-enabled
+      ansible.builtin.file:
+        src: "{{ system.etc }}/nginx/sites-available/http.conf"
+        dest: "{{ system.etc }}/nginx/sites-enabled/http.conf"
+        state: link
+
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      when: nginx_http.changed
+
+    - name: Request certificate
+      ansible.builtin.shell: |
+        certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.etc }}/letsencrypt
+
+    - name: Generate nginx (https) config
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/nginx-https.conf.j2"
+        dest: "{{ system.etc }}/nginx/sites-available/https.conf"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+      vars:
+        webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
+
+    - name: Symlink https.conf to sites-enabled
+      ansible.builtin.file:
+        src: "{{ system.etc }}/nginx/sites-available/https.conf"
+        dest: "{{ system.etc }}/nginx/sites-enabled/https.conf"
+        state: link
+      notify:
+        - Start nginx
+        - Restart nginx

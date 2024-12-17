@@ -18,10 +18,5 @@
     - string
     - random-string
 
-- name: Include caddy
-  ansible.builtin.include_tasks: caddy.yaml
-  tags:
-    - caddy
-
 - name: Include webtunnel
   ansible.builtin.include_tasks: webtunnel.yaml

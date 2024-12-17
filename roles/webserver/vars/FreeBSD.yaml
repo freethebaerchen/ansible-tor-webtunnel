@@ -4,5 +4,8 @@ root:
   group: wheel
 
 caddy:
-  user: caddy
-  group: caddy
+  user: www
+  group: www
+
+system:
+  etc: /etc

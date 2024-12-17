@@ -6,3 +6,6 @@ root:
 caddy:
   user: _caddy
   group: _caddy
+
+system:
+  etc: /usr/local/etc

@@ -68,7 +68,8 @@ You need a device, that is able to run Docker.
 
 ### Other
 1. A (sub)domain per server
-2. The code for a website (per server)\
+2. ´python3.12.*` installed on the server
+3. The code for a website (per server)\
 Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [host_vars/example.yaml](host_vars/your-bridge-fsn-0.yaml).
 Set the reverse-proxy value to true and configure the domain you want to reverse proxy to as value for the reverse_proxy_url variable.
 

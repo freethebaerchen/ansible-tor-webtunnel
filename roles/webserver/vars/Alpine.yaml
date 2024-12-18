@@ -23,3 +23,4 @@ system:
   etc: /etc
   nginx:
     config_dir: http.d
+  certbot_package: certbot

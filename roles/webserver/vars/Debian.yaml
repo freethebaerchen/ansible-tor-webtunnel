@@ -21,3 +21,4 @@ system:
   etc: /etc
   nginx:
     config_dir: sites-enabled
+  certbot_package: certbot

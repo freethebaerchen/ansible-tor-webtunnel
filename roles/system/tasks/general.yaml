@@ -292,3 +292,14 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/hosts.j2"
         dest: /etc/hosts
+
+    - name: Set the hostname
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Replace hostname in /etc/hostname
+      ansible.builtin.lineinfile:
+        path: /etc/hostname
+        regexp: '^.*$'
+        line: "{{ inventory_hostname }}"
+        state: present

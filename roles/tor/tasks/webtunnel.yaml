@@ -36,6 +36,7 @@
       ansible.builtin.package:
         name:
           - deb.torproject.org-keyring
+          - tor
         state: present
 
     - name: Configure tor apparmor

@@ -26,16 +26,10 @@
     - name: Generate nginx (http) config
       ansible.builtin.template:
         src: "{{ role_path }}/templates/nginx-http.conf.j2"
-        dest: "{{ system.etc }}/nginx/sites-available/http.conf"
+        dest: "{{ system.etc }}/nginx/{{ system.nginx.config_dir }}/http.conf"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       register: nginx_http
-
-    - name: Symlink http.conf to sites-enabled
-      ansible.builtin.file:
-        src: "{{ system.etc }}/nginx/sites-available/http.conf"
-        dest: "{{ system.etc }}/nginx/sites-enabled/http.conf"
-        state: link
 
     - name: Restart nginx
       ansible.builtin.service:
@@ -50,17 +44,11 @@
     - name: Generate nginx (https) config
       ansible.builtin.template:
         src: "{{ role_path }}/templates/nginx-https.conf.j2"
-        dest: "{{ system.etc }}/nginx/sites-available/https.conf"
+        dest: "{{ system.etc }}/nginx/{{ system.nginx.config_dir }}/https.conf"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       vars:
         webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
-
-    - name: Symlink https.conf to sites-enabled
-      ansible.builtin.file:
-        src: "{{ system.etc }}/nginx/sites-available/https.conf"
-        dest: "{{ system.etc }}/nginx/sites-enabled/https.conf"
-        state: link
       notify:
         - Start nginx
         - Restart nginx

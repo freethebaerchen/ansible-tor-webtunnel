@@ -19,3 +19,5 @@ webserver:
 
 system:
   etc: /etc
+  nginx:
+    config_dir: sites-enabled

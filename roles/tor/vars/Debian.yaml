@@ -3,20 +3,6 @@ root:
   user: root
   group: sudo
 
-webserver:
-  user: >-
-    {%- if use_webserver == "caddy" -%}
-      caddy
-    {%- else -%}
-      www-data
-    {%- endif -%}
-  group: >-
-    {%- if use_webserver == "caddy" -%}
-      caddy
-    {%- else -%}
-      www-data
-    {%- endif -%}
-
 system:
   etc: /etc
   shell: /bin/bash

@@ -5,7 +5,7 @@ root:
 
 webserver:
   user: >-
-    {%- if use_webserer == "caddy" -%}
+    {%- if use_webserver == "caddy" -%}
       caddy
     {%- else -%}
       www-data

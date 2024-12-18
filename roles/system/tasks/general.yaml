@@ -303,3 +303,4 @@
         regexp: '^.*$'
         line: "{{ inventory_hostname }}"
         state: present
+      notify: Restart system

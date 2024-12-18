@@ -10,5 +10,5 @@
     msg: "Reboot initiated by Ansible for package updates"
     pre_reboot_delay: 10
     post_reboot_delay: 10
-    reboot_timeout: 45
+    reboot_timeout: 60
   when: reboot_required.stat.exists

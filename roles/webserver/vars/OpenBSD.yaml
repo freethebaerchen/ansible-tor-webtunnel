@@ -3,9 +3,22 @@ root:
   user: root
   group: wheel
 
-caddy:
-  user: _caddy
-  group: _caddy
+webserver:
+  user: >-
+    {%- if use_webserver == "caddy" -%}
+      _caddy
+    {%- else -%}
+      www
+    {%- endif -%}
+  group: >-
+    {%- if use_webserver == "caddy" -%}
+      _caddy
+    {%- else -%}
+      www
+    {%- endif -%}
 
 system:
-  etc: /usr/local/etc
+  etc: /etc
+  nginx:
+    config_dir: http.d
+  certbot_package: certbot

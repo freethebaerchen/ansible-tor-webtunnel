@@ -181,6 +181,14 @@
         job: "/usr/local/bin/unattended-upgrades"
         state: present
 
+    - name: Replace hostname in /etc/myname
+      ansible.builtin.lineinfile:
+        path: /etc/myname
+        regexp: '^.*$'
+        line: "{{ inventory_hostname }}"
+        state: present
+      notify: Restart system
+
 - name: Block for OS-Specific tasks (Suse)
   when: ansible_os_family == "Suse"
   block:
@@ -304,3 +312,4 @@
         line: "{{ inventory_hostname }}"
         state: present
       notify: Restart system
+      when: ansible_os_family != "OpenBSD"

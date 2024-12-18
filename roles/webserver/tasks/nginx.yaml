@@ -1,6 +1,6 @@
 ---
 
-- name: Install nginx and certbot
+- name: Install nginx and {{ system.certbot_package }}
   ansible.builtin.package:
     name: 
       - nginx
@@ -20,20 +20,17 @@
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
 
-- name: Include configdir in nginx.conf (FreeBSD specific)
+- name: Include configdir in nginx.conf (BSD specific)
   ansible.builtin.lineinfile:
     path: "{{ system.etc }}/nginx/nginx.conf"
     line: "    include {{ system.etc }}/nginx/{{ system.nginx.config_dir }}/*.conf;"
     insertbefore: "}"
-  when: ansible_os_family == "FreeBSD"
+  when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD"
 
 - name: Remove nginx default configuration
   ansible.builtin.file:
-    path: "{{ system.etc }}/nginx/{{ item }}/default"
+    path: "{{ system.etc }}/nginx/{{ system.nginx.config_dir }}/default"
     state: absent
-  loop:
-    - sites-enabled
-    - sites-available
 
 - name: Generate nginx (http) config
   ansible.builtin.template:
@@ -43,16 +40,28 @@
     group: "{{ root.group }}"
   register: nginx_http
 
+- name: Start nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
 - name: Restart nginx
   ansible.builtin.service:
     name: nginx
     state: restarted
-    enabled: true
   when: nginx_http.changed
 
 - name: Request certificate
   ansible.builtin.shell: |
     certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.etc }}/letsencrypt
+
+- name: Ensure nginx log directory exists
+  ansible.builtin.file:
+    path: /var/log/nginx
+    state: directory
+    owner: "{{ webserver.user }}"
+    group: "{{ webserver.group }}"
 
 - name: Generate nginx (https) config
   ansible.builtin.template:

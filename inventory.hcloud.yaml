@@ -1,7 +1,7 @@
 plugin: hetzner.hcloud.hcloud
 
 compose:
-  ansible_host: ipv6
+  ansible_host: ipv4
   inventory_hostname: name
 
 keyed_groups:

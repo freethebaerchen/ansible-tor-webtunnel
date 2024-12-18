@@ -15,6 +15,9 @@ In Hetzner there will be created, if you do not make any changes for the servers
 They are spawned in the locations, the arm instances are available.
 So one will be created in Falkenstein, one in Nuremberg and one in Helsinki.
 
+When using Hetzner Cloud, and you are installing the OS via the "ISO" option, you may need to configure the IPv6-Address by yourself.
+You can look at this [documentation for some operating systems](https://docs.hetzner.com/de/cloud/servers/static-configuration/).
+
 In the [system role](roles/system) is a [templated /etc/hosts](roles/system/templates/hosts.j2) file.
 It adds a GitHub IPv6 "proxy", because GitHub, as of now, doesnt support IPv6.
 The proxy is provided by [Daniel Winzen](https://danwin1210.de/github-ipv6-proxy.php).

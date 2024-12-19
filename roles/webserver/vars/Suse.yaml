@@ -15,9 +15,14 @@ webserver:
   group: >-
     {%- if use_webserver == "caddy" -%}
       caddy
+    {%- elif use_webserver == "nginx" -%}
+      nginx
     {%- else -%}
       www-data
     {%- endif -%}
 
 system:
   etc: /etc
+  nginx:
+    config_dir: vhosts.d
+  certbot_package: certbot

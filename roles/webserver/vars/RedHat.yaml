@@ -3,9 +3,21 @@ root:
   user: root
   group: wheel
 
-caddy:
-  user: caddy
-  group: caddy
+webserver:
+  user: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- elif use_webserver == "nginx" -%}
+      nginx
+    {%- else -%}
+      www-data
+    {%- endif -%}
+  group: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- else -%}
+      www-data
+    {%- endif -%}
 
 system:
   etc: /etc

@@ -11,6 +11,21 @@
     chdir: /tmp/webtunnel/main/server
     creates: /usr/local/bin/webtunnel
 
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - tor
+    state: present
+
+- name: Configure WebSocket Bridge (torrc)
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/torrc.j2"
+    dest: "{{ system.etc }}/tor/torrc"
+  notify: Restart tor
+  vars:
+    webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
+  register: torrc
+
 - name: Block for OS-Familiy Debian
   when: ansible_os_family == "Debian"
   block:
@@ -80,12 +95,11 @@
     - name: Ensure User=tor and LimitNOFILE=65536 under [Service]
       ansible.builtin.lineinfile:
         path: "{{ system.etc }}/systemd/system/multi-user.target.wants/tor.service"
-        regexp: '^User=|^LimitNOFILE='
         line: "{{ item }}"
         insertafter: '^\[Service\]'
       loop:
-        - 'User=tor'
         - 'LimitNOFILE=65536'
+        - 'User=tor'
       notify: Reload daemon
 
     - name: Set Limits in security/limits.conf
@@ -96,21 +110,6 @@
           tor     hard    nofile    65536
           @tor    soft    nofile    65536
           @tor    hard    nofile    65536
-
-- name: Install required packages
-  ansible.builtin.package:
-    name:
-      - tor
-    state: present
-
-- name: Configure WebSocket Bridge (torrc)
-  ansible.builtin.template:
-    src: "{{ role_path }}/templates/torrc.j2"
-    dest: "{{ system.etc }}/tor/torrc"
-  notify: Restart tor
-  vars:
-    webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
-  register: torrc
 
 - name: Start tor
   ansible.builtin.service:

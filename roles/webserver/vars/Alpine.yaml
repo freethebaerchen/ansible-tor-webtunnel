@@ -27,11 +27,8 @@ system:
   etc: /etc
   packages:
     - apache2-ctl
-    #- apache2-rewrite
     - apache2-ssl
     - apache2-proxy
-    #- apache2-proxy-http
-    #- apache2-proxy-http2
   nginx:
     config_dir: nginx/http.d
   apache:

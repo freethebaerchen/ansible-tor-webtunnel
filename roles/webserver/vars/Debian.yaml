@@ -25,13 +25,14 @@ system:
   apache:
     service_name: apache2
     config_dir: apache2/sites-enabled
+    config_file: apache2/apache.conf
     modules:
-      - rewrite
-      - ssl
-      - proxy
-      - proxy_http
-      - proxy_http2
-      - headers
+      - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+      - LoadModule ssl_module libexec/apache24/mod_ssl.so
+      - LoadModule proxy_module libexec/apache24/mod_proxy.so
+      - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
+      - LoadModule proxy_http2_module libexec/apache24/mod_proxy_http2.so
+      - LoadModule headers_module libexec/apache24/mod_headers.so
     modules_disable:
       - other-vhosts-access-log
   certbot_package: certbot

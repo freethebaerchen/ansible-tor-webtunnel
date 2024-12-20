@@ -3,7 +3,7 @@
 - name: Install apache2 and {{ system.certbot_package }}
   ansible.builtin.package:
     name: 
-      - apache2
+      - "{{ system.apache.service_name }}"
       - "{{ system.certbot_package }}"
 
 - name: Install additional packages
@@ -27,24 +27,28 @@
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
 
-- name: Enable apache modules
-  community.general.apache2_module:
-    name: "{{ item }}"
-    state: present
-  loop: "{{ system.apache.modules }}"
-
 - name: Disable apache modules
-  community.general.apache2_module:
-    name: "{{ item }}"
-    state: absent
-  loop: "{{ system.apache.modules_disable }}"
-
-- name: Enable rewrite Module
   ansible.builtin.lineinfile:
-    path: "{{ system.etc }}/apache2/httpd.conf"
-    regexp: '^#LoadModule rewrite_module modules/mod_rewrite.so'
-    line: 'LoadModule rewrite_module modules/mod_rewrite.so'
+    path: "{{ system.etc }}/{{ system.apache.config_file }}"
+    regexp: '^#{{ item }}'
+    line: '{{ item }}'
+  loop: "{{ system.apache.modules_disable }}"
   notify: Restart apache
+
+- name: Enable apache modules
+  ansible.builtin.lineinfile:
+    path: "{{ system.etc }}/{{ system.apache.config_file }}"
+    regexp: '^#{{ item }}'
+    line: '{{ item }}'
+  loop: "{{ system.apache.modules }}"
+  notify: Restart apache
+
+- name: Enable port 443 (FreeBSD-specific)
+  ansible.builtin.lineinfile:
+    path: "{{ system.etc }}/{{ system.apache.config_file }}"
+    line: "Listen 443"
+    insertafter: "Listen 80"
+  when: ansible_os_family == "FreeBSD"
 
 - name: Include configdir in apache.conf
   ansible.builtin.lineinfile:

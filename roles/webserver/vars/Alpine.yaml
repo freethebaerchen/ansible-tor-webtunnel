@@ -34,9 +34,10 @@ system:
   apache:
     service_name: apache2
     config_dir: apache2/conf.d
+    config_file: apache2/httpd.conf
     modules:
-      - ssl
-      - proxy
-      - headers
+      - LoadModule ssl_module libexec/apache24/mod_ssl.so
+      - LoadModule proxy_module libexec/apache24/mod_proxy.so
+      - LoadModule headers_module libexec/apache24/mod_headers.so
     modules_disable: []
   certbot_package: certbot

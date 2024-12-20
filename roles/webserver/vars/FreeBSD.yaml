@@ -19,6 +19,19 @@ webserver:
 
 system:
   etc: /usr/local/etc
+  packages: []
   nginx:
     config_dir: nginx/http.d
+  apache:
+    service_name: apache24
+    config_dir: apache24/Includes
+    config_file: apache24/httpd.conf
+    modules:
+      - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+      - LoadModule ssl_module libexec/apache24/mod_ssl.so
+      - LoadModule proxy_module libexec/apache24/mod_proxy.so
+      - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
+      - LoadModule proxy_http2_module libexec/apache24/mod_proxy_http2.so
+      - LoadModule headers_module libexec/apache24/mod_headers.so
+    modules_disable: []
   certbot_package: security/py-certbot

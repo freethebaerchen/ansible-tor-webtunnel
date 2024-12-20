@@ -24,5 +24,5 @@ webserver:
 system:
   etc: /etc
   nginx:
-    config_dir: conf.d
+    config_dir: nginx/conf.d
   certbot_package: certbot

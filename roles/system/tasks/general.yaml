@@ -63,6 +63,14 @@
         state: present
       when: unattended_upgrades
 
+    - name: Replace hostname in rc.conf
+      ansible.builtin.lineinfile:
+        path: /etc/rc.conf
+        regexp: '^hostname='
+        line: "hostname={{ inventory_hostname }}"
+        state: present
+      notify: Restart system
+
 - name: Block for OS-Specific tasks (Alpine)
   when: ansible_os_family == "Alpine"
   block:
@@ -301,4 +309,4 @@
         line: "{{ inventory_hostname }}"
         state: present
       notify: Restart system
-      when: ansible_os_family != "OpenBSD"
+      when: ansible_os_family != "OpenBSD" and ansible_os_family != "FreeBSD" 

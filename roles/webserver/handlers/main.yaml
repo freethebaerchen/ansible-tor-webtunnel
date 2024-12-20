@@ -23,3 +23,16 @@
     name: nginx
     state: restarted
     enabled: true
+
+- name: Start apache
+  ansible.builtin.service:
+    name: "{{ system.apache.service_name }}"
+    state: started
+    enabled: true
+  register: apache_start
+
+- name: Restart apache
+  ansible.builtin.service:
+    name: "{{ system.apache.service_name }}"
+    state: restarted
+    enabled: true

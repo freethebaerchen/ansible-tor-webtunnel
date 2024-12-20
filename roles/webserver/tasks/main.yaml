@@ -19,5 +19,9 @@
   ansible.builtin.include_tasks: nginx.yaml
   when: use_webserver == "nginx"
 
+- name: Include caddy
+  ansible.builtin.include_tasks: apache.yaml
+  when: use_webserver == "apache"
+
 - name: Include webroot
   ansible.builtin.include_tasks: webroot.yaml

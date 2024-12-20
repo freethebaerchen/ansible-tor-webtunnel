@@ -21,4 +21,16 @@ system:
   etc: /etc
   nginx:
     config_dir: nginx/sites-enabled
+  apache:
+    service_name: apache2
+    config_dir: apache2/sites-enabled
+    modules:
+      - rewrite
+      - ssl
+      - proxy
+      - proxy_http
+      - proxy_http2
+      - headers
+    modules_disable:
+      - other-vhosts-access-log
   certbot_package: certbot

@@ -6,6 +6,13 @@
       - apache2
       - "{{ system.certbot_package }}"
 
+- name: Install additional packages
+  ansible.builtin.package:
+    name:
+      - "{{ item }}"
+  when: system.packages is defined and system.packages != ""
+  loop: "{{ system.packages }}"
+
 - name: Create certbot webroot
   ansible.builtin.file:
     path: "{{ dir.certbot }}"
@@ -31,6 +38,13 @@
     name: "{{ item }}"
     state: absent
   loop: "{{ system.apache.modules_disable }}"
+
+- name: Enable rewrite Module
+  ansible.builtin.lineinfile:
+    path: "{{ system.etc }}/apache2/httpd.conf"
+    regexp: '^#LoadModule rewrite_module modules/mod_rewrite.so'
+    line: 'LoadModule rewrite_module modules/mod_rewrite.so'
+  notify: Restart apache
 
 - name: Include configdir in apache.conf
   ansible.builtin.lineinfile:

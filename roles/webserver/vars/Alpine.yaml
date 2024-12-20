@@ -9,18 +9,37 @@ webserver:
       caddy
     {%- elif use_webserver == "nginx" -%}
       nginx
+    {%- elif use_webserver == "apache" -%}
+      apache
     {%- else -%}
       www-data
     {%- endif -%}
   group: >-
     {%- if use_webserver == "caddy" -%}
       caddy
+    {%- elif use_webserver == "apache" -%}
+      apache
     {%- else -%}
       www-data
     {%- endif -%}
 
 system:
   etc: /etc
+  packages:
+    - apache2-ctl
+    #- apache2-rewrite
+    - apache2-ssl
+    - apache2-proxy
+    #- apache2-proxy-http
+    #- apache2-proxy-http2
   nginx:
     config_dir: nginx/http.d
+  apache:
+    service_name: apache2
+    config_dir: apache2/conf.d
+    modules:
+      - ssl
+      - proxy
+      - headers
+    modules_disable: []
   certbot_package: certbot

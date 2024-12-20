@@ -19,6 +19,7 @@ webserver:
 
 system:
   etc: /etc
+    packages: []
   nginx:
     config_dir: nginx/sites-enabled
   apache:

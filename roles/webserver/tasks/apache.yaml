@@ -1,16 +1,9 @@
 ---
 
-- name: Install apache2 and {{ system.certbot_package }}
+- name: Install required packages
   ansible.builtin.package:
     name: 
-      - "{{ system.apache.service_name }}"
-      - "{{ system.certbot_package }}"
-
-- name: Install additional packages
-  ansible.builtin.package:
-    name:
       - "{{ item }}"
-  when: system.packages is defined and system.packages != ""
   loop: "{{ system.packages }}"
 
 - name: Create certbot webroot
@@ -22,14 +15,14 @@
 
 - name: Ensure apache configdir exists
   ansible.builtin.file:
-    path: "{{ system.etc }}/{{ system.apache.config_dir }}"
+    path: "{{ system.apache.config_dir }}"
     state: directory
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
 
 - name: Disable apache modules
   ansible.builtin.lineinfile:
-    path: "{{ system.etc }}/{{ system.apache.config_file }}"
+    path: "{{ system.apache.config_file }}"
     regexp: '^#{{ item }}'
     line: '{{ item }}'
   loop: "{{ system.apache.modules_disable }}"
@@ -37,7 +30,7 @@
 
 - name: Enable apache modules
   ansible.builtin.lineinfile:
-    path: "{{ system.etc }}/{{ system.apache.config_file }}"
+    path: "{{ system.apache.config_file }}"
     regexp: '^#{{ item }}'
     line: '{{ item }}'
   loop: "{{ system.apache.modules }}"
@@ -45,33 +38,34 @@
 
 - name: Enable port 443 (FreeBSD-specific)
   ansible.builtin.lineinfile:
-    path: "{{ system.etc }}/{{ system.apache.config_file }}"
+    path: "{{ system.apache.config_file }}"
     line: "Listen 443"
     insertafter: "Listen 80"
-  when: ansible_os_family == "FreeBSD"
+  when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD"
 
-- name: Include configdir in apache.conf
+- name: Include configdir in apache configuration
   ansible.builtin.lineinfile:
-    path: "{{ system.etc }}/apache/apache.conf"
+    path: "{{ system.apache.config_file }}"
     line: "IncludeOptional {{ system.apache.config_dir }}/*.conf;"
   when: system.apache.config_dir == "Includes"
 
 - name: Remove apache default configuration
   ansible.builtin.file:
-    path: "{{ system.etc }}/{{ system.apache.config_dir }}/000-default.conf"
+    path: "{{ system.apache.config_dir }}/000-default.conf"
     state: absent
 
 - name: Remove apache default configuration
   ansible.builtin.file:
-    path: "{{ system.etc }}/{{ system.apache.config_dir }}/default"
+    path: "{{ system.apache.config_dir }}/default"
     state: absent
 
 - name: Generate apache (http) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/apache-http.conf.j2"
-    dest: "{{ system.etc }}/{{ system.apache.config_dir }}/http.conf"
+    dest: "{{ system.apache.config_dir }}/http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
+  
 
 - name: Start apache
   ansible.builtin.service:
@@ -88,7 +82,7 @@
 
 - name: Request certificate
   ansible.builtin.shell: |
-    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.etc }}/letsencrypt
+    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.certbot.config_dir }}
 
 - name: Ensure apache log directory exists
   ansible.builtin.file:
@@ -100,7 +94,7 @@
 - name: Generate apache (https) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/apache-https.conf.j2"
-    dest: "{{ system.etc }}/{{ system.apache.config_dir }}/https.conf"
+    dest: "{{ system.apache.config_dir }}/https.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   vars:

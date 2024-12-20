@@ -18,14 +18,15 @@ webserver:
     {%- endif -%}
 
 system:
-  etc: /etc
-    packages: []
+    packages:
+      - apache2
+      - certbot
   nginx:
     config_dir: nginx/sites-enabled
   apache:
     service_name: apache2
-    config_dir: apache2/sites-enabled
-    config_file: apache2/apache.conf
+    config_dir: /etc/apache2/sites-enabled
+    config_file: /etc/apache2/apache.conf
     modules:
       - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
       - LoadModule ssl_module libexec/apache24/mod_ssl.so
@@ -35,4 +36,5 @@ system:
       - LoadModule headers_module libexec/apache24/mod_headers.so
     modules_disable:
       - other-vhosts-access-log
-  certbot_package: certbot
+  certbot:
+    config_dir: /etc/letsencrypt

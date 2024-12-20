@@ -24,8 +24,9 @@ webserver:
     {%- endif -%}
 
 system:
-  etc: /etc
   packages:
+    - apache2
+    - certbot
     - apache2-ctl
     - apache2-ssl
     - apache2-proxy
@@ -33,11 +34,12 @@ system:
     config_dir: nginx/http.d
   apache:
     service_name: apache2
-    config_dir: apache2/conf.d
-    config_file: apache2/httpd.conf
+    config_dir: /etc/apache2/conf.d
+    config_file: /etc/apache2/httpd.conf
     modules:
       - LoadModule ssl_module libexec/apache24/mod_ssl.so
       - LoadModule proxy_module libexec/apache24/mod_proxy.so
       - LoadModule headers_module libexec/apache24/mod_headers.so
     modules_disable: []
-  certbot_package: certbot
+  certbot:
+    config_dir: /etc/letsencrypt

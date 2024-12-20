@@ -29,7 +29,6 @@
     name: "{{ system.apache.service_name }}"
     state: started
     enabled: true
-  register: apache_start
 
 - name: Restart apache
   ansible.builtin.service:

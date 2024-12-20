@@ -1,7 +1,7 @@
 ---
 root:
   user: root
-  group: sudo
+  group: root
 
 webserver:
   user: >-
@@ -18,9 +18,9 @@ webserver:
     {%- endif -%}
 
 system:
-    packages:
-      - apache2
-      - certbot
+  packages:
+    - apache2
+    - certbot
   nginx:
     config_dir: nginx/sites-enabled
   apache:

@@ -82,7 +82,7 @@
 
 - name: Request certificate
   ansible.builtin.shell: |
-    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.certbot.config_dir }}
+    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.certbot.config_dir }} --dry-run
 
 - name: Ensure apache log directory exists
   ansible.builtin.file:

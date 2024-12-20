@@ -36,4 +36,4 @@ system:
       - LoadModule headers_module libexec/apache24/mod_headers.so
     modules_disable: []
   certbot:
-    config_dir: /etc/letsencrypt
+    config_dir: /usr/local/etc/letsencrypt

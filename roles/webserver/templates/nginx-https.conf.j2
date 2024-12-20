@@ -5,8 +5,8 @@ server {
     #ssl on;
 
     # certificates generated via acme.sh
-    ssl_certificate {{ system.etc }}/letsencrypt/live/{{ domain }}/fullchain.pem;
-    ssl_certificate_key {{ system.etc }}/letsencrypt/live/{{ domain }}/privkey.pem;
+    ssl_certificate {{ system.certbot.config_dir }}/live/{{ domain }}/fullchain.pem;
+    ssl_certificate_key {{ system.certbot.config_dir }}/live/{{ domain }}/privkey.pem;
 
     ssl_session_timeout 15m;
 

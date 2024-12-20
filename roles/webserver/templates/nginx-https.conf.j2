@@ -58,8 +58,8 @@ server {
         add_header              Front-End-Https   on;
 
         proxy_redirect     off;
-        access_log  off;
-        error_log off;
+        access_log  /dev/null;
+        error_log /dev/null;
     }
 
 }

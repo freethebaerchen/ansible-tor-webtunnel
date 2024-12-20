@@ -119,6 +119,7 @@
     - name: Install OS-specific packages
       ansible.builtin.package:
         name: 
+          - epel-release
           - dnf-command(copr)
           - golang
           - dnf-automatic

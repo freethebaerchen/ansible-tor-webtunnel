@@ -30,6 +30,8 @@ system:
     - apache2-ctl
     - apache2-ssl
     - apache2-proxy
+  caddy:
+    config_dir: /etc/caddy
   nginx:
     config_dir: nginx/http.d
   apache:

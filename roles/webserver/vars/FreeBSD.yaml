@@ -4,23 +4,15 @@ root:
   group: wheel
 
 webserver:
-  user: >-
-    {%- if use_webserver == "caddy" -%}
-      caddy
-    {%- else -%}
-      www
-    {%- endif -%}
-  group: >-
-    {%- if use_webserver == "caddy" -%}
-      caddy
-    {%- else -%}
-      www
-    {%- endif -%}
+  user: www
+  group: www
 
 system:
   packages:
     - apache24
     - security/py-certbot
+  caddy:
+    config_dir: /usr/local/etc/caddy
   nginx:
     config_dir: nginx/http.d
   apache:

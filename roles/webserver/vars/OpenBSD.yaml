@@ -21,6 +21,8 @@ system:
   packages:
     - apache-httpd
     - certbot
+  caddy:
+    config_dir: /etc/caddy
   nginx:
     config_dir: nginx/http.d
   apache:

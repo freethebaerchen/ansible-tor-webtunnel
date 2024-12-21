@@ -21,6 +21,8 @@ system:
   packages:
     - apache2
     - certbot
+  caddy:
+    config_dir: /etc/caddy
   nginx:
     config_dir: nginx/sites-enabled
   apache:

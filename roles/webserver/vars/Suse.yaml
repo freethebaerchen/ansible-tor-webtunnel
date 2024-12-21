@@ -22,7 +22,8 @@ webserver:
     {%- endif -%}
 
 system:
-  etc: /etc
+  caddy:
+    config_dir: /etc/caddy
   nginx:
     config_dir: nginx/vhosts.d
   certbot_package: certbot

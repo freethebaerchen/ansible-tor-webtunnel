@@ -1,13 +1,28 @@
 ---
 
-- name: Include webroot
-  ansible.builtin.include_tasks: webroot.yaml
-
 - name: Install required packages
   ansible.builtin.package:
     name: 
       - "{{ item }}"
   loop: "{{ apache.packages }}"
+
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
+
+- name: Ensure additional directories are present
+  ansible.builtin.file:
+    path: "{{ apache.server_root }}/{{ item }}"
+    state: directory
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  loop: "{{ apache.extra_dirs }}"
+
+- name: Symlink mime types
+  ansible.builtin.file:
+    src: /etc/mime.types
+    dest: "{{ apache.server_root }}/conf/mime.types"
+    state: link
+  when: ansible_os_family == "RedHat"
 
 - name: Template apache configuration
   ansible.builtin.template:
@@ -54,7 +69,7 @@
 
 - name: Request certificate
   ansible.builtin.shell: |
-    id #certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
 
 - name: Start apache
   ansible.builtin.service:

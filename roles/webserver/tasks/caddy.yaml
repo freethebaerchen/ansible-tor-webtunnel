@@ -76,13 +76,13 @@
 
 - name: Block for all OS-Families
   block:
-    - name: Include webroot
-      ansible.builtin.include_tasks: webroot.yaml
-
     - name: Install caddy
       ansible.builtin.package:
         name: 
           - caddy
+
+    - name: Include webroot
+      ansible.builtin.include_tasks: webroot.yaml
 
     - name: Generate Caddyfile
       ansible.builtin.template:

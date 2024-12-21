@@ -38,9 +38,18 @@ apache:
   server_root: /etc/apache2
   config_dir: /etc/apache2/conf.d
   config_file: /etc/apache2/httpd.conf
+  extra_dirs: []
   modules:
+    - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
     - LoadModule ssl_module libexec/apache24/mod_ssl.so
     - LoadModule proxy_module libexec/apache24/mod_proxy.so
+    - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
     - LoadModule headers_module libexec/apache24/mod_headers.so
+    - LoadModule mpm_worker_module libexec/apache24/mod_mpm_worker.so
+    - LoadModule authz_core_module libexec/apache24/mod_authz_core.so
+    - LoadModule log_config_module libexec/apache24/mod_log_config.so
+    - LoadModule unixd_module libexec/apache24/mod_unixd.so
+    - LoadModule dir_module libexec/apache24/mod_dir.so
+    - LoadModule mime_module libexec/apache24/mod_mime.so
 certbot:
   config_dir: /etc/letsencrypt

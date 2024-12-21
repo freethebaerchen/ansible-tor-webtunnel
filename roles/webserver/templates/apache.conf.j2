@@ -12,13 +12,21 @@ User {{ webserver.user }}
 Group {{ webserver.group }}
 </IfModule>
 
+<Directory "/var/www">
+    AllowOverride None
+    Require all granted
+</Directory>
+
 DocumentRoot "{{ dir.webroot }}"
 <Directory "{{ dir.webroot }}">
     Options Indexes FollowSymLinks
     AllowOverride None
     Require all granted
-    DirectoryIndex index.html
 </Directory>
+
+<IfModule dir_module>
+    DirectoryIndex index.html
+</IfModule>
 
 ErrorLog "/dev/null"
 CustomLog "/dev/null" combined

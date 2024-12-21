@@ -1,20 +1,13 @@
 ---
 
-- name: Include webroot
-  ansible.builtin.include_tasks: webroot.yaml
-
 - name: Install nginx and {{ certbot_package }}
   ansible.builtin.package:
     name: 
       - nginx
       - "{{ certbot_package }}"
 
-- name: Create certbot webroot
-  ansible.builtin.file:
-    path: "{{ dir.certbot }}"
-    state: directory
-    owner: "{{ webserver.user }}"
-    group: "{{ webserver.group }}"
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
 
 - name: Ensure nginx configdir exists
   ansible.builtin.file:
@@ -43,6 +36,23 @@
     group: "{{ root.group }}"
   register: nginx_http
 
+- name: Check if port 80 is in use
+  wait_for:
+    port: 80
+    timeout: 1
+  register: port_check
+  ignore_errors: yes
+
+- name: Stop webserver
+  ansible.builtin.service:
+    name: "{{ apache.service_name }}"
+    state: stopped
+  when: port_check.state is defined and port_check.state == "started"
+
+- name: Request certificate
+  ansible.builtin.shell: |
+    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+
 - name: Start nginx
   ansible.builtin.service:
     name: nginx
@@ -54,10 +64,6 @@
     name: nginx
     state: restarted
   when: nginx_http.changed
-
-- name: Request certificate
-  ansible.builtin.shell: |
-    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
 
 - name: Ensure nginx log directory exists
   ansible.builtin.file:

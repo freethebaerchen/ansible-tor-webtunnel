@@ -35,6 +35,5 @@ apache:
     - LoadModule proxy_module /usr/local/lib/apache2/mod_proxy.so
     - LoadModule proxy_http_module /usr/local/lib/apache2/mod_proxy_http.so
     - LoadModule headers_module /usr/local/lib/apache2/mod_headers.so
-  modules_disable: []
 certbot:
   config_dir: /etc/letsencrypt

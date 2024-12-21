@@ -40,6 +40,5 @@ apache:
   config_file: /etc/httpd/conf/httpd.conf
   modules:
     - LoadModule ssl_module modules/mod_ssl.so
-  modules_disable: []
 certbot:
   config_dir: /etc/letsencrypt

@@ -1,5 +1,8 @@
 ---
 
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
+
 - name: Install nginx and {{ certbot_package }}
   ansible.builtin.package:
     name: 

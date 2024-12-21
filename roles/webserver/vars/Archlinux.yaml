@@ -40,6 +40,6 @@ apache:
     - LoadModule log_config_module modules/mod_log_config.so
     - LoadModule unixd_module modules/mod_unixd.so
     - LoadModule dir_module modules/mod_dir.so
-  modules_disable: []
+    - LoadModule mime_module modules/mod_mime.so
 certbot:
   config_dir: /etc/letsencrypt

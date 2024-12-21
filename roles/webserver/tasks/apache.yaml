@@ -1,17 +1,13 @@
 ---
 
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
+
 - name: Install required packages
   ansible.builtin.package:
     name: 
       - "{{ item }}"
   loop: "{{ apache.packages }}"
-
-- name: Create certbot webroot
-  ansible.builtin.file:
-    path: "{{ dir.certbot }}"
-    state: directory
-    owner: "{{ webserver.user }}"
-    group: "{{ webserver.group }}"
 
 - name: Template apache configuration
   ansible.builtin.template:
@@ -58,7 +54,7 @@
 
 - name: Request certificate
   ansible.builtin.shell: |
-    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+    id #certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
 
 - name: Start apache
   ansible.builtin.service:

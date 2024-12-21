@@ -26,6 +26,5 @@ apache:
     - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
     - LoadModule proxy_http2_module libexec/apache24/mod_proxy_http2.so
     - LoadModule headers_module libexec/apache24/mod_headers.so
-  modules_disable: []
 certbot:
   config_dir: /usr/local/etc/letsencrypt

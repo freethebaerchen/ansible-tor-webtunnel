@@ -4,7 +4,7 @@
   ansible.builtin.package:
     name: 
       - "{{ item }}"
-  loop: "{{ system.packages }}"
+  loop: "{{ apache.packages }}"
 
 - name: Create certbot webroot
   ansible.builtin.file:
@@ -13,45 +13,23 @@
     owner: "{{ webserver.user }}"
     group: "{{ webserver.group }}"
 
+- name: Template apache configuration
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/apache.conf.j2"
+    dest: "{{ apache.config_file }}"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+
 - name: Ensure apache configdir exists
   ansible.builtin.file:
-    path: "{{ system.apache.config_dir }}"
+    path: "{{ apache.config_dir }}"
     state: directory
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
 
-- name: Disable apache modules
-  ansible.builtin.lineinfile:
-    path: "{{ system.apache.config_file }}"
-    regexp: '^#{{ item }}'
-    line: '{{ item }}'
-  loop: "{{ system.apache.modules_disable }}"
-  notify: Restart apache
-
-- name: Enable apache modules
-  ansible.builtin.lineinfile:
-    path: "{{ system.apache.config_file }}"
-    regexp: '^#{{ item }}'
-    line: '{{ item }}'
-  loop: "{{ system.apache.modules }}"
-  notify: Restart apache
-
-- name: Enable port 443 (FreeBSD-specific)
-  ansible.builtin.lineinfile:
-    path: "{{ system.apache.config_file }}"
-    line: "Listen 443"
-    insertafter: "Listen 80"
-  when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD" or ansible_os_family == "RedHat"
-
-- name: Include configdir in apache configuration
-  ansible.builtin.lineinfile:
-    path: "{{ system.apache.config_file }}"
-    line: "IncludeOptional {{ system.apache.config_dir }}/*.conf;"
-  when: system.apache.config_dir == "Includes"
-
 - name: Remove apache default configuration
   ansible.builtin.file:
-    path: "{{ system.apache.config_dir }}/{{ item }}"
+    path: "{{ apache.config_dir }}/{{ item }}"
     state: absent
   loop:
     - ssl.conf
@@ -61,27 +39,39 @@
 - name: Generate apache (http) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/apache-http.conf.j2"
-    dest: "{{ system.apache.config_dir }}/http.conf"
+    dest: "{{ apache.config_dir }}/http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
-  
+
+- name: Check if port 80 is in use
+  wait_for:
+    port: 80
+    timeout: 1
+  register: port_check
+  ignore_errors: yes
+
+- name: Stop webserver
+  ansible.builtin.service:
+    name: "{{ apache.service_name }}"
+    state: stopped
+  when: port_check.state is defined and port_check.state == "started"
+
+- name: Request certificate
+  ansible.builtin.shell: |
+    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
 
 - name: Start apache
   ansible.builtin.service:
-    name: "{{ system.apache.service_name }}"
+    name: "{{ apache.service_name }}"
     state: started
     enabled: true
   register: apache_start
 
 - name: Restart apache
   ansible.builtin.service:
-    name: "{{ system.apache.service_name }}"
+    name: "{{ apache.service_name }}"
     state: restarted
   when: not apache_start.changed
-
-- name: Request certificate
-  ansible.builtin.shell: |
-    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.certbot.config_dir }}
 
 - name: Ensure apache log directory exists
   ansible.builtin.file:
@@ -93,7 +83,7 @@
 - name: Generate apache (https) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/apache-https.conf.j2"
-    dest: "{{ system.apache.config_dir }}/https.conf"
+    dest: "{{ apache.config_dir }}/https.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   vars:

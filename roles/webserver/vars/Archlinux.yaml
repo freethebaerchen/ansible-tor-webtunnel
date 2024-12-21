@@ -1,16 +1,14 @@
 ---
 root:
   user: root
-  group: wheel
+  group: root
 
 webserver:
   user: >-
     {%- if use_webserver == "caddy" -%}
       caddy
-    {%- elif use_webserver == "nginx" -%}
-      http
     {%- else -%}
-      www-data
+      http
     {%- endif -%}
   group: >-
     {%- if use_webserver == "caddy" -%}
@@ -19,10 +17,29 @@ webserver:
       http
     {%- endif -%}
 
-system:
-  etc: /etc
-  caddy:
-    config_dir: /etc/caddy
-  nginx:
-    config_dir: nginx/http.d
-  certbot_package: certbot
+caddy:
+  config_dir: /etc/caddy
+nginx:
+  config_dir: /etc/nginx/http.d
+apache:
+  packages:
+    - apache
+    - certbot
+  service_name: httpd
+  server_root: /etc/httpd
+  config_dir: /etc/httpd/conf/Includes
+  config_file: /etc/httpd/conf/httpd.conf
+  modules:
+    - LoadModule rewrite_module modules/mod_rewrite.so
+    - LoadModule ssl_module modules/mod_ssl.so
+    - LoadModule proxy_module modules/mod_proxy.so
+    - LoadModule proxy_http_module modules/mod_proxy_http.so
+    - LoadModule headers_module modules/mod_headers.so
+    - LoadModule mpm_worker_module modules/mod_mpm_worker.so
+    - LoadModule authz_core_module modules/mod_authz_core.so
+    - LoadModule log_config_module modules/mod_log_config.so
+    - LoadModule unixd_module modules/mod_unixd.so
+    - LoadModule dir_module modules/mod_dir.so
+  modules_disable: []
+certbot:
+  config_dir: /etc/letsencrypt

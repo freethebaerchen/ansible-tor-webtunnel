@@ -23,25 +23,25 @@ webserver:
       www-data
     {%- endif -%}
 
-system:
+caddy:
+  config_dir: /etc/caddy
+nginx:
+  config_dir: /etc/nginx/http.d
+apache:
   packages:
     - apache2
     - certbot
     - apache2-ctl
     - apache2-ssl
     - apache2-proxy
-  caddy:
-    config_dir: /etc/caddy
-  nginx:
-    config_dir: nginx/http.d
-  apache:
-    service_name: apache2
-    config_dir: /etc/apache2/conf.d
-    config_file: /etc/apache2/httpd.conf
-    modules:
-      - LoadModule ssl_module libexec/apache24/mod_ssl.so
-      - LoadModule proxy_module libexec/apache24/mod_proxy.so
-      - LoadModule headers_module libexec/apache24/mod_headers.so
-    modules_disable: []
-  certbot:
-    config_dir: /etc/letsencrypt
+  service_name: apache2
+  server_root: /etc/apache2
+  config_dir: /etc/apache2/conf.d
+  config_file: /etc/apache2/httpd.conf
+  modules:
+    - LoadModule ssl_module libexec/apache24/mod_ssl.so
+    - LoadModule proxy_module libexec/apache24/mod_proxy.so
+    - LoadModule headers_module libexec/apache24/mod_headers.so
+  modules_disable: []
+certbot:
+  config_dir: /etc/letsencrypt

@@ -3,7 +3,8 @@
 
     RewriteEngine On
 
-    RewriteRule ^/\.well-known/ - [L]
+    RewriteRule ^/\.well-known/ /var/www/certbot/$1 [L]
 
-    RewriteRule (.*) https://%{SERVER_NAME}$1 [R=301,E,QSA]
+    RewriteCond %{REQUEST_URI} !^/\.well-known/
+    RewriteRule ^(.*)$ https://%{SERVER_NAME}/$1 [R=301,L,QSA]
 </VirtualHost>

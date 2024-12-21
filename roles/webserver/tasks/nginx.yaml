@@ -1,10 +1,10 @@
 ---
 
-- name: Install nginx and {{ system.certbot_package }}
+- name: Install nginx and {{ certbot_package }}
   ansible.builtin.package:
     name: 
       - nginx
-      - "{{ system.certbot_package }}"
+      - "{{ certbot_package }}"
 
 - name: Create certbot webroot
   ansible.builtin.file:
@@ -15,27 +15,27 @@
 
 - name: Ensure nginx configdir exists
   ansible.builtin.file:
-    path: "{{ system.etc }}/{{ system.nginx.config_dir }}"
+    path: "{{ nginx.config_dir }}"
     state: directory
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
 
 - name: Include configdir in nginx.conf
   ansible.builtin.lineinfile:
-    path: "{{ system.etc }}/nginx/nginx.conf"
-    line: "    include {{ system.etc }}/{{ system.nginx.config_dir }}/*.conf;"
+    path: "nginx/nginx.conf"
+    line: "    include {{ nginx.config_dir }}/*.conf;"
     insertbefore: "}"
-  when: system.nginx.config_dir == "http.d"
+  when: nginx.config_dir == "http.d"
 
 - name: Remove nginx default configuration
   ansible.builtin.file:
-    path: "{{ system.etc }}/{{ system.nginx.config_dir }}/default"
+    path: "{{ nginx.config_dir }}/default"
     state: absent
 
 - name: Generate nginx (http) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/nginx-http.conf.j2"
-    dest: "{{ system.etc }}/{{ system.nginx.config_dir }}/http.conf"
+    dest: "{{ nginx.config_dir }}/http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   register: nginx_http
@@ -54,7 +54,7 @@
 
 - name: Request certificate
   ansible.builtin.shell: |
-    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.etc }}/letsencrypt
+    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
 
 - name: Ensure nginx log directory exists
   ansible.builtin.file:
@@ -66,7 +66,7 @@
 - name: Generate nginx (https) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/nginx-https.conf.j2"
-    dest: "{{ system.etc }}/{{ system.nginx.config_dir }}/https.conf"
+    dest: "{{ nginx.config_dir }}/https.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   vars:

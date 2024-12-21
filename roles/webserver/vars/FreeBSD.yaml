@@ -7,25 +7,25 @@ webserver:
   user: www
   group: www
 
-system:
+caddy:
+  config_dir: /usr/local/etc/caddy
+nginx:
+  config_dir: /usr/local/etc/nginx/http.d
+apache:
   packages:
     - apache24
     - security/py-certbot
-  caddy:
-    config_dir: /usr/local/etc/caddy
-  nginx:
-    config_dir: nginx/http.d
-  apache:
-    service_name: apache24
-    config_dir: /usr/local/etc/apache24/Includes
-    config_file: /usr/local/etc/apache24/httpd.conf
-    modules:
-      - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
-      - LoadModule ssl_module libexec/apache24/mod_ssl.so
-      - LoadModule proxy_module libexec/apache24/mod_proxy.so
-      - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
-      - LoadModule proxy_http2_module libexec/apache24/mod_proxy_http2.so
-      - LoadModule headers_module libexec/apache24/mod_headers.so
-    modules_disable: []
-  certbot:
-    config_dir: /usr/local/etc/letsencrypt
+  service_name: apache24
+  server_root: /usr/local/etc/apache24
+  config_dir: /usr/local/etc/apache24/Includes
+  config_file: /usr/local/etc/apache24/httpd.conf
+  modules:
+    - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+    - LoadModule ssl_module libexec/apache24/mod_ssl.so
+    - LoadModule proxy_module libexec/apache24/mod_proxy.so
+    - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
+    - LoadModule proxy_http2_module libexec/apache24/mod_proxy_http2.so
+    - LoadModule headers_module libexec/apache24/mod_headers.so
+  modules_disable: []
+certbot:
+  config_dir: /usr/local/etc/letsencrypt

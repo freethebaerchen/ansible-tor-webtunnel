@@ -25,21 +25,21 @@ webserver:
       www-data
     {%- endif -%}
 
-system:
+caddy:
+  config_dir: /etc/caddy
+nginx:
+  config_dir: /etc/nginx/conf.d
+apache:
   packages:
     - httpd
     - certbot
     - mod_ssl
-  caddy:
-    config_dir: /etc/caddy
-  nginx:
-    config_dir: nginx/conf.d
-  apache:
-    service_name: httpd
-    config_dir: /etc/httpd/conf.d
-    config_file: /etc/httpd/conf/httpd.conf
-    modules:
-      - LoadModule ssl_module modules/mod_ssl.so
-    modules_disable: []
-  certbot:
-    config_dir: /etc/letsencrypt
+  service_name: httpd
+  server_root: /etc/httpd
+  config_dir: /etc/httpd/conf.d
+  config_file: /etc/httpd/conf/httpd.conf
+  modules:
+    - LoadModule ssl_module modules/mod_ssl.so
+  modules_disable: []
+certbot:
+  config_dir: /etc/letsencrypt

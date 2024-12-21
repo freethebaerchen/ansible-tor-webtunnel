@@ -17,26 +17,26 @@ webserver:
       www-data
     {%- endif -%}
 
-system:
+caddy:
+  config_dir: /etc/caddy
+nginx:
+  config_dir: /etc/nginx/sites-enabled
+apache:
   packages:
     - apache2
     - certbot
-  caddy:
-    config_dir: /etc/caddy
-  nginx:
-    config_dir: nginx/sites-enabled
-  apache:
-    service_name: apache2
-    config_dir: /etc/apache2/sites-enabled
-    config_file: /etc/apache2/apache.conf
-    modules:
-      - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
-      - LoadModule ssl_module libexec/apache24/mod_ssl.so
-      - LoadModule proxy_module libexec/apache24/mod_proxy.so
-      - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
-      - LoadModule proxy_http2_module libexec/apache24/mod_proxy_http2.so
-      - LoadModule headers_module libexec/apache24/mod_headers.so
-    modules_disable:
-      - other-vhosts-access-log
-  certbot:
-    config_dir: /etc/letsencrypt
+  service_name: apache2
+  server_root: /etc/apache2
+  config_dir: /etc/apache2/sites-enabled
+  config_file: /etc/apache2/apache.conf
+  modules:
+    - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+    - LoadModule ssl_module libexec/apache24/mod_ssl.so
+    - LoadModule proxy_module libexec/apache24/mod_proxy.so
+    - LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
+    - LoadModule proxy_http2_module libexec/apache24/mod_proxy_http2.so
+    - LoadModule headers_module libexec/apache24/mod_headers.so
+  modules_disable:
+    - other-vhosts-access-log
+certbot:
+  config_dir: /etc/letsencrypt

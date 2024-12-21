@@ -26,12 +26,12 @@
 
 - name: Start apache
   ansible.builtin.service:
-    name: "{{ system.apache.service_name }}"
+    name: "{{ apache.service_name }}"
     state: started
     enabled: true
 
 - name: Restart apache
   ansible.builtin.service:
-    name: "{{ system.apache.service_name }}"
+    name: "{{ apache.service_name }}"
     state: restarted
     enabled: true

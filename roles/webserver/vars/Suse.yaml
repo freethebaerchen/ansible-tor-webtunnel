@@ -21,9 +21,11 @@ webserver:
       www-data
     {%- endif -%}
 
-system:
-  caddy:
-    config_dir: /etc/caddy
-  nginx:
-    config_dir: nginx/vhosts.d
-  certbot_package: certbot
+caddy:
+  config_dir: /etc/caddy
+nginx:
+  config_dir: /etc/nginx/vhosts.d
+apache:
+  packages:
+    - apache2
+    - certbot

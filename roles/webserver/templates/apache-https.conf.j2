@@ -5,8 +5,8 @@
 
     SSLEngine on
 
-    SSLCertificateFile {{ system.certbot.config_dir }}/live/{{ domain }}/fullchain.pem
-    SSLCertificateKeyFile {{ system.certbot.config_dir }}/live/{{ domain }}/privkey.pem
+    SSLCertificateFile {{ certbot.config_dir }}/live/{{ domain }}/fullchain.pem
+    SSLCertificateKeyFile {{ certbot.config_dir }}/live/{{ domain }}/privkey.pem
 
     DocumentRoot /var/www/html
 

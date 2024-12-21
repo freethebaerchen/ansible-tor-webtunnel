@@ -92,9 +92,9 @@
 - name: Block for OS-Family Archlinux
   when: ansible_os_family == "Archlinux"
   block:
-    - name: Ensure User=tor and LimitNOFILE=65536 under [Service]
+    - name: Ensure User=tor and LimitNOFILE=65536 in systemd service
       ansible.builtin.lineinfile:
-        path: "{{ system.etc }}/systemd/system/multi-user.target.wants/tor.service"
+        path: "/usr/lib/systemd/system/tor.service"
         line: "{{ item }}"
         insertafter: '^\[Service\]'
       loop:

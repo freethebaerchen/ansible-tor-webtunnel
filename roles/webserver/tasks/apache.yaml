@@ -41,7 +41,7 @@
     path: "{{ system.apache.config_file }}"
     line: "Listen 443"
     insertafter: "Listen 80"
-  when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD"
+  when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD" or ansible_os_family == "RedHat"
 
 - name: Include configdir in apache configuration
   ansible.builtin.lineinfile:
@@ -51,13 +51,12 @@
 
 - name: Remove apache default configuration
   ansible.builtin.file:
-    path: "{{ system.apache.config_dir }}/000-default.conf"
+    path: "{{ system.apache.config_dir }}/{{ item }}"
     state: absent
-
-- name: Remove apache default configuration
-  ansible.builtin.file:
-    path: "{{ system.apache.config_dir }}/default"
-    state: absent
+  loop:
+    - ssl.conf
+    - 000-default.conf
+    - default
 
 - name: Generate apache (http) config
   ansible.builtin.template:
@@ -82,7 +81,7 @@
 
 - name: Request certificate
   ansible.builtin.shell: |
-    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.certbot.config_dir }} --dry-run
+    certbot certonly --webroot -w /var/www/certbot --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ system.certbot.config_dir }}
 
 - name: Ensure apache log directory exists
   ansible.builtin.file:

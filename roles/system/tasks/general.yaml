@@ -124,10 +124,15 @@
         state: present
         key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9
 
-    - name: Install OS-specific packages
+    - name: Install epel-release
       ansible.builtin.package:
         name: 
           - epel-release
+        state: present
+
+    - name: Install OS-specific packages
+      ansible.builtin.package:
+        name: 
           - dnf-command(copr)
           - golang
           - dnf-automatic

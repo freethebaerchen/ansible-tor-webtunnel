@@ -11,3 +11,4 @@ roles/tor/files/*
 !roles/tor/files/.gitkeep
 roles/system/files/*
 !roles/system/files/*-unattended-upgrades
+connection-strings.txt

@@ -33,3 +33,4 @@ deploy_webroot: false
 
 tor:
   nickname: somenickname
+  test: false

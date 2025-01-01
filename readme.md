@@ -2,7 +2,7 @@
 [Official Documentation of the Tor-Project](https://community.torproject.org/relay/setup/webtunnel/)
 
 ## Consideration
-Please consider not hosting you bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) reccomends, to use another hoster for bridges/relays.
+Please consider not hosting you bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) recommends, to use another hoster for bridges/relays.
 If you are not able to provide other VMs or servers you can still host the relays in Hetzner Cloud, since it is better to host there, than to not contibute to the Tor project.
 
 If you have servers at another provider or want to create servers there and follow [these instructions](non-hetzner-servers).
@@ -38,9 +38,9 @@ This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-base
 #### Alpine
 You either need to allow root login and specify the `ansible_user root` OR you need to install sudo before running the playbook.
 #### OpenSUSE
-You need to install `python312` and make the binary-file (`/usr/bin/python3`) link to `/usr/bin/python3.12`
+You need to install `python312`.
 #### OpenBSD (at least in Hetzner Cloud)
-You need to install the python(3) package with `pkg_add -r python`
+You need to install the `python` package.
 
 ## Prerequisites
 ### Network connection
@@ -97,7 +97,7 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 2. After that, the HCloud infrastructure is created\
     2.1 Now the DNS-Record(s) need to be set.\
     2.2 Set an AAAA-Record with the IPv6-Address of the server\
-    2.3 Set an A-Record with the IPv4-Address of the server (if you enbaled it)
+    2.3 Set an A-Record with the IPv4-Address of the server
 3. Run the script a second time.\
 
 Now the Tor WebTunnel Bridge is created.\
@@ -111,8 +111,8 @@ You can check the status of your bridge relay at https://bridges.torproject.org/
 ```
 
 The link in the last line will not show a status until you ran the relay for some time.
-Please don't stress. Some status will show up.
+Please don't stress. Some status will soon show up.
 
 ## Additional information
+### Hetzner specdific
 If you add more servers, you need to copy and paste one of the servers in the [group_vars](group_vars/all-example.yaml).
-Change the variables to your fit and count the id one up.

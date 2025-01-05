@@ -132,7 +132,7 @@
 
 - name: Write connection strings to a file
   ansible.builtin.lineinfile:
-    path: "{{ playbook_path }}/connection-strings.txt"
-    line: "{{ item }}"
+    path: "{{ role_path }}/../../connection-strings.txt"
+    line: "{{ item }} #{{ inventory_hostname }}"
   with_items: "{{ connection_string.stdout_lines }}"
   delegate_to: localhost

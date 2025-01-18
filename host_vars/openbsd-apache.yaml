@@ -1,5 +1,5 @@
 domain: openbsd.apache.jokester.cloud
-id: "openbsd.apache"
+id: "openbsdapache"
 reverse_proxy: false
 deploy_webroot: true
 webserver: apache

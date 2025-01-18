@@ -1,5 +1,5 @@
 domain: openbsd.caddy.jokester.cloud
-id: "openbsd.caddy"
+id: "openbsdcaddy"
 reverse_proxy: false
 deploy_webroot: true
 webserver: caddy

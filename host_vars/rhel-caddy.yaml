@@ -1,5 +1,5 @@
 domain: rhel.caddy.jokester.cloud
-id: "rhel.caddy"
+id: "rhelcaddy"
 reverse_proxy: false
 deploy_webroot: true
 webserver: caddy

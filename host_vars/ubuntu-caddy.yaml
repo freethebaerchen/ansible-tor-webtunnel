@@ -1,5 +1,5 @@
 domain: ubuntu.caddy.jokester.cloud
-id: "ubuntu.caddy"
+id: "ubuntucaddy"
 reverse_proxy: false
 deploy_webroot: true
 webserver: caddy

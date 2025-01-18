@@ -1,5 +1,5 @@
 domain: archlinux.apache.jokester.cloud
-id: "archlinux.apache"
+id: "archlinuxapache"
 reverse_proxy: false
 deploy_webroot: true
 webserver: apache

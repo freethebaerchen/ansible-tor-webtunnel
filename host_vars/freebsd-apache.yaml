@@ -1,5 +1,5 @@
 domain: freebsd.apache.jokester.cloud
-id: "freebsd.apache"
+id: "freebsdapache"
 reverse_proxy: false
 deploy_webroot: true
 webserver: apache

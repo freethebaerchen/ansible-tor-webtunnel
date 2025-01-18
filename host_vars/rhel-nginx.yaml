@@ -1,5 +1,5 @@
 domain: rhel.nginx.jokester.cloud
-id: "rhel.nginx"
+id: "rhelnginx"
 reverse_proxy: false
 deploy_webroot: true
 webserver: nginx

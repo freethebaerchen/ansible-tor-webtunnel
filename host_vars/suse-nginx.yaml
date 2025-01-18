@@ -1,5 +1,5 @@
 domain: suse.nginx.jokester.cloud
-id: "suse.nginx"
+id: "susenginx"
 reverse_proxy: false
 deploy_webroot: true
 webserver: nginx

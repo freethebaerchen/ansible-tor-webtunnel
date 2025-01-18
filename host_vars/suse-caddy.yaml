@@ -1,5 +1,5 @@
 domain: suse.caddy.jokester.cloud
-id: "suse.caddy"
+id: "susecaddy"
 reverse_proxy: false
 deploy_webroot: true
 webserver: caddy

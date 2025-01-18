@@ -1,5 +1,5 @@
 domain: suse.apache.jokester.cloud
-id: "suse.apache"
+id: "suseapache"
 reverse_proxy: false
 deploy_webroot: true
 webserver: apache

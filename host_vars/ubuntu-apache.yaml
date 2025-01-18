@@ -1,5 +1,5 @@
 domain: ubuntu.apache.jokester.cloud
-id: "ubuntu.apache"
+id: "ubuntuapache"
 reverse_proxy: false
 deploy_webroot: true
 webserver: apache

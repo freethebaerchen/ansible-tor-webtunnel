@@ -1,5 +1,5 @@
 domain: alpine.apache.jokester.cloud
-id: "alpine.apache"
+id: "alpineapache"
 reverse_proxy: false
 deploy_webroot: true
 webserver: apache

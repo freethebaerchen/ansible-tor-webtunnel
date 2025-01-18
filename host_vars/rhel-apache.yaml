@@ -1,5 +1,5 @@
 domain: rhel.apache.jokester.cloud
-id: "rhel.apache"
+id: "rhelapache"
 reverse_proxy: false
 deploy_webroot: true
 webserver: apache

@@ -1,5 +1,5 @@
 domain: freebsd.caddy.jokester.cloud
-id: "freebsd.caddy"
+id: "freebsdcaddy"
 reverse_proxy: false
 deploy_webroot: true
 webserver: caddy

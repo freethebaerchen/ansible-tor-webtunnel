@@ -1,5 +1,5 @@
 domain: openbsd.nginx.jokester.cloud
-id: "openbsd.nginx"
+id: "openbsdnginx"
 reverse_proxy: false
 deploy_webroot: true
 webserver: nginx

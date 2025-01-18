@@ -40,5 +40,5 @@ jobs:
       - name: Destroy ubuntu servers
         run: |
           chmod +x ansible-playbook.sh
-          ./ansible-playbook.sh actions-playbook.yaml --tags=destroy-server -e "os=ubuntu"
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
         if: success()

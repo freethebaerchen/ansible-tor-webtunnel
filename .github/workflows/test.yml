@@ -1,0 +1,44 @@
+name: Test Ansible Playbook by Server
+
+on:
+  push:
+    branches:
+      - '**'
+    branches-ignore:
+      - main
+
+jobs:
+  setup-ubuntu:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create ubuntu servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
+
+      - name: Run Ansible Playbook Test for Ubuntu
+        run: |
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh playbook.yaml --limit=ubuntu -i actions-inventory.ini
+
+  test-ubuntu:
+    needs: 
+      - setup-ubuntu
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Test connections
+        run: |
+          chmod +x test-connection.sh
+          ./test-connection.sh
+
+      - name: Destroy ubuntu servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=destroy-server -e "os=ubuntu"
+        if: success()

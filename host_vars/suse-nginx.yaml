@@ -2,7 +2,7 @@ domain: suse.nginx.jokester.cloud
 id: "susenginx"
 reverse_proxy: false
 deploy_webroot: true
-webserver: nginx
+use_webserver: nginx
 tor:
   nickname:
   test: true

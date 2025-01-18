@@ -2,7 +2,7 @@ domain: openbsd.apache.jokester.cloud
 id: "openbsdapache"
 reverse_proxy: false
 deploy_webroot: true
-webserver: apache
+use_webserver: apache
 tor:
   nickname:
   test: true

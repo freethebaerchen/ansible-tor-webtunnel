@@ -2,7 +2,7 @@ domain: ubuntu.nginx.jokester.cloud
 id: "ubuntunginx"
 reverse_proxy: false
 deploy_webroot: true
-webserver: nginx
+use_webserver: nginx
 tor:
   nickname:
   test: true

@@ -2,7 +2,7 @@ domain: ubuntu.caddy.jokester.cloud
 id: "ubuntucaddy"
 reverse_proxy: false
 deploy_webroot: true
-webserver: caddy
+use_webserver: caddy
 tor:
   nickname:
   test: true

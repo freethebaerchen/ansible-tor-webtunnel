@@ -1,0 +1,7 @@
+domain: archlinux.nginx.jokester.cloud
+id: "archlinux.nginx"
+reverse_proxy: false
+deploy_webroot: true
+webserver: nginx
+tor:
+  test: true

@@ -1,0 +1,7 @@
+domain: freebsd.caddy.jokester.cloud
+id: "freebsd.caddy"
+reverse_proxy: false
+deploy_webroot: true
+webserver: caddy
+tor:
+  test: true

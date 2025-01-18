@@ -1,0 +1,7 @@
+domain: rhel.apache.jokester.cloud
+id: "rhel.apache"
+reverse_proxy: false
+deploy_webroot: true
+webserver: apache
+tor:
+  test: true

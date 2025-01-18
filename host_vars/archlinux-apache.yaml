@@ -1,0 +1,7 @@
+domain: archlinux.apache.jokester.cloud
+id: "archlinux.apache"
+reverse_proxy: false
+deploy_webroot: true
+webserver: apache
+tor:
+  test: true

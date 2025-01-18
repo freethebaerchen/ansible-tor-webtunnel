@@ -1,0 +1,17 @@
+---
+
+- name: Setup test server
+  hosts: bhyve-host
+  become: true
+  tags:
+    - create-server
+  roles:
+    - role: bhyve
+
+- name: Delete test server
+  hosts: bhyve-host
+  become: true
+  tags:
+    - delete-server
+  roles:
+    - role: bhyve

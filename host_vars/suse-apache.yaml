@@ -1,0 +1,7 @@
+domain: suse.apache.jokester.cloud
+id: "suse.apache"
+reverse_proxy: false
+deploy_webroot: true
+webserver: apache
+tor:
+  test: true

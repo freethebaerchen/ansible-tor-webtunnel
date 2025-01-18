@@ -1,0 +1,7 @@
+domain: freebsd.apache.jokester.cloud
+id: "freebsd.apache"
+reverse_proxy: false
+deploy_webroot: true
+webserver: apache
+tor:
+  test: true

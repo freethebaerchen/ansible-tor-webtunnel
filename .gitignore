@@ -7,6 +7,9 @@ roles/hetzner/files/*
 inventory.ini
 host_vars/*
 !host_vars/your-bridge-*-0.yaml
+!host_vars/*-caddy.yaml
+!host_vars/*-nginx.yaml
+!host_vars/*-apache.yaml
 roles/tor/files/*
 !roles/tor/files/.gitkeep
 roles/system/files/*

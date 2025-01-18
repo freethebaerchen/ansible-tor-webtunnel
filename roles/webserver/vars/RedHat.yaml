@@ -1,0 +1,47 @@
+---
+root:
+  user: root
+  group: root
+
+webserver:
+  user: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- elif use_webserver == "nginx" -%}
+      nginx
+    {%- elif use_webserver == "apache" -%}
+      apache
+    {%- else -%}
+      www-data
+    {%- endif -%}
+  group: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- elif use_webserver == "nginx" -%}
+      nginx
+    {%- elif use_webserver == "apache" -%}
+      apache
+    {%- else -%}
+      www-data
+    {%- endif -%}
+
+caddy:
+  config_dir: /etc/caddy
+nginx:
+  config_dir: /etc/nginx/conf.d
+apache:
+  packages:
+    - httpd
+    - certbot
+    - mod_ssl
+  service_name: httpd
+  server_root: /etc/httpd
+  config_dir: /etc/httpd/conf/Includes
+  config_file: /etc/httpd/conf/httpd.conf
+  extra_dirs:
+    - run
+    - conf
+  modules:
+    - Include conf.modules.d/*.conf
+certbot:
+  config_dir: /etc/letsencrypt

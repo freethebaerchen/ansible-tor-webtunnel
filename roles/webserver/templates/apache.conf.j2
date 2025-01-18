@@ -1,0 +1,34 @@
+ServerRoot "{{ apache.server_root }}"
+
+Listen 80
+Listen 443
+
+{% for module in apache.modules %}
+{{ module }}
+{% endfor %}
+
+<IfModule unixd_module>
+User {{ webserver.user }}
+Group {{ webserver.group }}
+</IfModule>
+
+<Directory "/var/www">
+    AllowOverride None
+    Require all granted
+</Directory>
+
+DocumentRoot "{{ dir.webroot }}"
+<Directory "{{ dir.webroot }}">
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
+
+<IfModule dir_module>
+    DirectoryIndex index.html
+</IfModule>
+
+ErrorLog "/dev/null"
+CustomLog "/dev/null" combined
+
+IncludeOptional {{ apache.config_dir }}/*.conf

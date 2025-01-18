@@ -1,11 +1,7 @@
 ---
 root:
   user: root
-  group: sudo
-
-caddy:
-  user: caddy
-  group: caddy
+  group: root
 
 system:
   etc: /etc

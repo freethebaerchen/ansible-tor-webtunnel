@@ -1,0 +1,24 @@
+---
+
+- name: Load OS-specific vars
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_distribution }}.yaml'
+        - '{{ ansible_os_family }}.yaml'
+        - main.yaml
+      paths:
+        - '{{ role_path }}/vars'
+
+- name: Include caddy
+  ansible.builtin.include_tasks: caddy.yaml
+  when: use_webserver == "caddy"
+
+- name: Include nginx
+  ansible.builtin.include_tasks: nginx.yaml
+  when: use_webserver == "nginx"
+
+- name: Include caddy
+  ansible.builtin.include_tasks: apache.yaml
+  when: use_webserver == "apache"

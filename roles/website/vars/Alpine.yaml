@@ -1,8 +1,0 @@
----
-root:
-  user: root
-  group: wheel
-
-caddy:
-  user: caddy
-  group: caddy

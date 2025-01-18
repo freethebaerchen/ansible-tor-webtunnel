@@ -1,0 +1,50 @@
+<VirtualHost *:443>
+    ServerName {{ domain }}
+
+    Protocols http/1.1 h2
+
+    SSLEngine on
+
+    SSLCertificateFile {{ certbot.config_dir }}/live/{{ domain }}/fullchain.pem
+    SSLCertificateKeyFile {{ certbot.config_dir }}/live/{{ domain }}/privkey.pem
+
+    DocumentRoot /var/www/html
+
+    <Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    SSLProtocol TLSv1.2 TLSv1.3
+    SSLSessionCacheTimeout 900
+
+    SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+
+    ProxyPreserveHost On
+    ProxyRequests off
+
+    Header always set Strict-Transport-Security "max-age=63072000"
+
+    <Location /{{ webtunnel_path }}>
+        # This lets Apache set the "X-Forwarded-For", "X-Forwarded-Host" and
+        # "X-Forwarded-Server" HTTP headers automatically if enabled (Default is 'On').
+        # "X-Forwarded-For" is set manually below to avoid the other two
+        # headers provided by this directive that we don't need.
+        ProxyAddHeaders Off
+
+        # Set Proxy headers
+        RequestHeader unset Accept-Encoding
+        RequestHeader set X-Real-IP         "%{REMOTE_ADDR}s"
+        RequestHeader set X-Forwarded-For   "%{REMOTE_ADDR}s"
+        RequestHeader set X-Forwarded-Proto "%{REQUEST_SCHEME}s"
+        Header        set Front-End-Https   on
+
+        ProxyPass "ws://127.0.0.1:15000/%{REQUEST_URI}s"
+        ProxyPassReverse "ws://127.0.0.1:15000%{REQUEST_URI}s"
+    </Location>
+
+    CustomLog /dev/null combined
+    ErrorLog /dev/null
+
+</VirtualHost>

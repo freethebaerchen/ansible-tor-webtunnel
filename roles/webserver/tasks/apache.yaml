@@ -1,0 +1,104 @@
+---
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: 
+      - "{{ item }}"
+  loop: "{{ apache.packages }}"
+
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
+
+- name: Ensure additional directories are present
+  ansible.builtin.file:
+    path: "{{ apache.server_root }}/{{ item }}"
+    state: directory
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  loop: "{{ apache.extra_dirs }}"
+
+- name: Symlink mime types
+  ansible.builtin.file:
+    src: /etc/mime.types
+    dest: "{{ apache.server_root }}/conf/mime.types"
+    state: link
+  when: ansible_os_family == "RedHat"
+
+- name: Template apache configuration
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/apache.conf.j2"
+    dest: "{{ apache.config_file }}"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+
+- name: Ensure apache configdir exists
+  ansible.builtin.file:
+    path: "{{ apache.config_dir }}"
+    state: directory
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+
+- name: Remove apache default configuration
+  ansible.builtin.file:
+    path: "{{ apache.config_dir }}/{{ item }}"
+    state: absent
+  loop:
+    - ssl.conf
+    - 000-default.conf
+    - default
+
+- name: Generate apache (http) config
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/apache-http.conf.j2"
+    dest: "{{ apache.config_dir }}/http.conf"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+
+- name: Check if port 80 is in use
+  wait_for:
+    port: 80
+    timeout: 1
+  register: port_check
+  ignore_errors: yes
+
+- name: Stop webserver
+  ansible.builtin.service:
+    name: "{{ apache.service_name }}"
+    state: stopped
+  when: port_check.state is defined and port_check.state == "started"
+
+- name: Request certificate
+  ansible.builtin.shell: |
+    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+
+- name: Start apache
+  ansible.builtin.service:
+    name: "{{ apache.service_name }}"
+    state: started
+    enabled: true
+  register: apache_start
+
+- name: Restart apache
+  ansible.builtin.service:
+    name: "{{ apache.service_name }}"
+    state: restarted
+  when: not apache_start.changed
+
+- name: Ensure apache log directory exists
+  ansible.builtin.file:
+    path: /var/log/apache
+    state: directory
+    owner: "{{ webserver.user }}"
+    group: "{{ webserver.group }}"
+
+- name: Generate apache (https) config
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/apache-https.conf.j2"
+    dest: "{{ apache.config_dir }}/https.conf"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  vars:
+    webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
+  notify:
+    - Start apache
+    - Restart apache

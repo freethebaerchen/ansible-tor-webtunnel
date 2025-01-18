@@ -30,6 +30,9 @@ hcloud:
 email: user@example.com
 
 deploy_webroot: false
+use_webserver: caddy #possible values are nginx and apache
+website:
+  no_index: true
 
 tor:
   nickname: somenickname

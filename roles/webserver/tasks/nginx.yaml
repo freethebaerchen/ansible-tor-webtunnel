@@ -1,0 +1,85 @@
+---
+
+- name: Install nginx and {{ certbot_package }}
+  ansible.builtin.package:
+    name: 
+      - nginx
+      - "{{ certbot_package }}"
+
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
+
+- name: Ensure nginx configdir exists
+  ansible.builtin.file:
+    path: "{{ nginx.config_dir }}"
+    state: directory
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+
+- name: Include configdir in nginx.conf
+  ansible.builtin.lineinfile:
+    path: "nginx/nginx.conf"
+    line: "    include {{ nginx.config_dir }}/*.conf;"
+    insertbefore: "}"
+  when: nginx.config_dir == "http.d"
+
+- name: Remove nginx default configuration
+  ansible.builtin.file:
+    path: "{{ nginx.config_dir }}/default"
+    state: absent
+
+- name: Generate nginx (http) config
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/nginx-http.conf.j2"
+    dest: "{{ nginx.config_dir }}/http.conf"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  register: nginx_http
+
+- name: Check if port 80 is in use
+  wait_for:
+    port: 80
+    timeout: 1
+  register: port_check
+  ignore_errors: yes
+
+- name: Stop webserver
+  ansible.builtin.service:
+    name: "{{ apache.service_name }}"
+    state: stopped
+  when: port_check.state is defined and port_check.state == "started"
+
+- name: Request certificate
+  ansible.builtin.shell: |
+    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+
+- name: Start nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+  when: nginx_http.changed
+
+- name: Ensure nginx log directory exists
+  ansible.builtin.file:
+    path: /var/log/nginx
+    state: directory
+    owner: "{{ webserver.user }}"
+    group: "{{ webserver.group }}"
+
+- name: Generate nginx (https) config
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/nginx-https.conf.j2"
+    dest: "{{ nginx.config_dir }}/https.conf"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  vars:
+    webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
+  notify:
+    - Start nginx
+    - Restart nginx

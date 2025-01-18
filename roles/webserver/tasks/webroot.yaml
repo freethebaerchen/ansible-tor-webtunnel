@@ -13,30 +13,30 @@
       ansible.builtin.file:
         path: "{{ dir.webroot }}"
         state: directory
-        owner: "{{ caddy.user }}"
-        group: "{{ caddy.group }}"
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
 
     - name: Copy index.html
       ansible.builtin.copy:
         src: "{{ role_path }}/files/index.html"
         dest: "{{ dir.webroot }}"
-        owner: "{{ caddy.user }}"
-        group: "{{ caddy.group }}"
-      notify: Reload caddy
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+      notify: Restart {{ use_webserver }}
 
     - name: Copy bear.svg
       ansible.builtin.copy:
         src: "{{ role_path }}/files/bear.svg"
         dest: "{{ dir.webroot }}"
-        owner: "{{ caddy.user }}"
-        group: "{{ caddy.group }}"
-      notify: Reload caddy
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+      notify: Restart {{ use_webserver }}
 
     - name: Copy robots.txt
       ansible.builtin.copy:
         src: "{{ role_path }}/files/robots.txt"
         dest: "{{ dir.webroot }}"
-        owner: "{{ caddy.user }}"
-        group: "{{ caddy.group }}"
-      notify: Reload caddy
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+      notify: Restart {{ use_webserver }}
       when: website.no_index

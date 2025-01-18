@@ -15,6 +15,9 @@ In Hetzner there will be created, if you do not make any changes for the servers
 They are spawned in the locations, the arm instances are available.
 So one will be created in Falkenstein, one in Nuremberg and one in Helsinki.
 
+When using Hetzner Cloud, and you are installing the OS via the "ISO Images" option, you may need to configure the IPv6-Address by yourself.
+You can look at this [documentation for some operating systems](https://docs.hetzner.com/de/cloud/servers/static-configuration/).
+
 In the [system role](roles/system) is a [templated /etc/hosts](roles/system/templates/hosts.j2) file.
 It adds a GitHub IPv6 "proxy", because GitHub, as of now, doesnt support IPv6.
 The proxy is provided by [Daniel Winzen](https://danwin1210.de/github-ipv6-proxy.php).
@@ -32,7 +35,7 @@ For Debian-based distros it's pretty uncritical, but for the rest, do it at your
 You can disable them by setting `unattended_upgrades: no`or `unattended_upgrades: false` in the [host_vars]
 
 ## OS Support
-This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9), OpenSUSE-based (OpenSUSE Leap 15.6), OpenBSD-based (OpenBSD 7.6), Archlinux-based (Archlinux 2024.08.01) and FreeBSD-based (FreeBSD 14) distributions.
+This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9), OpenSUSE-based (OpenSUSE Leap 15.6), OpenBSD-based (OpenBSD 7.6), Archlinux-based (Archlinux 2024.08.01) and FreeBSD-based (FreeBSD 14.1) distributions.
 
 ### OS specialties
 #### Alpine
@@ -65,7 +68,8 @@ You need a device, that is able to run Docker.
 
 ### Other
 1. A (sub)domain per server
-2. The code for a website (per server)\
+2. ´python3.12.*` installed on the server
+3. The code for a website (per server)\
 Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [host_vars/example.yaml](host_vars/your-bridge-fsn-0.yaml).
 Set the reverse-proxy value to true and configure the domain you want to reverse proxy to as value for the reverse_proxy_url variable.
 

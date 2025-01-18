@@ -21,10 +21,10 @@
         line: "{{ domain }}"
       delegate_to: localhost
 
-    - name: Copy motd-file to host
-      ansible.builtin.copy:
-        src: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
-        dest: /etc/motd
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-        mode: 0644
+- name: Copy motd-file to host
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
+    dest: /etc/motd
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: 0644

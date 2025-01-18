@@ -29,11 +29,10 @@
     - bridge
     - webtunnel
 
-- name: Setup webroot
+- name: Setup webserver
   hosts: all
   become: yes
   roles: 
-    - website
+    - webserver
   tags:
-    - website
-    - webroot
+    - webserver

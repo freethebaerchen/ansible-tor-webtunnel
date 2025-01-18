@@ -20,13 +20,13 @@
     - name: Set caddy-users
       community.general.sysrc:
         name: caddy_user
-        value: "{{ caddy.user }}"
+        value: "{{ webserver.user }}"
         state: value_present
       
     - name: Set caddy-group
       community.general.sysrc:
         name: caddy_group
-        value: "{{ caddy.group }}"
+        value: "{{ webserver.group }}"
         state: value_present
 
     - name: Install OS-specific software
@@ -38,7 +38,7 @@
     - name: Set portacl-user
       community.general.sysrc:
         name: portacl_users
-        value: "{{ caddy.group }}"
+        value: "{{ webserver.group }}"
         state: value_present
 
     - name: Set portacl-user privilege (tcp)
@@ -59,8 +59,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
-        owner: "{{ caddy.user }}"
-        group: "{{ caddy.group }}"
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
         recurse: true
       loop:
         - /var/db/caddy
@@ -81,14 +81,17 @@
         name: 
           - caddy
 
+    - name: Include webroot
+      ansible.builtin.include_tasks: webroot.yaml
+
     - name: Generate Caddyfile
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"
-        dest: "{{ system.etc }}/caddy/Caddyfile"
+        dest: "{{ caddy.config_dir }}/Caddyfile"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify:
         - Start caddy 
         - Restart caddy
       vars:
-        webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
+        webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"

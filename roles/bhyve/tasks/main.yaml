@@ -1,0 +1,11 @@
+---
+
+- name: Include create provisioned server
+  ansible.builtin.include_tasks: create-os-provision.yaml
+  tags:
+    - create-server
+
+- name: Include delete provisioned server
+  ansible.builtin.include_tasks: delete-os-provision.yaml
+  tags:
+    - delete-server

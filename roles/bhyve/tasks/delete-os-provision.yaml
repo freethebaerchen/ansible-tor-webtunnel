@@ -1,0 +1,19 @@
+---
+
+- name: Block for provisioning VMs
+  tags:
+    - delete-server
+  block:
+    - name: Get stopped vms
+      ansible.builtin.shell: vm list
+      register: all_vms
+
+    - name: Extract os-webserver schema
+      set_fact:
+        vms_to_delete: "{{ vms_to_delete | default([]) + [os ~ '-' ~ item] }}"
+      when: all_vms.stdout_lines | select('search', 'Stopped') | select('search', os + '-' + item) | list | length > 0
+      loop: "{{ webserver_software }}"
+
+    - name: Delete selected vms
+      ansible.builtin.shell: vm destroy {{ item }}
+      loop: "{{ vms_to_delete }}"

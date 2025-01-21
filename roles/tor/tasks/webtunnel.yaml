@@ -89,6 +89,13 @@
         state: present
         reload: yes
 
+    - name: Start tor
+      ansible.builtin.service:
+        name: tor
+        state: started
+        enabled: yes
+      when: torrc.changed
+
 - name: Block for OS-Family Archlinux
   when: ansible_os_family == "Archlinux"
   block:

@@ -1,10 +1,10 @@
 ---
 
-- name: Install nginx and {{ certbot_package }}
+- name: Install required packages
   ansible.builtin.package:
     name: 
-      - nginx
-      - "{{ certbot_package }}"
+      - "{{ item }}"
+  loop: "{{ nginx.packages }}"
 
 - name: Include webroot
   ansible.builtin.include_tasks: webroot.yaml
@@ -45,7 +45,7 @@
 
 - name: Stop webserver
   ansible.builtin.service:
-    name: "{{ apache.service_name }}"
+    name: "{{ nginx.service_name }}"
     state: stopped
   when: port_check.state is defined and port_check.state == "started"
 

@@ -26,6 +26,10 @@ webserver:
 caddy:
   config_dir: /etc/caddy
 nginx:
+  packages:
+    - nginx
+    - certbot
+  service_name: nginx
   config_dir: /etc/nginx/http.d
 apache:
   packages:

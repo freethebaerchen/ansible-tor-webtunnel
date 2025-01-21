@@ -10,6 +10,10 @@ webserver:
 caddy:
   config_dir: /usr/local/etc/caddy
 nginx:
+  packages:
+    - nginx
+    - security/py-certbot
+  service_name: nginx
   config_dir: /usr/local/etc/nginx/http.d
 apache:
   packages:

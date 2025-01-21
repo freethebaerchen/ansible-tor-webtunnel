@@ -2,8 +2,6 @@ name: Test Ansible Playbook by Server
 
 on:
   push:
-    branches:
-      - '**'
     branches-ignore:
       - main
 

@@ -114,7 +114,7 @@
 - name: Start tor
   ansible.builtin.service:
     name: tor
-    state: started
+    state: restarted
     enabled: yes
   when: torrc.changed
 

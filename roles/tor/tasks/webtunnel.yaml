@@ -111,7 +111,7 @@
           @tor    soft    nofile    65536
           @tor    hard    nofile    65536
 
-- name: Start tor
+- name: Restart tor
   ansible.builtin.service:
     name: tor
     state: restarted

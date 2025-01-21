@@ -6,12 +6,6 @@
     state: restarted
     enabled: true
 
-- name: Restart portacl
-  ansible.builtin.service:
-    name: portacl
-    state: restarted
-    enabled: true
-
 - name: Reload daemon
   ansible.builtin.systemd:
     daemon_reload: yes

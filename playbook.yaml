@@ -36,3 +36,12 @@
     - webserver
   tags:
     - webserver
+
+- name: Shutdown
+  hosts: test
+  become: yes
+  tags:
+    - shutdown
+  tasks:
+    - name: Shutdown server {{ inventory_hostname }}
+      community.general.shutdown:

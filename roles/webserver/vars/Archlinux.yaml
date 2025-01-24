@@ -34,7 +34,7 @@ apache:
   config_dir: /etc/httpd/conf/Includes
   config_file: /etc/httpd/conf/httpd.conf
   extra_dirs: []
-  modules:
+  modules_config:
     - LoadModule rewrite_module modules/mod_rewrite.so
     - LoadModule ssl_module modules/mod_ssl.so
     - LoadModule proxy_module modules/mod_proxy.so

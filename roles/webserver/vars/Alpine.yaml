@@ -43,7 +43,7 @@ apache:
   config_dir: /etc/apache2/conf.d
   config_file: /etc/apache2/httpd.conf
   extra_dirs: []
-  modules:
+  modules_config:
     - LoadModule rewrite_module libexec/apache24/mod_rewrite.so
     - LoadModule ssl_module libexec/apache24/mod_ssl.so
     - LoadModule proxy_module libexec/apache24/mod_proxy.so

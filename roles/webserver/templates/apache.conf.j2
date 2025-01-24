@@ -1,11 +1,15 @@
+ServerName 127.0.1.1
+
 ServerRoot "{{ apache.server_root }}"
 
 Listen 80
 Listen 443
 
-{% for module in apache.modules %}
+{% if apache.modules_config is defined and apache.modules_config|length > 0 %}
+{% for module in apache.modules_config %}
 {{ module }}
 {% endfor %}
+{% endif %}
 
 <IfModule unixd_module>
 User {{ webserver.user }}

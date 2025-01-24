@@ -42,7 +42,7 @@ apache:
   config_dir: /etc/apache2/Includes
   config_file: /etc/apache2/httpd.conf
   extra_dirs: []
-  modules:
+  modules_config:
     - LoadModule rewrite_module /usr/lib64/apache2-prefork/mod_rewrite.so
     - LoadModule ssl_module /usr/lib64/apache2-prefork/mod_ssl.so
     - LoadModule proxy_module /usr/lib64/apache2-prefork/mod_proxy.so

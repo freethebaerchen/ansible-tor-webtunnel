@@ -34,7 +34,7 @@ apache:
   config_dir: /etc/apache2/Includes
   config_file: /etc/apache2/httpd2.conf
   extra_dirs: []
-  modules:
+  modules_config:
     - LoadModule rewrite_module /usr/local/lib/apache2/mod_rewrite.so
     - LoadModule ssl_module /usr/local/lib/apache2/mod_ssl.so
     - LoadModule proxy_module /usr/local/lib/apache2/mod_proxy.so

@@ -12,6 +12,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Debug
+        run: whoami
+
       - name: Create ubuntu servers
         run: |
           chmod +x ansible-playbook.sh

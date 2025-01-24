@@ -19,7 +19,7 @@ env_file=".env.local"
 if [ ! -f $(pwd)/$env_file ]; then
     env_file=".env"
 fi
-export $(grep -v '^#' $env_file | xargs)
+#export $(grep -v '^#' $env_file | xargs)
 
 user=$(git config user.email)
 user="${user%@*}"

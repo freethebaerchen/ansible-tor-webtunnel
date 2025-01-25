@@ -2,6 +2,6 @@
 
 - name: Provision/Deprovision test server
   hosts: bhyve-host
-  become: false
+  become: true
   roles:
     - role: bhyve

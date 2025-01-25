@@ -5,7 +5,7 @@
     - create-server
   block:
     - name: Get images
-      ansible.builtin.shell: vm image list
+      ansible.builtin.shell: sudo vm image list
       register: vm_images
 
     - name: Set image uuid fact
@@ -13,7 +13,7 @@
         vm_image_uuid: "{{ vm_images.stdout_lines | select('search', os + '-template') | map('regex_replace', '^([^ ]+) .*$', '\\1') | list | first }}"
 
     - name: Create templated vms
-      ansible.builtin.shell: vm image provision {{ vm_image_uuid }} {{ os }}-{{ item }}
+      ansible.builtin.shell: sudo vm image provision {{ vm_image_uuid }} {{ os }}-{{ item }}
       loop: "{{ webserver_software }}"
       register: provision_result
       failed_when:
@@ -34,5 +34,5 @@
       loop: "{{ webserver_software }}"
 
     - name: Start VMs
-      ansible.builtin.shell: vm start {{ os }}-{{ item }}
+      ansible.builtin.shell: sudo vm start {{ os }}-{{ item }}
       loop: "{{ webserver_software }}"

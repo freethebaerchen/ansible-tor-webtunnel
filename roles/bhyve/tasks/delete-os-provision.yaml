@@ -5,7 +5,7 @@
     - delete-server
   block:
     - name: Get stopped vms
-      ansible.builtin.shell: vm list
+      ansible.builtin.shell: sudo vm list
       register: all_vms
 
     - name: Extract os-webserver schema
@@ -15,5 +15,5 @@
       loop: "{{ webserver_software }}"
 
     - name: Delete selected vms
-      ansible.builtin.shell: vm destroy {{ item }}
+      ansible.builtin.shell: sudo vm destroy {{ item }}
       loop: "{{ vms_to_delete }}"

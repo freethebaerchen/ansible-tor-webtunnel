@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Ansible Playbook Test for Ubuntu
         run: |
-          chmod +x ansible-playbook.sh
+          chmod +x scripts/ansible-playbook.sh
           ansible-playbook playbook.yaml --limit=ubuntu -i actions-inventory.ini
 
   test-ubuntu:
@@ -38,17 +38,15 @@ jobs:
       - name: Test connections
         run: |
           chmod +x scripts/test-connection.sh
-          ./test-connection.sh
+          ./scripts/test-connection.sh
 
       - name: Shutdown ubuntu servers
         run: |
-          chmod +x ansible-playbook.sh
+          chmod +x scripts/ansible-playbook.sh
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
         if: success()
 
 #  setup-alpine:
-#    needs: 
-#      - test-ubuntu
 #    runs-on: self-hosted
 #    steps:
 #      - name: Checkout repository
@@ -66,7 +64,7 @@ jobs:
 #
 #      - name: Run Ansible Playbook Test for alpine
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --limit=alpine -i actions-inventory.ini
 #
 #  test-alpine:
@@ -80,17 +78,17 @@ jobs:
 #      - name: Test connections
 #        run: |
 #          chmod +x scripts/test-connection.sh
-#          ./test-connection.sh
+#          ./scripts/test-connection.sh
 #
 #      - name: Shutdown alpine servers
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
 #        if: success()
 #
 #  setup-archlinux:
 #    needs: 
-#      - test-alpine
+#      - test-ubuntu
 #    runs-on: self-hosted
 #    steps:
 #      - name: Checkout repository
@@ -108,7 +106,7 @@ jobs:
 #
 #      - name: Run Ansible Playbook Test for archlinux
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --limit=archlinux -i actions-inventory.ini
 #
 #  test-archlinux:
@@ -122,17 +120,17 @@ jobs:
 #      - name: Test connections
 #        run: |
 #          chmod +x scripts/test-connection.sh
-#          ./test-connection.sh
+#          ./scripts/test-connection.sh
 #
 #      - name: Shutdown archlinux servers
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
 #        if: success()
 #
 #  setup-freebsd:
 #    needs: 
-#      - test-archlinux
+#      - test-alpine
 #    runs-on: self-hosted
 #    steps:
 #      - name: Checkout repository
@@ -150,7 +148,7 @@ jobs:
 #
 #      - name: Run Ansible Playbook Test for freebsd
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --limit=freebsd -i actions-inventory.ini
 #
 #  test-freebsd:
@@ -164,17 +162,17 @@ jobs:
 #      - name: Test connections
 #        run: |
 #          chmod +x scripts/test-connection.sh
-#          ./test-connection.sh
+#          ./scripts/test-connection.sh
 #
 #      - name: Shutdown freebsd servers
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
 #        if: success()
 #
 #  setup-openbsd:
 #    needs: 
-#      - test-freebsd
+#      - test-archlinux
 #    runs-on: self-hosted
 #    steps:
 #      - name: Checkout repository
@@ -192,7 +190,7 @@ jobs:
 #
 #      - name: Run Ansible Playbook Test for openbsd
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --limit=openbsd -i actions-inventory.ini
 #
 #  test-openbsd:
@@ -206,11 +204,11 @@ jobs:
 #      - name: Test connections
 #        run: |
 #          chmod +x scripts/test-connection.sh
-#          ./test-connection.sh
+#          ./scripts/test-connection.sh
 #
 #      - name: Shutdown openbsd servers
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
 #        if: success()
 #
@@ -234,7 +232,7 @@ jobs:
 #
 #      - name: Run Ansible Playbook Test for rhel
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --limit=rhel -i actions-inventory.ini
 #
 #  test-rhel:
@@ -248,17 +246,17 @@ jobs:
 #      - name: Test connections
 #        run: |
 #          chmod +x scripts/test-connection.sh
-#          ./test-connection.sh
+#          ./scripts/test-connection.sh
 #
 #      - name: Shutdown rhel servers
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
 #        if: success()
 #
 #  setup-suse:
 #    needs: 
-#      - test-rhel
+#      - test-openbsd
 #    runs-on: self-hosted
 #    steps:
 #      - name: Checkout repository
@@ -276,7 +274,7 @@ jobs:
 #
 #      - name: Run Ansible Playbook Test for suse
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --limit=suse -i actions-inventory.ini
 #
 #  test-suse:
@@ -290,15 +288,15 @@ jobs:
 #      - name: Test connections
 #        run: |
 #          chmod +x scripts/test-connection.sh
-#          ./test-connection.sh
+#          ./scripts/test-connection.sh
 #
 #      - name: Shutdown suse servers
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
 #        if: success()
 #
-#  delete-servers:
+#  delete-ubuntu:
 #    needs: 
 #      - test-suse
 #    runs-on: self-hosted
@@ -307,12 +305,71 @@ jobs:
 #        env:
 #          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
 #        run: |
-#          chmod +x ansible-playbook.sh
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
+#  delete-alpine:
+#    needs: 
+#      - test-suse
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#        run: |
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=alpine"
+#  delete-archlinux:
+#    needs: 
+#      - test-suse
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#        run: |
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=archlinux"
+#  delete-freebsd:
+#    needs: 
+#      - test-suse
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#        run: |
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=freebsd"
+#  delete-openbsd:
+#    needs: 
+#      - test-suse
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#        run: |
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=openbsd"
+#  delete-rhel:
+#    needs: 
+#      - test-suse
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#        run: |
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=rhel"
+#  delete-suse:
+#    needs: 
+#      - test-suse
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#        run: |
+#          chmod +x scripts/ansible-playbook.sh
 #          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=suse"
-#

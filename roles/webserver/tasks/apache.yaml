@@ -47,19 +47,19 @@
     - 000-default.conf
     - default
 
-- name: Generate apache (http) config
-  ansible.builtin.template:
-    src: "{{ role_path }}/templates/apache-http.conf.j2"
-    dest: "{{ apache.config_dir }}/http.conf"
-    owner: "{{ root.user }}"
-    group: "{{ root.group }}"
-
 - name: Enable apache modules
   community.general.apache2_module:
     name: "{{ item }}"
     state: present
   loop: "{{ apache.modules }}"
   when: apache.modules is defined
+
+- name: Generate apache (http) config
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/apache-http.conf.j2"
+    dest: "{{ apache.config_dir }}/http.conf"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
 
 - name: Check if port 80 is in use
   wait_for:

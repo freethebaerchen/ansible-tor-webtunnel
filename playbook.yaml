@@ -41,7 +41,8 @@
   hosts: test
   become: yes
   tags:
-    - shutdown
+    - never
+    - shutdown-server
   tasks:
     - name: Shutdown server {{ inventory_hostname }}
       community.general.shutdown:

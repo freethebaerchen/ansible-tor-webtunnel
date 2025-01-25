@@ -34,6 +34,11 @@ jobs:
           chmod +x test-connection.sh
           ./test-connection.sh
 
+      - name: Shutdown ubuntu servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
+
       - name: Destroy ubuntu servers
         run: |
           chmod +x ansible-playbook.sh

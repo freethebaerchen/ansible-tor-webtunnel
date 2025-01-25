@@ -27,6 +27,7 @@
         dest: "{{ bhyve.root_dir }}/{{ os }}-{{ item }}/{{ os }}-{{ item }}.conf"
       loop: "{{ webserver_software }}"
       become: true
+      become_method: sudo
 
     - name: Set MAC-address for static mapping
       ansible.builtin.lineinfile:

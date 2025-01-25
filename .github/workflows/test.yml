@@ -19,12 +19,12 @@ jobs:
 
       - name: Create ubuntu servers
         run: |
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
 
       - name: Run Ansible Playbook Test for Ubuntu
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=ubuntu -i actions-inventory.ini
+          ./ansible-playbook playbook.yaml --limit=ubuntu -i actions-inventory.ini
 
   test-ubuntu:
     needs: 
@@ -42,5 +42,5 @@ jobs:
       - name: Destroy ubuntu servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
         if: success()

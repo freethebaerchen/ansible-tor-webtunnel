@@ -141,6 +141,7 @@
   ansible.builtin.lineinfile:
     path: "{{ role_path }}/../../connection-strings.txt"
     line: "{{ item }} #{{ inventory_hostname }}"
+    creates: yes
   with_items: "{{ connection_string.stdout_lines }}"
   delegate_to: localhost
   become: false

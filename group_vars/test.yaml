@@ -8,7 +8,7 @@ admins:
 
 users: []
 
-email: user@example.com
+email: jke-webtunnel@tutamail.com
 
 deploy_webroot: false
 use_webserver: caddy

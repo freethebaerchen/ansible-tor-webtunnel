@@ -143,3 +143,4 @@
     line: "{{ item }} #{{ inventory_hostname }}"
   with_items: "{{ connection_string.stdout_lines }}"
   delegate_to: localhost
+  become: false

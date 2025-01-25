@@ -5,6 +5,7 @@
     path: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
   register: motd_file
   delegate_to: localhost
+  become: false
 
 - name: Block for generating motd
   when: not motd_file.stat.exists
@@ -14,12 +15,14 @@
         cmd: figlet {{ tor.nickname }}{{ id }} > "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
       register: figlet
       delegate_to: localhost
+      become: false
 
     - name: Add domain to new motd file
       ansible.builtin.lineinfile:
         path: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
         line: "{{ domain }}"
       delegate_to: localhost
+      become: false
 
 - name: Copy motd-file to host
   ansible.builtin.copy:

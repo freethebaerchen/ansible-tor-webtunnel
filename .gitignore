@@ -2,6 +2,7 @@ tmp
 .env.local
 group_vars/*
 !group_vars/*.yaml.example
+!group_vars/test.yaml
 roles/hetzner/files/*
 !roles/hetzner/files/.gitkeep
 inventory.ini

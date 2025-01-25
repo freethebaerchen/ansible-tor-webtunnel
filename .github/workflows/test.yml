@@ -12,11 +12,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup ansible
-        run: |
-          apt install -y ansible
-          ansible-galaxy install -r requirements.yaml
-
       - name: Create ubuntu servers
         run: |
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"

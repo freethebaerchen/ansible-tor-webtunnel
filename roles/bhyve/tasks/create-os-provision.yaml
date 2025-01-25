@@ -26,6 +26,7 @@
         src: "{{ role_path }}/templates/{{ vm[os].template }}.conf.j2"
         dest: "{{ bhyve.root_dir }}/{{ os }}-{{ item }}/{{ os }}-{{ item }}.conf"
       loop: "{{ webserver_software }}"
+      become: true
 
     - name: Set MAC-address for static mapping
       ansible.builtin.lineinfile:

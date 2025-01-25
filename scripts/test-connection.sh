@@ -1,6 +1,6 @@
 #!/bin/bash
 
-input_file="$PWD/../../connection-strings.txt"
+input_file="$PWD/../connection-strings.txt"
 
 if [[ ! -f $input_file ]]; then
   echo "File $input_file does not exist."

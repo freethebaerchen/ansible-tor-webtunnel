@@ -18,6 +18,10 @@ jobs:
         run: |
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
 
+      - name: Wait until the hosts are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit ubuntu -i actions-inventory.ini
+
       - name: Run Ansible Playbook Test for Ubuntu
         run: |
           chmod +x ansible-playbook.sh
@@ -33,7 +37,7 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x test-connection.sh
+          chmod +x scripts/test-connection.sh
           ./test-connection.sh
 
       - name: Shutdown ubuntu servers

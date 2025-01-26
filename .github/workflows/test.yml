@@ -379,87 +379,87 @@ jobs:
           chmod +x ansible-playbook.sh
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
 
-  delete-ubuntu:
-    needs: 
-      - test-suse
-    runs-on: self-hosted
-    steps:
-      - name: Destroy ubuntu servers
-        env:
-          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
-  delete-alpine:
-    needs: 
-      - test-suse
-    runs-on: self-hosted
-    steps:
-      - name: Destroy alpine servers
-        env:
-          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=alpine"
-  delete-archlinux:
-    needs: 
-      - test-suse
-    runs-on: self-hosted
-    steps:
-      - name: Destroy archlinux servers
-        env:
-          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=archlinux"
-  delete-freebsd:
-    needs: 
-      - test-suse
-    runs-on: self-hosted
-    steps:
-      - name: Destroy freebsd servers
-        env:
-          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=freebsd"
-  delete-openbsd:
-    needs: 
-      - test-suse
-    runs-on: self-hosted
-    steps:
-      - name: Destroy openbsd servers
-        env:
-          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=openbsd"
-  delete-rhel:
-    needs: 
-      - test-suse
-    runs-on: self-hosted
-    steps:
-      - name: Destroy rhel servers
-        env:
-          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=rhel"
-  delete-suse:
-    needs: 
-      - test-suse
-    runs-on: self-hosted
-    steps:
-      - name: Destroy suse servers
-        env:
-          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=suse"
+#  delete-ubuntu:
+#    needs: 
+#      - test-ubuntu
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy ubuntu servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#          ANSIBLE_NOCOLOR: 1
+#        run: |
+#          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+#          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
+#  delete-alpine:
+#    needs: 
+#      - test-alpine
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy alpine servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#          ANSIBLE_NOCOLOR: 1
+#        run: |
+#          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+#          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=alpine"
+#  delete-archlinux:
+#    needs: 
+#      - test-archlinux
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy archlinux servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#          ANSIBLE_NOCOLOR: 1
+#        run: |
+#          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+#          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=archlinux"
+#  delete-freebsd:
+#    needs: 
+#      - test-freebsd
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy freebsd servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#          ANSIBLE_NOCOLOR: 1
+#        run: |
+#          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+#          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=freebsd"
+#  delete-openbsd:
+#    needs: 
+#      - test-openbsd
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy openbsd servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#          ANSIBLE_NOCOLOR: 1
+#        run: |
+#          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+#          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=openbsd"
+#  delete-rhel:
+#    needs: 
+#      - test-rhel
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy rhel servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#          ANSIBLE_NOCOLOR: 1
+#        run: |
+#          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+#          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=rhel"
+#  delete-suse:
+#    needs: 
+#      - test-suse
+#    runs-on: self-hosted
+#    steps:
+#      - name: Destroy suse servers
+#        env:
+#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+#          ANSIBLE_NOCOLOR: 1
+#        run: |
+#          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+#          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=suse"

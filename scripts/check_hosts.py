@@ -18,28 +18,26 @@ def get_host_info(inventory_file, group_name, max_retries=5):
 
     if result.returncode != 0:
         print(f"Error executing command: {result.stderr}")
-        sys.exit(1)  # Exit if inventory command fails
+        sys.exit(1)
     
     try:
         inventory_data = json.loads(result.stdout)
     except json.JSONDecodeError:
         print("Error parsing inventory data.")
-        sys.exit(1)  # Exit if JSON parsing fails
+        sys.exit(1)
 
     if group_name not in inventory_data:
         print(f"Group '{group_name}' not found in the inventory.")
-        sys.exit(1)  # Exit if group is not found
+        sys.exit(1)
 
     hosts = inventory_data[group_name]['hosts']
     retries = {host: 0 for host in hosts}
     all_reachable = False
 
-    # First check if all hosts are reachable, if so, exit immediately
     if all(check_port(inventory_data['_meta']['hostvars'].get(host, {}).get('ansible_host', 'No IP')) for host in hosts):
         print("All hosts are reachable. Exiting immediately.")
-        sys.exit(0)  # Exit with success if all hosts are reachable
+        sys.exit(0)
 
-    # If not all are reachable, retry up to max_retries
     attempts = 0
     failed_hosts = 0
 
@@ -58,14 +56,15 @@ def get_host_info(inventory_file, group_name, max_retries=5):
                 retries[host] += 1
                 if retries[host] < max_retries:
                     print(f"Port 22 is not reachable on {hostname} ({ip}). Retrying...")
+                    time.sleep(5)
                 else:
                     print(f"Port 22 is still not reachable on {hostname} ({ip}) after {max_retries} attempts.")
+                    time.sleep(5)
                     failed_hosts += 1
         
-        # If all hosts fail after max retries, stop the pipeline
         if failed_hosts == len(hosts):
             print("All hosts have failed after maximum retries. Stopping pipeline.")
-            sys.exit(1)  # Exit with error if all hosts failed
+            sys.exit(1)
 
         if all(retries[host] >= max_retries for host in hosts):
             print("All hosts have been probed for maximum retries.")
@@ -74,7 +73,6 @@ def get_host_info(inventory_file, group_name, max_retries=5):
         time.sleep(1)
         attempts += 1
 
-    # If at least one host is reachable, exit successfully
     print("All reachable hosts confirmed, proceeding to next step.")
     sys.exit(0)
 

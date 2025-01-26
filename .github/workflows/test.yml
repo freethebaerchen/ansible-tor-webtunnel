@@ -273,7 +273,7 @@ jobs:
 
   setup-rhel:
     needs: 
-      - test-openbsd
+      - test-freebsd
     runs-on: self-hosted
     steps:
       - name: Checkout repository

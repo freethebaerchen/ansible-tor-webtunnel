@@ -79,7 +79,7 @@ jobs:
       - name: Run Ansible Playbook Test for alpine
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=alpine -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --limit=alpine -i actions-inventory.ini
 
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
@@ -107,7 +107,7 @@ jobs:
       - name: Shutdown alpine servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
 
   setup-archlinux:
     needs: 
@@ -132,7 +132,7 @@ jobs:
       - name: Run Ansible Playbook Test for archlinux
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=archlinux -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --limit=archlinux -i actions-inventory.ini
 
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
@@ -161,7 +161,7 @@ jobs:
       - name: Shutdown archlinux servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
 
   setup-freebsd:
     needs: 
@@ -186,7 +186,7 @@ jobs:
       - name: Run Ansible Playbook Test for freebsd
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=freebsd -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --limit=freebsd -i actions-inventory.ini
 
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
@@ -215,7 +215,7 @@ jobs:
       - name: Shutdown freebsd servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
 
   setup-openbsd:
     needs: 
@@ -240,7 +240,7 @@ jobs:
       - name: Run Ansible Playbook Test for openbsd
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=openbsd -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --limit=openbsd -i actions-inventory.ini
 
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
@@ -269,7 +269,7 @@ jobs:
       - name: Shutdown openbsd servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
 
   setup-rhel:
     needs: 
@@ -294,7 +294,7 @@ jobs:
       - name: Run Ansible Playbook Test for rhel
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=rhel -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --limit=rhel -i actions-inventory.ini
 
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
@@ -323,7 +323,7 @@ jobs:
       - name: Shutdown rhel servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
 
   setup-suse:
     needs: 
@@ -348,7 +348,7 @@ jobs:
       - name: Run Ansible Playbook Test for suse
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=suse -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --limit=suse -i actions-inventory.ini
 
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
@@ -377,7 +377,7 @@ jobs:
       - name: Shutdown suse servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
 
 #  delete-ubuntu:
 #    needs: 

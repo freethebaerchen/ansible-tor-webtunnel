@@ -32,7 +32,7 @@ jobs:
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-ubuntu
           path: connection-strings.txt
 
   test-ubuntu:
@@ -46,7 +46,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-ubuntu
 
       - name: Test connections
         run: |
@@ -84,7 +84,7 @@ jobs:
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-alpine
           path: connection-strings.txt
   test-alpine:
     needs: 
@@ -97,7 +97,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-alpine
       
       - name: Test connections
         run: |
@@ -137,7 +137,7 @@ jobs:
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-archlinux
           path: connection-strings.txt
 
   test-archlinux:
@@ -151,7 +151,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-archlinux
       
       - name: Test connections
         run: |
@@ -191,7 +191,7 @@ jobs:
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-freebsd
           path: connection-strings.txt
 
   test-freebsd:
@@ -205,7 +205,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-freebsd
       
       - name: Test connections
         run: |
@@ -245,7 +245,7 @@ jobs:
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-openbsd
           path: connection-strings.txt
 
   test-openbsd:
@@ -259,7 +259,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-openbsd
       
       - name: Test connections
         run: |
@@ -299,7 +299,7 @@ jobs:
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-rhel
           path: connection-strings.txt
 
   test-rhel:
@@ -313,7 +313,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-rhel
       
       - name: Test connections
         run: |
@@ -353,7 +353,7 @@ jobs:
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-suse
           path: connection-strings.txt
 
   test-suse:
@@ -367,7 +367,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: connection-strings
+          name: connection-strings-suse
       
       - name: Test connections
         run: |

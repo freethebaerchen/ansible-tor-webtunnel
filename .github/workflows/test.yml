@@ -18,7 +18,7 @@ jobs:
           ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu" < /dev/null
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
 
       - name: Wait until the ubuntu are reacheable
         run: |
@@ -27,7 +27,7 @@ jobs:
       - name: Run Ansible Playbook Test for Ubuntu
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --limit=ubuntu -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --limit=ubuntu -i actions-inventory.ini
 
       - name: Upload connection-strings
         uses: actions/upload-artifact@v3
@@ -56,7 +56,7 @@ jobs:
       - name: Shutdown ubuntu servers
         run: |
           chmod +x ansible-playbook.sh
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
+          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
         if: success()
 
 #  setup-alpine:

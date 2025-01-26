@@ -28,6 +28,7 @@ vm:
 
   archlinux:
     name: archlinux
+    template: Archlinux
     mac_address:
       caddy: 58:9c:fc:30:00:00
       nginx: 58:9c:fc:31:00:00

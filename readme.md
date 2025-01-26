@@ -46,9 +46,6 @@ You need to install `python312`.
 You need to install the `python` package.
 
 ## Prerequisites
-### Network connection
-This project aims on NOT being behind a NAT.
-The server(s) need their own IPv4 and/or IPv6.
 
 ### SSH
 At least one (ed25519) SSH-Key is needed.\

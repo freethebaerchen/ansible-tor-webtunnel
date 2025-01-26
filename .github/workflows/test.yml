@@ -15,8 +15,9 @@ jobs:
       - name: Create ubuntu servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
         run: |
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
 
       - name: Wait until the ubuntu are reacheable
         run: |

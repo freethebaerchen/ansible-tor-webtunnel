@@ -45,7 +45,7 @@ apache:
   extra_dirs:
     - run
     - conf
-  modules:
+  modules_config:
     - Include conf.modules.d/*.conf
 certbot:
   config_dir: /etc/letsencrypt

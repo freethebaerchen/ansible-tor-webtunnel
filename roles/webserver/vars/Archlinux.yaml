@@ -23,12 +23,14 @@ nginx:
   packages:
     - nginx
     - certbot
+    - python3
   service_name: nginx
   config_dir: /etc/nginx/http.d
 apache:
   packages:
     - apache
     - certbot
+    - python3
   service_name: httpd
   server_root: /etc/httpd
   config_dir: /etc/httpd/conf/Includes

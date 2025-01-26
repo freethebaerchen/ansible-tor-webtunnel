@@ -55,11 +55,10 @@ def get_host_info(inventory_file, group_name, max_retries=5):
             else:
                 retries[host] += 1
                 if retries[host] < max_retries:
-                    print(f"Port 22 is not reachable on {hostname} ({ip}). Retrying...")
+                    print(f"Port 22 is not reachable on {hostname} ({ip}). Retrying in 5 seconds...")
                     time.sleep(5)
                 else:
                     print(f"Port 22 is still not reachable on {hostname} ({ip}) after {max_retries} attempts.")
-                    time.sleep(5)
                     failed_hosts += 1
         
         if failed_hosts == len(hosts):

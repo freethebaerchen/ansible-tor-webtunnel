@@ -35,6 +35,5 @@ apache:
     - LoadModule log_config_module /usr/local/libexec/apache24/mod_log_config.so
     - LoadModule unixd_module /usr/local/libexec/apache24/mod_unixd.so
     - LoadModule dir_module /usr/local/libexec/apache24/mod_dir.so
-    - LoadModule mime_module /usr/local/libexec/apache24/mod_mime.so
 certbot:
   config_dir: /usr/local/etc/letsencrypt

@@ -19,14 +19,25 @@ env_file=".env.local"
 if [ ! -f $(pwd)/$env_file ]; then
     env_file=".env"
 fi
-#export $(grep -v '^#' $env_file | xargs)
 
 user=$(git config user.email)
 user="${user%@*}"
 user=$(echo "$user" | tr '[:upper:]' '[:lower:]')
 
+tty_flag=""
+if [ -t 1 ]; then
+    tty_flag="-it"
+fi
+
 if [ "$(uname)" == "Darwin" ]; then
-    docker run -it --rm --network host -v $(pwd):/ansible:rw -v /run/host-services/ssh-auth.sock:/ssh-agent -e SSH_AUTH_SOCK="/ssh-agent" --env-file $env_file -v ~/.ssh:/tmp/.ssh:ro -e ANSIBLE_REMOTE_USER="${user}" $tag "${args[@]}"    
+    docker run $tty_flag --rm --network host -v $(pwd):/ansible:rw \
+        -v /run/host-services/ssh-auth.sock:/ssh-agent \
+        -e SSH_AUTH_SOCK="/ssh-agent" --env-file $env_file \
+        -v ~/.ssh:/tmp/.ssh:ro \
+        -e ANSIBLE_REMOTE_USER="${user}" $tag "${args[@]}"
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    docker run -it --rm --network host -v $(pwd):/ansible:rw -v ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK} -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} --env-file $env_file -v ~/.ssh:/tmp/.ssh:ro -e ANSIBLE_REMOTE_USER="${user}" $tag "${args[@]}"
+    docker run $tty_flag --rm --network host -v $(pwd):/ansible:rw \
+        -v ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK} -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} \
+        --env-file $env_file -v ~/.ssh:/tmp/.ssh:ro \
+        -e ANSIBLE_REMOTE_USER="${user}" $tag "${args[@]}"
 fi

@@ -57,332 +57,409 @@ jobs:
         run: |
           chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
-        if: success()
 
-#  setup-alpine:
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Create alpine servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=alpine"
-#
-#      - name: Wait until the alpine are reacheable
-#        run: |
-#          python3 scripts/check_hosts.py --limit alpine -i actions-inventory.ini
-#
-#      - name: Run Ansible Playbook Test for alpine
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --limit=alpine -i actions-inventory.ini
-#
-#  test-alpine:
-#    needs: 
-#      - setup-alpine
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#      
-#      - name: Test connections
-#        run: |
-#          chmod +x scripts/test-connection.sh
-#          ./scripts/test-connection.sh
-#
-#      - name: Shutdown alpine servers
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
-#        if: success()
-#
-#  setup-archlinux:
-#    needs: 
-#      - test-ubuntu
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Create archlinux servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=archlinux"
-#
-#      - name: Wait until the archlinux are reacheable
-#        run: |
-#          python3 scripts/check_hosts.py --limit archlinux -i actions-inventory.ini
-#
-#      - name: Run Ansible Playbook Test for archlinux
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --limit=archlinux -i actions-inventory.ini
-#
-#  test-archlinux:
-#    needs: 
-#      - setup-archlinux
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#      
-#      - name: Test connections
-#        run: |
-#          chmod +x scripts/test-connection.sh
-#          ./scripts/test-connection.sh
-#
-#      - name: Shutdown archlinux servers
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
-#        if: success()
-#
-#  setup-freebsd:
-#    needs: 
-#      - test-alpine
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Create freebsd servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=freebsd"
-#
-#      - name: Wait until the freebsd are reacheable
-#        run: |
-#          python3 scripts/check_hosts.py --limit freebsd -i actions-inventory.ini
-#
-#      - name: Run Ansible Playbook Test for freebsd
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --limit=freebsd -i actions-inventory.ini
-#
-#  test-freebsd:
-#    needs: 
-#      - setup-freebsd
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#      
-#      - name: Test connections
-#        run: |
-#          chmod +x scripts/test-connection.sh
-#          ./scripts/test-connection.sh
-#
-#      - name: Shutdown freebsd servers
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
-#        if: success()
-#
-#  setup-openbsd:
-#    needs: 
-#      - test-archlinux
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Create openbsd servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=openbsd"
-#
-#      - name: Wait until the openbsd are reacheable
-#        run: |
-#          python3 scripts/check_hosts.py --limit openbsd -i actions-inventory.ini
-#
-#      - name: Run Ansible Playbook Test for openbsd
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --limit=openbsd -i actions-inventory.ini
-#
-#  test-openbsd:
-#    needs: 
-#      - setup-openbsd
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#      
-#      - name: Test connections
-#        run: |
-#          chmod +x scripts/test-connection.sh
-#          ./scripts/test-connection.sh
-#
-#      - name: Shutdown openbsd servers
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
-#        if: success()
-#
-#  setup-rhel:
-#    needs: 
-#      - test-openbsd
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Create rhel servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=rhel"
-#
-#      - name: Wait until the rhel are reacheable
-#        run: |
-#          python3 scripts/check_hosts.py --limit rhel -i actions-inventory.ini
-#
-#      - name: Run Ansible Playbook Test for rhel
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --limit=rhel -i actions-inventory.ini
-#
-#  test-rhel:
-#    needs: 
-#      - setup-rhel
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#      
-#      - name: Test connections
-#        run: |
-#          chmod +x scripts/test-connection.sh
-#          ./scripts/test-connection.sh
-#
-#      - name: Shutdown rhel servers
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
-#        if: success()
-#
-#  setup-suse:
-#    needs: 
-#      - test-openbsd
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Create suse servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=suse"
-#
-#      - name: Wait until the suse are reacheable
-#        run: |
-#          python3 scripts/check_hosts.py --limit suse -i actions-inventory.ini
-#
-#      - name: Run Ansible Playbook Test for suse
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --limit=suse -i actions-inventory.ini
-#
-#  test-suse:
-#    needs: 
-#      - setup-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#      
-#      - name: Test connections
-#        run: |
-#          chmod +x scripts/test-connection.sh
-#          ./scripts/test-connection.sh
-#
-#      - name: Shutdown suse servers
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
-#        if: success()
-#
-#  delete-ubuntu:
-#    needs: 
-#      - test-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Destroy servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
-#  delete-alpine:
-#    needs: 
-#      - test-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Destroy servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=alpine"
-#  delete-archlinux:
-#    needs: 
-#      - test-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Destroy servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=archlinux"
-#  delete-freebsd:
-#    needs: 
-#      - test-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Destroy servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=freebsd"
-#  delete-openbsd:
-#    needs: 
-#      - test-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Destroy servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=openbsd"
-#  delete-rhel:
-#    needs: 
-#      - test-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Destroy servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=rhel"
-#  delete-suse:
-#    needs: 
-#      - test-suse
-#    runs-on: self-hosted
-#    steps:
-#      - name: Destroy servers
-#        env:
-#          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-#        run: |
-#          chmod +x ansible-playbook.sh
-#          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=suse"
+  setup-alpine:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create alpine servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=alpine"
+
+      - name: Wait until the alpine are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit alpine -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for alpine
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --limit=alpine -i actions-inventory.ini
+
+      - name: Upload connection-strings
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-strings
+          path: connection-strings.txt
+  test-alpine:
+    needs: 
+      - setup-alpine
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: connection-strings
+      
+      - name: Test connections
+        run: |
+          chmod +x scripts/test-connection.sh
+          ./scripts/test-connection.sh
+
+      - name: Shutdown alpine servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
+
+  setup-archlinux:
+    needs: 
+      - test-ubuntu
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create archlinux servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=archlinux"
+
+      - name: Wait until the archlinux are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit archlinux -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for archlinux
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --limit=archlinux -i actions-inventory.ini
+
+      - name: Upload connection-strings
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-strings
+          path: connection-strings.txt
+
+  test-archlinux:
+    needs: 
+      - setup-archlinux
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: connection-strings
+      
+      - name: Test connections
+        run: |
+          chmod +x scripts/test-connection.sh
+          ./scripts/test-connection.sh
+
+      - name: Shutdown archlinux servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
+
+  setup-freebsd:
+    needs: 
+      - test-alpine
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create freebsd servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=freebsd"
+
+      - name: Wait until the freebsd are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit freebsd -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for freebsd
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --limit=freebsd -i actions-inventory.ini
+
+      - name: Upload connection-strings
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-strings
+          path: connection-strings.txt
+
+  test-freebsd:
+    needs: 
+      - setup-freebsd
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: connection-strings
+      
+      - name: Test connections
+        run: |
+          chmod +x scripts/test-connection.sh
+          ./scripts/test-connection.sh
+
+      - name: Shutdown freebsd servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
+
+  setup-openbsd:
+    needs: 
+      - test-archlinux
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create openbsd servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=openbsd"
+
+      - name: Wait until the openbsd are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit openbsd -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for openbsd
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --limit=openbsd -i actions-inventory.ini
+
+      - name: Upload connection-strings
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-strings
+          path: connection-strings.txt
+
+  test-openbsd:
+    needs: 
+      - setup-openbsd
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: connection-strings
+      
+      - name: Test connections
+        run: |
+          chmod +x scripts/test-connection.sh
+          ./scripts/test-connection.sh
+
+      - name: Shutdown openbsd servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
+
+  setup-rhel:
+    needs: 
+      - test-openbsd
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create rhel servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=rhel"
+
+      - name: Wait until the rhel are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit rhel -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for rhel
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --limit=rhel -i actions-inventory.ini
+
+      - name: Upload connection-strings
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-strings
+          path: connection-strings.txt
+
+  test-rhel:
+    needs: 
+      - setup-rhel
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: connection-strings
+      
+      - name: Test connections
+        run: |
+          chmod +x scripts/test-connection.sh
+          ./scripts/test-connection.sh
+
+      - name: Shutdown rhel servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
+
+  setup-suse:
+    needs: 
+      - test-openbsd
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create suse servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=suse"
+
+      - name: Wait until the suse are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit suse -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for suse
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --limit=suse -i actions-inventory.ini
+
+      - name: Upload connection-strings
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-strings
+          path: connection-strings.txt
+
+  test-suse:
+    needs: 
+      - setup-suse
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: connection-strings
+      
+      - name: Test connections
+        run: |
+          chmod +x scripts/test-connection.sh
+          ./scripts/test-connection.sh
+
+      - name: Shutdown suse servers
+        run: |
+          chmod +x ansible-playbook.sh
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
+
+  delete-ubuntu:
+    needs: 
+      - test-suse
+    runs-on: self-hosted
+    steps:
+      - name: Destroy ubuntu servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=ubuntu"
+  delete-alpine:
+    needs: 
+      - test-suse
+    runs-on: self-hosted
+    steps:
+      - name: Destroy alpine servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=alpine"
+  delete-archlinux:
+    needs: 
+      - test-suse
+    runs-on: self-hosted
+    steps:
+      - name: Destroy archlinux servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=archlinux"
+  delete-freebsd:
+    needs: 
+      - test-suse
+    runs-on: self-hosted
+    steps:
+      - name: Destroy freebsd servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=freebsd"
+  delete-openbsd:
+    needs: 
+      - test-suse
+    runs-on: self-hosted
+    steps:
+      - name: Destroy openbsd servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=openbsd"
+  delete-rhel:
+    needs: 
+      - test-suse
+    runs-on: self-hosted
+    steps:
+      - name: Destroy rhel servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=rhel"
+  delete-suse:
+    needs: 
+      - test-suse
+    runs-on: self-hosted
+    steps:
+      - name: Destroy suse servers
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+          ANSIBLE_NOCOLOR: 1
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e "os=suse"

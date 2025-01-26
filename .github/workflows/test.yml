@@ -27,6 +27,12 @@ jobs:
           chmod +x ansible-playbook.sh
           ansible-playbook playbook.yaml --limit=ubuntu -i actions-inventory.ini
 
+      - name: Upload connection-strings
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-strings
+          path: connection-strings.txt
+
   test-ubuntu:
     needs: 
       - setup-ubuntu
@@ -34,7 +40,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: name: connection-strings
+
       - name: Test connections
         run: |
           chmod +x scripts/test-connection.sh

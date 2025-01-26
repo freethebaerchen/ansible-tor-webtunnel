@@ -21,9 +21,11 @@ while IFS= read -r line; do
 
   if [[ $response == *'"IsTor":false'* ]]; then
     echo "$node_name: False"
+    exit 1
   elif [[ $response == *'"IsTor":true'* ]]; then
     echo "$node_name: True"
   else
     echo "Something went really wrong for node $node_name"
+    exit 1
   fi
 done < "$input_file"

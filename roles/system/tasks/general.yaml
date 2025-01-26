@@ -254,12 +254,6 @@
           - cronie
         state: present
 
-    - name: Symlink pyhton bin to /usr/local/bin
-      ansible.builtin.file:
-        src: /usr/bin/python3
-        dest: /usr/local/bin/python3
-        state: link
-
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"

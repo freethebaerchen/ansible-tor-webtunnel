@@ -44,7 +44,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: name: connection-strings
+          name: connection-strings
 
       - name: Test connections
         run: |

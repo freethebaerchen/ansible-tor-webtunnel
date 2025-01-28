@@ -7,6 +7,9 @@ webserver:
   user: www
   group: www
 
+system:
+  etc: /usr/local/etc
+
 caddy:
   config_dir: /usr/local/etc/caddy
 nginx:

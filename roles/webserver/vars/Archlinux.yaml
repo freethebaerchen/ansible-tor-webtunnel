@@ -17,6 +17,9 @@ webserver:
       http
     {%- endif -%}
 
+system:
+  etc: /etc
+
 caddy:
   config_dir: /etc/caddy
 nginx:

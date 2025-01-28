@@ -18,7 +18,7 @@
 
 - name: Include configdir in nginx.conf
   ansible.builtin.lineinfile:
-    path: "nginx/nginx.conf"
+    path: "{{ system.etc }}/nginx/nginx.conf"
     line: "    include {{ nginx.config_dir }}/*.conf;"
     insertbefore: "}"
   when: nginx.config_dir == "http.d"

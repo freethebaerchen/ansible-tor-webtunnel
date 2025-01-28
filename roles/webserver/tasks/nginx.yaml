@@ -25,8 +25,11 @@
 
 - name: Remove nginx default configuration
   ansible.builtin.file:
-    path: "{{ nginx.config_dir }}/default"
+    path: "{{ nginx.config_dir }}/{{ item }}"
     state: absent
+  loop:
+    - default
+    - default.conf
 
 - name: Set types_hash_max_size;
   ansible.builtin.blockinfile:

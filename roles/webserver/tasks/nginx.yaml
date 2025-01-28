@@ -31,14 +31,10 @@
 - name: Set types_hash_max_size;
   ansible.builtin.blockinfile:
     path: "{{ system.etc }}/nginx/nginx.conf"
-    insertbefore: '^    server {'
-    block: '    types_hash_max_size 2048;'
-
-- name: Set types_hash_bucket_size;
-  ansible.builtin.blockinfile:
-    path: "{{ system.etc }}/nginx/nginx.conf"
-    insertbefore: '^    server {'
-    block: '    types_hash_bucket_size 128;'
+    insertafter: '^http {'
+    block: |
+      types_hash_max_size 2048;
+      types_hash_bucket_size 128;
 
 - name: Generate nginx (http) config
   ansible.builtin.template:

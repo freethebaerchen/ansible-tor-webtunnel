@@ -20,7 +20,7 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
 
-      - name: Wait until the ubuntu are reacheable
+      - name: Wait until the ubuntu servers are reacheable
         run: |
           python3 scripts/check_hosts.py --limit ubuntu -i actions-inventory.ini
 
@@ -72,7 +72,7 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=alpine"
 
-      - name: Wait until the alpine are reacheable
+      - name: Wait until the alpine servers are reacheable
         run: |
           python3 scripts/check_hosts.py --limit alpine -i actions-inventory.ini
 
@@ -125,7 +125,7 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=archlinux"
 
-      - name: Wait until the archlinux are reacheable
+      - name: Wait until the archlinux servers are reacheable
         run: |
           python3 scripts/check_hosts.py --limit archlinux -i actions-inventory.ini
 
@@ -179,7 +179,7 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=freebsd"
 
-      - name: Wait until the freebsd are reacheable
+      - name: Wait until the freebsd servers are reacheable
         run: |
           python3 scripts/check_hosts.py --limit freebsd -i actions-inventory.ini
 
@@ -233,7 +233,7 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=openbsd"
 
-      - name: Wait until the openbsd are reacheable
+      - name: Wait until the openbsd servers are reacheable
         run: |
           python3 scripts/check_hosts.py --limit openbsd -i actions-inventory.ini
 
@@ -287,7 +287,7 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=rhel"
 
-      - name: Wait until the rhel are reacheable
+      - name: Wait until the rhel servers are reacheable
         run: |
           python3 scripts/check_hosts.py --limit rhel -i actions-inventory.ini
 
@@ -341,7 +341,7 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=suse"
 
-      - name: Wait until the suse are reacheable
+      - name: Wait until the suse servers are reacheable
         run: |
           python3 scripts/check_hosts.py --limit suse -i actions-inventory.ini
 

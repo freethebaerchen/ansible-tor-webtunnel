@@ -5,3 +5,12 @@
   become: true
   roles:
     - role: bhyve
+
+- name: Shutdown
+  hosts: webtunnel-client
+  become: yes
+  tags:
+    - never
+    - test-webtunnel
+  roles:
+    - role: test-webtunnel

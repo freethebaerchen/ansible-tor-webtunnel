@@ -1,0 +1,11 @@
+---
+
+- name: Slurp connection-string.txt content
+  ansible.builtin.slurp:
+    src: "{{ role_path }}/../../connection-strings.txt"
+  register: connection_strings
+  delegate_to: localhost
+
+- name: Include webutnnel testing task
+  ansible.builtin.include_tasks: webtunnel-testing.yaml 
+  loop: "{{ connection_strings['content'] | b64decode | split('\n') }}"

@@ -86,6 +86,7 @@ jobs:
         with:
           name: connection-strings-alpine
           path: connection-strings.txt
+
   test-alpine:
     needs: 
       - setup-alpine
@@ -110,8 +111,6 @@ jobs:
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
 
   setup-archlinux:
-    needs: 
-      - setup-ubuntu
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -164,8 +163,6 @@ jobs:
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
 
   setup-freebsd:
-    needs: 
-      - setup-alpine
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -218,8 +215,6 @@ jobs:
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
 
   setup-openbsd:
-    needs: 
-      - setup-archlinux
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -272,8 +267,6 @@ jobs:
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
 
   setup-rhel:
-    needs: 
-      - setup-freebsd
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -326,8 +319,6 @@ jobs:
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
 
   setup-suse:
-    needs: 
-      - setup-openbsd
     runs-on: self-hosted
     steps:
       - name: Checkout repository

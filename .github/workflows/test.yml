@@ -50,8 +50,8 @@ jobs:
 
       - name: Test connections
         run: |
-          chmod +x scripts/test-connection.sh
-          ./scripts/test-connection.sh
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown ubuntu servers
         run: |
@@ -102,8 +102,8 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x scripts/test-connection.sh
-          ./scripts/test-connection.sh
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown alpine servers
         run: |
@@ -154,8 +154,8 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x scripts/test-connection.sh
-          ./scripts/test-connection.sh
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown archlinux servers
         run: |
@@ -206,8 +206,8 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x scripts/test-connection.sh
-          ./scripts/test-connection.sh
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown freebsd servers
         run: |
@@ -258,8 +258,8 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x scripts/test-connection.sh
-          ./scripts/test-connection.sh
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown openbsd servers
         run: |
@@ -310,8 +310,8 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x scripts/test-connection.sh
-          ./scripts/test-connection.sh
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown rhel servers
         run: |
@@ -362,8 +362,8 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x scripts/test-connection.sh
-          ./scripts/test-connection.sh
+          chmod +x ansible-playbook.sh
+          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown suse servers
         run: |

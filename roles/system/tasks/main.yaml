@@ -20,5 +20,8 @@
 - name: Include motd
   ansible.builtin.include_tasks: motd.yaml
 
+- name: Include firewall
+  ansible.builtin.include_tasks: firewall.yaml
+
 - name: Include reboot
   ansible.builtin.include_tasks: reboot.yaml

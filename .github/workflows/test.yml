@@ -87,6 +87,7 @@ jobs:
   test-alpine:
     needs: 
       - setup-alpine
+      - test-ubuntu
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -137,6 +138,7 @@ jobs:
   test-archlinux:
     needs: 
       - setup-archlinux
+      - test-alpine
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -187,6 +189,7 @@ jobs:
   test-freebsd:
     needs: 
       - setup-freebsd
+      - test-archlinux
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -237,6 +240,7 @@ jobs:
   test-openbsd:
     needs: 
       - setup-openbsd
+      - test-freebsd
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -287,6 +291,7 @@ jobs:
   test-rhel:
     needs: 
       - setup-rhel
+      - test-openbsd
     runs-on: self-hosted
     steps:
       - name: Checkout repository
@@ -337,6 +342,7 @@ jobs:
   test-suse:
     needs: 
       - setup-suse
+      - test-rhel
     runs-on: self-hosted
     steps:
       - name: Checkout repository

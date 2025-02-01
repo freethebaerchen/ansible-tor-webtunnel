@@ -12,7 +12,7 @@ def check_port(ip, port=22, timeout=2):
     except (socket.timeout, socket.error):
         return False
 
-def get_host_info(inventory_file, group_name, max_retries=5):
+def get_host_info(inventory_file, group_name, max_retries=10):
     command = f"ansible-inventory -i {inventory_file} --list"
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 

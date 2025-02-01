@@ -26,7 +26,6 @@ jobs:
 
       - name: Run Ansible Playbook Test for Ubuntu
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --limit=ubuntu -i actions-inventory.ini
 
       - name: Upload connection-strings
@@ -50,12 +49,11 @@ jobs:
 
       - name: Test connections
         run: |
-          chmod +x ansible-playbook.sh
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown ubuntu servers
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
 
   setup-alpine:
@@ -78,7 +76,6 @@ jobs:
 
       - name: Run Ansible Playbook Test for alpine
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --limit=alpine -i actions-inventory.ini
 
       - name: Upload connection-strings
@@ -102,12 +99,11 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x ansible-playbook.sh
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown alpine servers
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
 
   setup-archlinux:
@@ -130,7 +126,6 @@ jobs:
 
       - name: Run Ansible Playbook Test for archlinux
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --limit=archlinux -i actions-inventory.ini
 
       - name: Upload connection-strings
@@ -154,12 +149,11 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x ansible-playbook.sh
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown archlinux servers
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
 
   setup-freebsd:
@@ -182,7 +176,6 @@ jobs:
 
       - name: Run Ansible Playbook Test for freebsd
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --limit=freebsd -i actions-inventory.ini
 
       - name: Upload connection-strings
@@ -206,12 +199,11 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x ansible-playbook.sh
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown freebsd servers
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
 
   setup-openbsd:
@@ -234,7 +226,6 @@ jobs:
 
       - name: Run Ansible Playbook Test for openbsd
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --limit=openbsd -i actions-inventory.ini
 
       - name: Upload connection-strings
@@ -258,12 +249,11 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x ansible-playbook.sh
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown openbsd servers
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
 
   setup-rhel:
@@ -286,7 +276,6 @@ jobs:
 
       - name: Run Ansible Playbook Test for rhel
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --limit=rhel -i actions-inventory.ini
 
       - name: Upload connection-strings
@@ -310,12 +299,11 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x ansible-playbook.sh
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown rhel servers
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
 
   setup-suse:
@@ -338,7 +326,6 @@ jobs:
 
       - name: Run Ansible Playbook Test for suse
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --limit=suse -i actions-inventory.ini
 
       - name: Upload connection-strings
@@ -362,10 +349,9 @@ jobs:
       
       - name: Test connections
         run: |
-          chmod +x ansible-playbook.sh
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
 
       - name: Shutdown suse servers
         run: |
-          chmod +x ansible-playbook.sh
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini

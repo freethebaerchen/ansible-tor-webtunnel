@@ -15,7 +15,6 @@ jobs:
       - name: Create ubuntu servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=ubuntu"
@@ -48,6 +47,8 @@ jobs:
           name: connection-strings-ubuntu
 
       - name: Test connections
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
@@ -65,7 +66,6 @@ jobs:
       - name: Create alpine servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=alpine"
@@ -99,6 +99,8 @@ jobs:
           name: connection-strings-alpine
       
       - name: Test connections
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
@@ -116,7 +118,6 @@ jobs:
       - name: Create archlinux servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=archlinux"
@@ -150,6 +151,8 @@ jobs:
           name: connection-strings-archlinux
       
       - name: Test connections
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
@@ -167,7 +170,6 @@ jobs:
       - name: Create freebsd servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=freebsd"
@@ -201,6 +203,8 @@ jobs:
           name: connection-strings-freebsd
       
       - name: Test connections
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
@@ -218,7 +222,6 @@ jobs:
       - name: Create openbsd servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=openbsd"
@@ -252,6 +255,8 @@ jobs:
           name: connection-strings-openbsd
       
       - name: Test connections
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
@@ -269,7 +274,6 @@ jobs:
       - name: Create rhel servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=rhel"
@@ -303,6 +307,8 @@ jobs:
           name: connection-strings-rhel
       
       - name: Test connections
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 
@@ -320,7 +326,6 @@ jobs:
       - name: Create suse servers
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
-          ANSIBLE_NOCOLOR: 1
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e "os=suse"
@@ -354,6 +359,8 @@ jobs:
           name: connection-strings-suse
       
       - name: Test connections
+        env:
+          ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel -i actions-inventory.ini 

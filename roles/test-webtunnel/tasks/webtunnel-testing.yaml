@@ -26,10 +26,5 @@
 
 - name: Display IsTor value
   debug:
-    var: isTor
+    msg: "{{ isTor }} for node {{ item | regex_replace('.*#', '') }}"
   failed_when: isTor == false
-
-#- name: Display Tor IP check result
-#  ansible.builtin.debug:
-#    var: tor_result.stdout
-#  failed_when: '"false" in tor_result.stdout'

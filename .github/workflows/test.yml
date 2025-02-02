@@ -37,6 +37,7 @@ jobs:
     needs: 
       - setup-ubuntu
     runs-on: self-hosted
+    concurrency: test-jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -87,8 +88,8 @@ jobs:
   test-alpine:
     needs: 
       - setup-alpine
-      - test-ubuntu
     runs-on: self-hosted
+    concurrency: test-jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -139,8 +140,8 @@ jobs:
   test-archlinux:
     needs: 
       - setup-archlinux
-      - test-alpine
     runs-on: self-hosted
+    concurrency: test-jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -191,8 +192,8 @@ jobs:
   test-freebsd:
     needs: 
       - setup-freebsd
-      - test-archlinux
     runs-on: self-hosted
+    concurrency: test-jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -243,8 +244,8 @@ jobs:
   test-openbsd:
     needs: 
       - setup-openbsd
-      - test-freebsd
     runs-on: self-hosted
+    concurrency: test-jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -295,8 +296,8 @@ jobs:
   test-rhel:
     needs: 
       - setup-rhel
-      - test-openbsd
     runs-on: self-hosted
+    concurrency: test-jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -347,8 +348,8 @@ jobs:
   test-suse:
     needs: 
       - setup-suse
-      - test-rhel
     runs-on: self-hosted
+    concurrency: test-jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

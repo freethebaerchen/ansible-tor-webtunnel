@@ -124,18 +124,6 @@
     enabled: yes
   async: 120
   poll: 5 
-  when: 
-    - torrc.changed
-    - not ansible_os_family == "Alpine"
-
-- name: Restart tor
-  ansible.builtin.command:
-    cmd: rc-update add tor && rc-service restart tor
-  async: 120
-  poll: 5 
-  when: 
-    - torrc.changed
-    - ansible_os_family == "Alpine"
   ignore_errors: true
 
 - name: Wait until fingerprint file exists

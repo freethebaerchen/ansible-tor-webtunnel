@@ -122,6 +122,8 @@
     name: tor
     state: restarted
     enabled: yes
+  async: 120
+  poll: 5 
   when: 
     - torrc.changed
     - not ansible_os_family == "Alpine"
@@ -131,6 +133,8 @@
     name: tor
     state: restarted
     enabled: yes
+  async: 120
+  poll: 5 
   when: 
     - torrc.changed
     - ansible_os_family == "Alpine"

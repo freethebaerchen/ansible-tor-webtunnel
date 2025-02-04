@@ -122,7 +122,18 @@
     name: tor
     state: restarted
     enabled: yes
-  when: torrc.changed
+  when: 
+    - torrc.changed
+    - not ansible_os_family == "Alpine"
+
+- name: Restart tor
+  community.general.openrc_service:
+    name: tor
+    state: restarted
+    enabled: yes
+  when: 
+    - torrc.changed
+    - ansible_os_family == "Alpine"
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

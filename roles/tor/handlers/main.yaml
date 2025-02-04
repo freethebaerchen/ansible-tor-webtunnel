@@ -1,13 +1,5 @@
 ---
 
-- name: Restart tor
-  ansible.builtin.service:
-    name: tor
-    state: restarted
-    enabled: true
-  async: 120
-  poll: 5 
-
 - name: Reload daemon
   ansible.builtin.systemd:
     daemon_reload: yes

@@ -129,15 +129,14 @@
     - not ansible_os_family == "Alpine"
 
 - name: Restart tor
-  community.general.openrc_service:
-    name: tor
-    state: restarted
-    enabled: yes
+  ansible.builtin.command:
+    cmd: rc-update add tor && rc-service restart tor
   async: 120
   poll: 5 
   when: 
     - torrc.changed
     - ansible_os_family == "Alpine"
+  ignore_errors: true
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

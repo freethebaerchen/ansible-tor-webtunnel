@@ -37,9 +37,6 @@ jobs:
     needs: 
       - setup-ubuntu
     runs-on: self-hosted
-    concurrency: 
-      group: test-jobs-${{ github.run_id }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -48,6 +45,23 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-ubuntu
+
+      - name: Wait for lock
+        run: |
+          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+            echo "Another test job is running. Waiting..."
+            sleep 5
+          done
+
+      - name: Acquire Lock
+        run: echo "locked" > lockfile.txt
+
+      - name: Upload Lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: lock-file
+          path: lockfile.txt
+          retention-days: 1
 
       - name: Test connections
         env:
@@ -59,6 +73,14 @@ jobs:
       - name: Shutdown ubuntu servers
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
+
+      - name: Remove Lock
+        run: rm -f lockfile.txt
+
+      - name: Delete Lock Artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: lock-file
 
   setup-alpine:
     runs-on: self-hosted
@@ -102,7 +124,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-alpine
-      
+
+       - name: Wait for lock
+        run: |
+          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+            echo "Another test job is running. Waiting..."
+            sleep 5
+          done
+
+      - name: Acquire Lock
+        run: echo "locked" > lockfile.txt
+
+      - name: Upload Lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: lock-file
+          path: lockfile.txt
+          retention-days: 1
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -113,6 +152,14 @@ jobs:
       - name: Shutdown alpine servers
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
+
+      - name: Remove Lock
+        run: rm -f lockfile.txt
+
+      - name: Delete Lock Artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: lock-file
 
   setup-archlinux:
     runs-on: self-hosted
@@ -156,7 +203,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-archlinux
-      
+
+       - name: Wait for lock
+        run: |
+          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+            echo "Another test job is running. Waiting..."
+            sleep 5
+          done
+
+      - name: Acquire Lock
+        run: echo "locked" > lockfile.txt
+
+      - name: Upload Lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: lock-file
+          path: lockfile.txt
+          retention-days: 1
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -167,6 +231,14 @@ jobs:
       - name: Shutdown archlinux servers
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
+
+      - name: Remove Lock
+        run: rm -f lockfile.txt
+
+      - name: Delete Lock Artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: lock-file
 
   setup-freebsd:
     runs-on: self-hosted
@@ -210,7 +282,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-freebsd
-      
+
+      - name: Wait for lock
+        run: |
+          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+            echo "Another test job is running. Waiting..."
+            sleep 5
+          done
+
+      - name: Acquire Lock
+        run: echo "locked" > lockfile.txt
+
+      - name: Upload Lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: lock-file
+          path: lockfile.txt
+          retention-days: 1
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -221,6 +310,14 @@ jobs:
       - name: Shutdown freebsd servers
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
+
+      - name: Remove Lock
+        run: rm -f lockfile.txt
+
+      - name: Delete Lock Artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: lock-file
 
   setup-openbsd:
     runs-on: self-hosted
@@ -264,7 +361,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-openbsd
-      
+
+      - name: Wait for lock
+        run: |
+          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+            echo "Another test job is running. Waiting..."
+            sleep 5
+          done
+
+      - name: Acquire Lock
+        run: echo "locked" > lockfile.txt
+
+      - name: Upload Lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: lock-file
+          path: lockfile.txt
+          retention-days: 1
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -275,6 +389,14 @@ jobs:
       - name: Shutdown openbsd servers
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
+
+      - name: Remove Lock
+        run: rm -f lockfile.txt
+
+      - name: Delete Lock Artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: lock-file
 
   setup-rhel:
     runs-on: self-hosted
@@ -318,7 +440,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-rhel
-      
+
+      - name: Wait for lock
+        run: |
+          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+            echo "Another test job is running. Waiting..."
+            sleep 5
+          done
+
+      - name: Acquire Lock
+        run: echo "locked" > lockfile.txt
+
+      - name: Upload Lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: lock-file
+          path: lockfile.txt
+          retention-days: 1
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -329,6 +468,14 @@ jobs:
       - name: Shutdown rhel servers
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
+
+      - name: Remove Lock
+        run: rm -f lockfile.txt
+
+      - name: Delete Lock Artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: lock-file
 
   setup-suse:
     runs-on: self-hosted
@@ -372,7 +519,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-suse
-      
+
+      - name: Wait for lock
+        run: |
+          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+            echo "Another test job is running. Waiting..."
+            sleep 5
+          done
+
+      - name: Acquire Lock
+        run: echo "locked" > lockfile.txt
+
+      - name: Upload Lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: lock-file
+          path: lockfile.txt
+          retention-days: 1
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -383,3 +547,11 @@ jobs:
       - name: Shutdown suse servers
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
+
+      - name: Remove Lock
+        run: rm -f lockfile.txt
+
+      - name: Delete Lock Artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: lock-file

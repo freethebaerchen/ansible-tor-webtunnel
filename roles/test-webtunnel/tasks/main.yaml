@@ -6,6 +6,12 @@
   register: connection_strings
   delegate_to: localhost
 
-- name: Include webutnnel testing task
+- name: Include webtunnel testing task
   ansible.builtin.include_tasks: webtunnel-testing.yaml 
   loop: "{{ connection_strings['content'] | b64decode | split('\n') }}"
+  loop_control:
+    extended: true
+
+- name: Display all Tor test results
+  ansible.builtin.debug:
+    msg: "{{ webtunnel_test_result }}"

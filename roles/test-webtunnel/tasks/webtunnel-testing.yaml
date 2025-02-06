@@ -27,7 +27,11 @@
       ansible.builtin.set_fact:
         isTor: "{{ tor_result.stdout | from_json | json_query('IsTor') }}"
 
-    - name: Display IsTor value
-      debug:
-        msg: "{{ isTor }} for node {{ item | regex_replace('.*#', '') }}"
-      failed_when: isTor == false
+    - name: Append debug message to list
+      ansible.builtin.set_fact:
+        webtunnel_test_result: "{{ debug_messages | default([]) + [item | regex_replace('.*#', '') ~ ': ' ~ isTor | string] }}"
+
+    - name: Fail if IsTor is false
+      ansible.builtin.fail:
+        msg: "Tor connection failed for node {{ item | regex_replace('.*#', '') }}"
+      when: isTor == false

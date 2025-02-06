@@ -113,9 +113,6 @@ jobs:
     needs: 
       - setup-alpine
     runs-on: self-hosted
-    concurrency: 
-      group: test-jobs-${{ github.run_id }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -192,9 +189,6 @@ jobs:
     needs: 
       - setup-archlinux
     runs-on: self-hosted
-    concurrency: 
-      group: test-jobs-${{ github.run_id }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -271,9 +265,6 @@ jobs:
     needs: 
       - setup-freebsd
     runs-on: self-hosted
-    concurrency: 
-      group: test-jobs-${{ github.run_id }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -350,9 +341,6 @@ jobs:
     needs: 
       - setup-openbsd
     runs-on: self-hosted
-    concurrency: 
-      group: test-jobs-${{ github.run_id }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -429,9 +417,6 @@ jobs:
     needs: 
       - setup-rhel
     runs-on: self-hosted
-    concurrency: 
-      group: test-jobs-${{ github.run_id }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -508,9 +493,6 @@ jobs:
     needs: 
       - setup-suse
     runs-on: self-hosted
-    concurrency: 
-      group: test-jobs-${{ github.run_id }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

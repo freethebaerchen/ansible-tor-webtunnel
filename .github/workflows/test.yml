@@ -122,12 +122,12 @@ jobs:
         with:
           name: connection-strings-alpine
 
-       - name: Wait for lock
-        run: |
-          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
-            echo "Another test job is running. Waiting..."
-            sleep 5
-          done
+      - name: Wait for lock
+       run: |
+         while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+           echo "Another test job is running. Waiting..."
+           sleep 5
+         done
 
       - name: Acquire Lock
         run: echo "locked" > lockfile.txt
@@ -198,12 +198,12 @@ jobs:
         with:
           name: connection-strings-archlinux
 
-       - name: Wait for lock
-        run: |
-          while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
-            echo "Another test job is running. Waiting..."
-            sleep 5
-          done
+      - name: Wait for lock
+       run: |
+         while curl --fail --silent --head "https://github.com/${{ github.repository }}/actions/artifacts/lock-file"; do
+           echo "Another test job is running. Waiting..."
+           sleep 5
+         done
 
       - name: Acquire Lock
         run: echo "locked" > lockfile.txt

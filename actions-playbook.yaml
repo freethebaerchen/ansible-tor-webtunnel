@@ -7,7 +7,7 @@
     - role: bhyve
 
 - name: Shutdown
-  hosts: webtunnel-client
+  hosts: webtunnel-clients
   become: yes
   tags:
     - never

@@ -1,0 +1,8 @@
+---
+
+- name: Block for deleting webtunnel-client
+  tags:
+    - delete-webtunnel-client
+  block:
+    - name: Delete selected vms
+      ansible.builtin.shell: vm destroy {{ os.name }}-webtunnel-client

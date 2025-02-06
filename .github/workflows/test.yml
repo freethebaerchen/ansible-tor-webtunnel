@@ -53,6 +53,10 @@ jobs:
         with:
           name: connection-strings-ubuntu
 
+      - name: Wait until the ubuntu servers are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit=ubuntu-webtunnel-client -i actions-inventory.ini
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -117,6 +121,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-alpine
+
+      - name: Wait until the ubuntu servers are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit=alpine-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
         env:
@@ -183,6 +191,10 @@ jobs:
         with:
           name: connection-strings-archlinux
 
+      - name: Wait until the ubuntu servers are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit=archlinux-webtunnel-client -i actions-inventory.ini
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -247,6 +259,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-freebsd
+
+      - name: Wait until the ubuntu servers are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit=freebsd-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
         env:
@@ -313,6 +329,10 @@ jobs:
         with:
           name: connection-strings-openbsd
 
+      - name: Wait until the ubuntu servers are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit=openbsd-webtunnel-client -i actions-inventory.ini
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -378,6 +398,10 @@ jobs:
         with:
           name: connection-strings-rhel
 
+      - name: Wait until the ubuntu servers are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit=rhel-webtunnel-client -i actions-inventory.ini
+
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -442,6 +466,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-suse
+
+      - name: Wait until the ubuntu servers are reacheable
+        run: |
+          python3 scripts/check_hosts.py --limit=suse-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
         env:

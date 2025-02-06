@@ -9,7 +9,8 @@ while true; do
         echo "Server is up (HTTP 200 received). Exiting loop."
         break
     else
-        echo "Server not ready (HTTP $STATUS_CODE). Checking again in 5 seconds..."
-        sleep 5
+        RANDOM_SLEEP=$((RANDOM % 14 + 2))
+        echo "Server not ready (HTTP $STATUS_CODE). Checking again in $RANDOM_SLEEP seconds..."
+        sleep $RANDOM_SLEEP
     fi
 done

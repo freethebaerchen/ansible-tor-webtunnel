@@ -74,10 +74,12 @@ jobs:
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=ubuntu -i actions-inventory.ini
 
-      - name: Remove Lock
+      - name: Ensure Lock Removal
+        if: always()
         run: rm -f lockfile.txt
 
       - name: Delete Lock Artifact
+        if: always()
         uses: geekyeggo/delete-artifact@v2
         with:
           name: lock-file
@@ -150,10 +152,12 @@ jobs:
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=alpine -i actions-inventory.ini
 
-      - name: Remove Lock
+      - name: Ensure Lock Removal
+        if: always()
         run: rm -f lockfile.txt
 
       - name: Delete Lock Artifact
+        if: always()
         uses: geekyeggo/delete-artifact@v2
         with:
           name: lock-file
@@ -226,10 +230,12 @@ jobs:
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=archlinux -i actions-inventory.ini
 
-      - name: Remove Lock
+      - name: Ensure Lock Removal
+        if: always()
         run: rm -f lockfile.txt
 
       - name: Delete Lock Artifact
+        if: always()
         uses: geekyeggo/delete-artifact@v2
         with:
           name: lock-file
@@ -302,10 +308,12 @@ jobs:
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=freebsd -i actions-inventory.ini
 
-      - name: Remove Lock
+      - name: Ensure Lock Removal
+        if: always()
         run: rm -f lockfile.txt
 
       - name: Delete Lock Artifact
+        if: always()
         uses: geekyeggo/delete-artifact@v2
         with:
           name: lock-file
@@ -378,10 +386,12 @@ jobs:
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=openbsd -i actions-inventory.ini
 
-      - name: Remove Lock
+      - name: Ensure Lock Removal
+        if: always()
         run: rm -f lockfile.txt
 
       - name: Delete Lock Artifact
+        if: always()
         uses: geekyeggo/delete-artifact@v2
         with:
           name: lock-file
@@ -454,10 +464,12 @@ jobs:
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=rhel -i actions-inventory.ini
 
-      - name: Remove Lock
+      - name: Ensure Lock Removal
+        if: always()
         run: rm -f lockfile.txt
 
       - name: Delete Lock Artifact
+        if: always()
         uses: geekyeggo/delete-artifact@v2
         with:
           name: lock-file
@@ -530,10 +542,12 @@ jobs:
         run: |
           ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=suse -i actions-inventory.ini
 
-      - name: Remove Lock
+      - name: Ensure Lock Removal
+        if: always()
         run: rm -f lockfile.txt
 
       - name: Delete Lock Artifact
+        if: always()
         uses: geekyeggo/delete-artifact@v2
         with:
           name: lock-file

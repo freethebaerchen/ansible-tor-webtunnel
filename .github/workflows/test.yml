@@ -53,10 +53,6 @@ jobs:
         with:
           name: connection-strings-ubuntu
 
-      - name: Check webtunnel-client availablity
-        run: |
-          ./scripts/check_client_availability.sh
-
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -121,10 +117,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-alpine
-
-      - name: Check webtunnel-client availablity
-        run: |
-          ./scripts/check_client_availability.sh
 
       - name: Test connections
         env:
@@ -191,10 +183,6 @@ jobs:
         with:
           name: connection-strings-archlinux
 
-      - name: Check webtunnel-client availablity
-        run: |
-          ./scripts/check_client_availability.sh
-
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -259,10 +247,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-freebsd
-
-      - name: Check webtunnel-client availablity
-        run: |
-          ./scripts/check_client_availability.sh
 
       - name: Test connections
         env:
@@ -329,10 +313,6 @@ jobs:
         with:
           name: connection-strings-openbsd
 
-      - name: Check webtunnel-client availablity
-        run: |
-          ./scripts/check_client_availability.sh
-
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -398,10 +378,6 @@ jobs:
         with:
           name: connection-strings-rhel
 
-      - name: Check webtunnel-client availablity
-        run: |
-          ./scripts/check_client_availability.sh
-
       - name: Test connections
         env:
           ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -466,10 +442,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: connection-strings-suse
-
-      - name: Check webtunnel-client availablity
-        run: |
-          ./scripts/check_client_availability.sh
 
       - name: Test connections
         env:

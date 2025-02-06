@@ -11,6 +11,11 @@
     src: "{{ role_path }}/files/503.conf"
     dest: /etc/nginx/http.d/503.conf
 
+- name: Unerve HTTP-200
+  ansible.builtin.file:
+    path: /etc/nginx/http.d/200.conf
+    state: absent
+
 - name: Reload nginx
   ansible.builtin.service:
     name: nginx
@@ -27,7 +32,7 @@
     src: "{{ role_path }}/files/200.conf"
     dest: /etc/nginx/http.d/200.conf
 
-- name: Unerve HTTP-200
+- name: Unerve HTTP-503
   ansible.builtin.file:
     path: /etc/nginx/http.d/503.conf
     state: absent

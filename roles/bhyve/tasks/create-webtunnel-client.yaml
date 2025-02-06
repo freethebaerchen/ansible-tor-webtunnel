@@ -4,7 +4,7 @@
   tags:
     - create-webtunnel-client
   block:
-    - name: Create {{ os.name }}-webtunnel-client
+    - name: Create {{ vm[os].name }}-webtunnel-client
       ansible.builtin.shell: vm image provision eb57ef8e-dc1f-11ef-90dc-94de80212bf5 {{ os }}-webtunnel-client
       register: provision_result
       failed_when:
@@ -17,5 +17,5 @@
         src: "{{ role_path }}/templates/webtunnel-client.conf.j2"
         dest: "{{ bhyve.root_dir }}/{{ os }}-webtunnel-client/{{ os }}-webtunnel-client.conf"
 
-    - name: Start {{ os.name }}-webtunnel-client
-      ansible.builtin.command: vm start {{ os.name }}-webtunnel-client
+    - name: Start {{ vm[os].name }}-webtunnel-client
+      ansible.builtin.command: vm start {{ vm[os].name }}-webtunnel-client

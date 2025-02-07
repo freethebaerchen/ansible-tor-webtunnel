@@ -20,7 +20,7 @@
       register: socks_port_check
 
     - name: Test tor connection
-      ansible.builtin.command: curl -sS --socks5 localhost:1080 https://check.torproject.org/api/ip
+      ansible.builtin.command: curl -sS --socks5 127.0.0.1:1080 https://check.torproject.org/api/ip
       register: tor_result
 
     - name: Set IsTor fact

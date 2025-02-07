@@ -11,4 +11,4 @@ system:
   etc: /etc
   shell: /usr/local/bin/bash
   tor:
-    directory: /root/.tor
+    directory: /var/tor

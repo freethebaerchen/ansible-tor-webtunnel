@@ -126,6 +126,14 @@
   poll: 5 
   ignore_errors: true
 
+- name: Set {{ system.tor.directory }} owner- and groupship
+  ansible.builtin.file:
+    path: "{{ system.tor.directory }}"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    state: directory
+    recurse: true
+
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:
     path: "{{ system.tor.directory }}/fingerprint"

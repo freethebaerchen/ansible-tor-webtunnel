@@ -1,8 +1,8 @@
-# Setup for a Tor WebTunnel Bridge with Ansible in Hetzner Cloud
+# Setup for a Tor WebTunnel Bridge with Ansible
 [Official Documentation of the Tor-Project](https://community.torproject.org/relay/setup/webtunnel/)
 
 ## Consideration
-Please consider not hosting you bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) recommends, to use another hoster for bridges/relays.
+The script can handle Setting up the infrastructure in Hetzner, but you should consider to not host your bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) recommends, to use another hoster for bridges/relays.
 If you are not able to provide other VMs or servers you can still host the relays in Hetzner Cloud, since it is better to host there, than to not contibute to the Tor project.
 
 If you have servers at another provider or want to create servers there and follow [these instructions](non-hetzner-servers).

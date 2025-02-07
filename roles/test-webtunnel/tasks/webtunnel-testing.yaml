@@ -28,6 +28,10 @@
         isTor: "{{ tor_result.stdout | from_json | json_query('IsTor') }}"
 
     - name: Display IsTor value
-      debug:
+      ansible.builtin.debug:
         msg: "{{ isTor }} for node {{ item | regex_replace('.*#', '') }}"
       failed_when: isTor == false
+
+    - name: Merge isTor messages
+      ansible.builtin.set_fact:
+        tor_debug_messages: "{{ (tor_debug_messages | default([])) + [ 'Tor check result: ' + (isTor | string) + ' for node ' + (item | regex_replace('.*#', '')) ] }}"

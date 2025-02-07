@@ -2,9 +2,9 @@ admins:
   - name: username
     vars:
       public-keys:
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 username@some-domain"
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPAjVNV2L+9Eq+pHpvz4P6JKAJctb0y5f4Z7ieUqFsPC username@some-domain"
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y username@some-domain"
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 username@example.com"
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPAjVNV2L+9Eq+pHpvz4P6JKAJctb0y5f4Z7ieUqFsPC username@example.org"
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y username@example.net"
 
 users: []
 

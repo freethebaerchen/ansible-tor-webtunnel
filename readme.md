@@ -2,10 +2,10 @@
 [Official Documentation of the Tor-Project](https://community.torproject.org/relay/setup/webtunnel/)
 
 ## Consideration
-The script can handle Setting up the infrastructure in Hetzner, but you should consider to not host your bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) recommends, to use another hoster for bridges/relays.
+The script can handle Setting up the infrastructure in Hetzner Cloud, but you should consider to not host your bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) recommends, to use another hoster for bridges/relays.
 If you are not able to provide other VMs or servers you can still host the relays in Hetzner Cloud, since it is better to host there, than to not contibute to the Tor project.
 
-If you have servers at another provider or want to create servers there and follow [these instructions](non-hetzner-servers).
+If you have servers at another provider or want to create servers there you can follow the "non Hetzner instructions" below.
 
 ## General information
 The anible project sets up the HCloud servers with the [ansbile hcloud colection](https://docs.ansible.com/ansible/latest/collections/hetzner/hcloud/index.html).\
@@ -67,10 +67,10 @@ You need a device, that is able to run Docker.
 1. A (sub)domain per server
 2. ´python3.12.*` installed on the server
 3. The code for a website (per server)\
-Optional: The Webservers can be configured to reverse-proxy an existing domain. If you want to do this you can configure it in the [host_vars/example.yaml](host_vars/your-bridge-fsn-0.yaml).
+In Future: The Webservers will be able to reverse-proxy an existing domain. If you want to do this you can configure it in the [host_vars/example.yaml](host_vars/your-bridge-fsn-0.yaml).
 Set the reverse-proxy value to true and configure the domain you want to reverse proxy to as value for the reverse_proxy_url variable.
 
-## Non-Hetzner servers
+## Non-Hetzner-specific Setup
 1. Forget the (Hetzner) steps before this one.
 2. Copy the [example inventory.ini](inventory.ini.example) to inventory.ini
 3. Modify the entry or entries to your fit
@@ -80,7 +80,7 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
     1.1 Change the username\
     1.2 Change the public key(s)\
     1.3 Modify the servers to your fit\
-    1.4 Change the SSH-Key. This will be the key, that is added for the root-User to the Hetzner instance and in the HCloud Console in Security/SSH-Keys\
+    1.4 Change the SSH public key(s).
     1.5 Change the E-Mail you want to use for the certificate request AND as contact address for the bridge\
     Info: For the bridge address the @ and . symbol will be replaced with [at] and [dot]\
     1.6 Change the tor.nickname to a your fit
@@ -94,12 +94,13 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
     4.3 Configure if caddy should be reverse-proxy to another site.
 
 ## executing ansible
-1. ```./ansible-playbook.sh playbook.yaml (--tags hetzner)```
+INFO: Step 3 is only for a Hetzner Cloud setup
+1. ```./ansible-playbook.sh playbook.yaml```
 2. After that, the HCloud infrastructure is created\
     2.1 Now the DNS-Record(s) need to be set.\
     2.2 Set an AAAA-Record with the IPv6-Address of the server\
     2.3 Set an A-Record with the IPv4-Address of the server
-3. Run the script a second time.\
+3. Run the script a second time.
 
 Now the Tor WebTunnel Bridge is created.\
 You can SSH to your server and run ```sudo journalctl -xeu tor@default```.\

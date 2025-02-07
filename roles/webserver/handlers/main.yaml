@@ -5,36 +5,54 @@
     name: caddy
     state: started
     enabled: true
+  async: 120
+  poll: 5 
+  ignore_errors: true
 
 - name: Restart caddy
   ansible.builtin.service:
     name: caddy
     state: restarted
     enabled: true
+  async: 120
+  poll: 5 
+  ignore_errors: true
 
 - name: Start nginx
   ansible.builtin.service:
     name: nginx
     state: started
     enabled: true
+  async: 120
+  poll: 5 
+  ignore_errors: true
 
 - name: Restart nginx
   ansible.builtin.service:
     name: nginx
     state: restarted
     enabled: true
+  async: 120
+  poll: 5 
+  ignore_errors: true
 
 - name: Start apache
   ansible.builtin.service:
     name: "{{ apache.service_name }}"
     state: started
     enabled: true
+  async: 120
+  poll: 5 
+  ignore_errors: true
 
 - name: Restart apache
   ansible.builtin.service:
     name: "{{ apache.service_name }}"
     state: restarted
     enabled: true
+  async: 120
+  poll: 5 
+  ignore_errors: true
 
 - name: Restart portacl
   ansible.builtin.service:

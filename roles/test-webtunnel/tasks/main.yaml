@@ -42,9 +42,5 @@
     name: nginx
     state: reloaded
 
-- name: Display all Tor test results
-  ansible.builtin.debug:
-    msg: "{{ webtunnel_test_result }}"
-
 - name: Shutdown webtunnel-client
   community.general.shutdown:

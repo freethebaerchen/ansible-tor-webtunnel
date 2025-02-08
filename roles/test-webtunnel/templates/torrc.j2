@@ -1,7 +1,8 @@
-UseBridges 1
 SocksPort 1080
 DataDirectory /var/lib/tor
 PIDFile /var/lib/tor/tor.pid
 CookieAuthentication 0
 ClientTransportPlugin webtunnel exec /usr/local/bin/webtunnel
 Bridge {{ item }}
+Log debug file /var/log/tor/debug.log
+Log notice file /var/log/tor/notice.log

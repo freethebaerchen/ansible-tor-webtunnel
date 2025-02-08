@@ -32,7 +32,3 @@
         path: "{{ bhyve.root_dir }}/{{ os }}-{{ item }}/{{ os }}-{{ item }}.conf"
         line: "network0_mac=\"{{ vm[os].mac_address[item] }}\""
       loop: "{{ webserver_software }}"
-
-    - name: Start VMs
-      ansible.builtin.shell: vm start {{ os }}-{{ item }}
-      loop: "{{ webserver_software }}"

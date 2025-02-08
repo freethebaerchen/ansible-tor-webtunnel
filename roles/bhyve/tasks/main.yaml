@@ -10,6 +10,11 @@
   tags:
     - delete-server
 
+- name: Include starting all vms
+  ansible.builtin.include_tasks: start-vms.yaml
+  tags:
+    - start-server
+
 - name: Include create wetunnel-client
   ansible.builtin.include_tasks: create-webtunnel-client.yaml
   tags:

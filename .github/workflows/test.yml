@@ -48,10 +48,15 @@ jobs:
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
       #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
 
-      - name: Create ${{ env.OS }} servers
+      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
+
+      - name: Start all ${ env.OS }} servers
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -155,10 +160,16 @@ jobs:
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
       #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
 
-      - name: Create ${{ env.OS }} servers
+      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
+
+      - name: Start all ${ env.OS }} servers
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -262,10 +273,16 @@ jobs:
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
       #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
 
-      - name: Create ${{ env.OS }} servers
+      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
+
+      - name: Start all ${ env.OS }} servers
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -369,10 +386,16 @@ jobs:
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
       #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
 
-      - name: Create ${{ env.OS }} servers
+      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
+
+      - name: Start all ${ env.OS }} servers
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -476,10 +499,16 @@ jobs:
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
       #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
 
-      - name: Create ${{ env.OS }} servers
+      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
+
+      - name: Start all ${ env.OS }} servers
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -583,10 +612,16 @@ jobs:
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
       #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
 
-      - name: Create ${{ env.OS }} servers
+      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
+
+      - name: Start all ${ env.OS }} servers
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -690,10 +725,16 @@ jobs:
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
       #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
 
-      - name: Create ${{ env.OS }} servers
+      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -e 'os=os=${{ env.OS }} webserver_software=["${ env.WEBSERVER_SOFTWARE }"]'
+
+      - name: Start all ${ env.OS }} servers
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |

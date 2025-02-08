@@ -1,0 +1,9 @@
+---
+
+- name: Block for starting all VMs
+  tags:
+    - start-server
+  block:
+    - name: Start VMs
+      ansible.builtin.shell: vm start {{ os }}-{{ item }}
+      loop: "{{ webserver_software }}"

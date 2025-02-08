@@ -27,12 +27,12 @@ jobs:
   initialise-run-counter:
     runs-on: self-hosted
     steps:
-      #- name: Download run counter
-      #  id: download-counter
-      #  uses: actions/download-artifact@v4
-      #  with:
-      #    name: run-counter
-      #    path: .github/workflows/
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
 
       - name: Read counter
         id: read-counter

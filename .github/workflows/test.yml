@@ -173,9 +173,6 @@ jobs:
           path: connection-strings.txt
 
   test-alpine:
-    needs:
-      - setup-ansible-on-runner
-      - initialise-run-counter
     needs: 
       - setup-alpine
     runs-on: self-hosted

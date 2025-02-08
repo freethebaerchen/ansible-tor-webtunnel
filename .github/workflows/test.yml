@@ -9,14 +9,24 @@ env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
 
 jobs:
-  setup-ubuntu:
+  setup-ansible-on-runner:
     runs-on: self-hosted
-    env:
-      OS: ubuntu
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Install apt packages
+        run: |
+          sudo setup-ansible
 
+      - name: Install pip reqiurements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install ansible-galaxy requirements
+        run: |
+          ansible-galaxy install -r requirements.yaml
+
+  initialise-run-counter:
+    runs-on: self-hosted
+    steps:
       #- name: Download run counter
       #  id: download-counter
       #  uses: actions/download-artifact@v4
@@ -43,20 +53,31 @@ jobs:
           echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
           echo "Using webserver: $WEBSERVER_SOFTWARE"
 
-      #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
+  setup-ubuntu:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
+    runs-on: self-hosted
+    env:
+      OS: ubuntu
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -64,24 +85,13 @@ jobs:
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
-          ./ansible-playbook.sh playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
         uses: actions/upload-artifact@v4
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
-
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true
 
   test-ubuntu:
     needs: 
@@ -96,7 +106,7 @@ jobs:
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -110,18 +120,21 @@ jobs:
       - name: Test connections
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
         run: |
-          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
   setup-alpine:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
     runs-on: self-hosted
     env:
       OS: alpine
@@ -129,46 +142,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download run counter
-        id: download-counter
-        uses: actions/download-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/
-
-      - name: Read counter
-        id: read-counter
-        run: |
-          if [ -f .github/workflows/counter.txt ]; then
-            RUN_COUNT=$(cat .github/workflows/counter.txt)
-          else
-            RUN_COUNT=0
-          fi
-          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
-
-      - name: Determine webserver
-        id: select-webserver
-        run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          INDEX=$((RUN_COUNT % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
-          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
-          echo "Using webserver: $WEBSERVER_SOFTWARE"
-
-      #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
+      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -177,7 +164,7 @@ jobs:
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
-          ./ansible-playbook.sh playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
         uses: actions/upload-artifact@v4
@@ -185,18 +172,10 @@ jobs:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
 
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true
-
   test-alpine:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
     needs: 
       - setup-alpine
     runs-on: self-hosted
@@ -209,7 +188,7 @@ jobs:
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -223,18 +202,21 @@ jobs:
       - name: Test connections
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
         run: |
-          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
   setup-archlinux:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
     runs-on: self-hosted
     env:
       OS: archlinux
@@ -242,46 +224,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download run counter
-        id: download-counter
-        uses: actions/download-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/
-
-      - name: Read counter
-        id: read-counter
-        run: |
-          if [ -f .github/workflows/counter.txt ]; then
-            RUN_COUNT=$(cat .github/workflows/counter.txt)
-          else
-            RUN_COUNT=0
-          fi
-          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
-
-      - name: Determine webserver
-        id: select-webserver
-        run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          INDEX=$((RUN_COUNT % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
-          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
-          echo "Using webserver: $WEBSERVER_SOFTWARE"
-
-      #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
+      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -290,24 +246,13 @@ jobs:
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
-          ./ansible-playbook.sh playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
         uses: actions/upload-artifact@v4
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
-
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true
 
   test-archlinux:
     needs: 
@@ -322,7 +267,7 @@ jobs:
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -336,18 +281,21 @@ jobs:
       - name: Test connections
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
         run: |
-          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
   setup-freebsd:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
     runs-on: self-hosted
     env:
       OS: freebsd
@@ -355,46 +303,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download run counter
-        id: download-counter
-        uses: actions/download-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/
-
-      - name: Read counter
-        id: read-counter
-        run: |
-          if [ -f .github/workflows/counter.txt ]; then
-            RUN_COUNT=$(cat .github/workflows/counter.txt)
-          else
-            RUN_COUNT=0
-          fi
-          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
-
-      - name: Determine webserver
-        id: select-webserver
-        run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          INDEX=$((RUN_COUNT % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
-          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
-          echo "Using webserver: $WEBSERVER_SOFTWARE"
-
-      #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
+      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -403,24 +325,13 @@ jobs:
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
-          ./ansible-playbook.sh playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
         uses: actions/upload-artifact@v4
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
-
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true
 
   test-freebsd:
     needs: 
@@ -435,7 +346,7 @@ jobs:
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -449,18 +360,21 @@ jobs:
       - name: Test connections
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
         run: |
-          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
   setup-openbsd:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
     runs-on: self-hosted
     env:
       OS: openbsd
@@ -468,46 +382,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download run counter
-        id: download-counter
-        uses: actions/download-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/
-
-      - name: Read counter
-        id: read-counter
-        run: |
-          if [ -f .github/workflows/counter.txt ]; then
-            RUN_COUNT=$(cat .github/workflows/counter.txt)
-          else
-            RUN_COUNT=0
-          fi
-          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
-
-      - name: Determine webserver
-        id: select-webserver
-        run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          INDEX=$((RUN_COUNT % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
-          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
-          echo "Using webserver: $WEBSERVER_SOFTWARE"
-
-      #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
+      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -516,24 +404,13 @@ jobs:
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
-          ./ansible-playbook.sh playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
         uses: actions/upload-artifact@v4
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
-
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true
 
   test-openbsd:
     needs: 
@@ -548,7 +425,7 @@ jobs:
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -562,18 +439,21 @@ jobs:
       - name: Test connections
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
         run: |
-          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
   setup-rhel:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
     runs-on: self-hosted
     env:
       OS: rhel
@@ -581,46 +461,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download run counter
-        id: download-counter
-        uses: actions/download-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/
-
-      - name: Read counter
-        id: read-counter
-        run: |
-          if [ -f .github/workflows/counter.txt ]; then
-            RUN_COUNT=$(cat .github/workflows/counter.txt)
-          else
-            RUN_COUNT=0
-          fi
-          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
-
-      - name: Determine webserver
-        id: select-webserver
-        run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          INDEX=$((RUN_COUNT % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
-          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
-          echo "Using webserver: $WEBSERVER_SOFTWARE"
-
-      #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
+      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -629,24 +483,13 @@ jobs:
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
-          ./ansible-playbook.sh playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
         uses: actions/upload-artifact@v4
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
-
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true
 
   test-rhel:
     needs: 
@@ -661,7 +504,7 @@ jobs:
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -675,18 +518,21 @@ jobs:
       - name: Test connections
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
         run: |
-          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
   setup-suse:
+    needs:
+      - setup-ansible-on-runner
+      - initialise-run-counter
     runs-on: self-hosted
     env:
       OS: suse
@@ -694,46 +540,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download run counter
-        id: download-counter
-        uses: actions/download-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/
-
-      - name: Read counter
-        id: read-counter
-        run: |
-          if [ -f .github/workflows/counter.txt ]; then
-            RUN_COUNT=$(cat .github/workflows/counter.txt)
-          else
-            RUN_COUNT=0
-          fi
-          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
-
-      - name: Determine webserver
-        id: select-webserver
-        run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          INDEX=$((RUN_COUNT % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
-          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
-          echo "Using webserver: $WEBSERVER_SOFTWARE"
-
-      #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
+      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -e 'os=os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -742,24 +562,13 @@ jobs:
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
-          ./ansible-playbook.sh playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
         uses: actions/upload-artifact@v4
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
-
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true
 
   test-suse:
     needs: 
@@ -774,7 +583,7 @@ jobs:
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -788,13 +597,36 @@ jobs:
       - name: Test connections
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
         run: |
-          ./ansible-playbook.sh playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+
+  increase-run-counter:
+    needs:
+      - setup-ubuntu
+      - setup-alpine
+      - setup-archlinux
+      - setup-freebsd
+      - setup-openbsd
+      - setup-rhel
+      - setup-suse
+    if: always()
+    runs-on: self-hosted
+    steps:
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true

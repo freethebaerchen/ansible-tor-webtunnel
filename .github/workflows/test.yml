@@ -17,6 +17,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
+
+      - name: Read counter
+        id: read-counter
+        run: |
+          if [ -f .github/workflows/counter.txt ]; then
+            RUN_COUNT=$(cat .github/workflows/counter.txt)
+          else
+            RUN_COUNT=0
+          fi
+          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
+
+      - name: Determine webserver
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          INDEX=$((RUN_COUNT % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -40,6 +66,17 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
+
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true
 
   test-ubuntu:
     needs: 
@@ -87,6 +124,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
+
+      - name: Read counter
+        id: read-counter
+        run: |
+          if [ -f .github/workflows/counter.txt ]; then
+            RUN_COUNT=$(cat .github/workflows/counter.txt)
+          else
+            RUN_COUNT=0
+          fi
+          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
+
+      - name: Determine webserver
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          INDEX=$((RUN_COUNT % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -110,6 +173,17 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
+
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true
 
   test-alpine:
     needs: 
@@ -157,6 +231,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
+
+      - name: Read counter
+        id: read-counter
+        run: |
+          if [ -f .github/workflows/counter.txt ]; then
+            RUN_COUNT=$(cat .github/workflows/counter.txt)
+          else
+            RUN_COUNT=0
+          fi
+          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
+
+      - name: Determine webserver
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          INDEX=$((RUN_COUNT % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -180,6 +280,17 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
+
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true
 
   test-archlinux:
     needs: 
@@ -227,6 +338,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
+
+      - name: Read counter
+        id: read-counter
+        run: |
+          if [ -f .github/workflows/counter.txt ]; then
+            RUN_COUNT=$(cat .github/workflows/counter.txt)
+          else
+            RUN_COUNT=0
+          fi
+          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
+
+      - name: Determine webserver
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          INDEX=$((RUN_COUNT % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -250,6 +387,17 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
+
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true
 
   test-freebsd:
     needs: 
@@ -297,6 +445,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
+
+      - name: Read counter
+        id: read-counter
+        run: |
+          if [ -f .github/workflows/counter.txt ]; then
+            RUN_COUNT=$(cat .github/workflows/counter.txt)
+          else
+            RUN_COUNT=0
+          fi
+          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
+
+      - name: Determine webserver
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          INDEX=$((RUN_COUNT % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -320,6 +494,17 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
+
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true
 
   test-openbsd:
     needs: 
@@ -367,6 +552,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
+
+      - name: Read counter
+        id: read-counter
+        run: |
+          if [ -f .github/workflows/counter.txt ]; then
+            RUN_COUNT=$(cat .github/workflows/counter.txt)
+          else
+            RUN_COUNT=0
+          fi
+          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
+
+      - name: Determine webserver
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          INDEX=$((RUN_COUNT % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -390,6 +601,17 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
+
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true
 
   test-rhel:
     needs: 
@@ -437,6 +659,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download run counter
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/
+
+      - name: Read counter
+        id: read-counter
+        run: |
+          if [ -f .github/workflows/counter.txt ]; then
+            RUN_COUNT=$(cat .github/workflows/counter.txt)
+          else
+            RUN_COUNT=0
+          fi
+          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
+
+      - name: Determine webserver
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          INDEX=$((RUN_COUNT % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -460,6 +708,17 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
           path: connection-strings.txt
+
+      - name: Increment and save counter
+        run: |
+          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
+
+      - name: Upload updated counter
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-counter
+          path: .github/workflows/counter.txt
+          overwrite: true
 
   test-suse:
     needs: 

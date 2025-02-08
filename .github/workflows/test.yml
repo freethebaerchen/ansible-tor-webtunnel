@@ -46,12 +46,12 @@ jobs:
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
@@ -158,12 +158,12 @@ jobs:
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
@@ -271,12 +271,12 @@ jobs:
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
@@ -384,12 +384,12 @@ jobs:
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
@@ -497,12 +497,12 @@ jobs:
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
@@ -610,12 +610,12 @@ jobs:
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |
@@ -723,12 +723,12 @@ jobs:
       #- name: Delete ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE }
       #  run: |
       #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      #    ./ansible-playbook.sh actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${ env.WEBSERVER_SOFTWARE } server
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ./ansible-playbook.sh actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${ env.OS }} servers
         run: |

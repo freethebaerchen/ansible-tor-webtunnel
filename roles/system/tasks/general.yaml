@@ -246,6 +246,10 @@
 - name: Block for OS-Specific tasks (Archlinux)
   when: ansible_os_family == "Archlinux"
   block:
+    - name: Update package cache
+      ansible.builtin.command: pacman -Syu --noconfirm
+      become: yes
+
     - name: Install OS-specific packages
       ansible.builtin.package:
         name:

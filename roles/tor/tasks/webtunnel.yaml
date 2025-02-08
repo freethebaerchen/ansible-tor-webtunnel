@@ -88,13 +88,6 @@
         state: present
         reload: yes
 
-    - name: Start tor
-      ansible.builtin.service:
-        name: tor
-        state: started
-        enabled: yes
-      when: torrc.changed
-
 - name: Block for OS-Family Archlinux
   when: ansible_os_family == "Archlinux"
   block:
@@ -117,6 +110,21 @@
           @tor    soft    nofile    65536
           @tor    hard    nofile    65536
 
+- name: Set {{ system.tor.directory }} owner- and groupship
+  ansible.builtin.file:
+    path: "{{ system.tor.directory }}"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    state: directory
+    recurse: true
+
+- name: Start tor
+  ansible.builtin.service:
+    name: tor
+    state: started
+    enabled: yes
+  when: torrc.changed
+
 - name: Restart tor
   ansible.builtin.service:
     name: tor
@@ -125,14 +133,6 @@
   async: 120
   poll: 5 
   ignore_errors: true
-
-- name: Set {{ system.tor.directory }} owner- and groupship
-  ansible.builtin.file:
-    path: "{{ system.tor.directory }}"
-    owner: "{{ root.user }}"
-    group: "{{ root.group }}"
-    state: directory
-    recurse: true
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

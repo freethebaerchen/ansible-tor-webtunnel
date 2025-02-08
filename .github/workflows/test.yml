@@ -10,7 +10,10 @@ env:
 
 jobs:
   setup-ansible-on-runner:
-    runs-on: self-hosted
+    strategy:
+      matrix:
+        runner: [self-hosted]  # Targets all self-hosted runners
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Install apt packages
         run: |

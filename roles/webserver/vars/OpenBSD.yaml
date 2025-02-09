@@ -40,7 +40,8 @@ webserver_config:
     server_root: /etc/apache2
     config_dir: /etc/apache2/Includes
     config_file: /etc/apache2/httpd2.conf
-    extra_dirs: []
+    extra_dirs:
+      - logs
     modules_config:
       - LoadModule rewrite_module /usr/local/lib/apache2/mod_rewrite.so
       - LoadModule ssl_module /usr/local/lib/apache2/mod_ssl.so

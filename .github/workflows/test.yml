@@ -12,7 +12,8 @@ jobs:
   setup-ansible-on-runner:
     check-bats-version:
       runs-on: 
-        group: ubuntu-runners
+        group: ansible-runners
+        labels: self-hosted
     steps:
       - name: Install apt packages
         run: |

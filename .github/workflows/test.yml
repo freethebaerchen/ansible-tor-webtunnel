@@ -96,7 +96,7 @@ jobs:
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -195,7 +195,7 @@ jobs:
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -295,7 +295,7 @@ jobs:
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -395,7 +395,7 @@ jobs:
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -495,7 +495,7 @@ jobs:
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -595,7 +595,7 @@ jobs:
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -695,7 +695,7 @@ jobs:
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable

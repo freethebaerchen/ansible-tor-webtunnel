@@ -1,25 +1,25 @@
 ---
 
 - name: Validate caddy
-  ansible.builin.command:
+  ansible.builtin.command: 
     cmd: caddy validate
-    register: caddy_validate
-    notify:
-      - Start caddy
+  register: caddy_validate
+  notify:
+    - Start caddy
 
 - name: Validate nginx
-  ansible.builin.command:
+  ansible.builtin.command: 
     cmd: nginx -t
-    register: nginx_validate
-    notify:
-      - Start nginx
+  register: nginx_validate
+  notify:
+    - Start nginx
 
 - name: Validate apache
-  ansible.builin.command:
+  ansible.builtin.command: 
     cmd: apachectl configtest
-    register: apache_validate
-    notify:
-      - Start apache
+  register: apache_validate
+  notify:
+    - Start apache
 
 - name: Start caddy
   ansible.builtin.service:

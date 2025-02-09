@@ -151,6 +151,7 @@ jobs:
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
+        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
@@ -251,6 +252,7 @@ jobs:
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
+        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
@@ -351,6 +353,7 @@ jobs:
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
+        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
@@ -451,6 +454,7 @@ jobs:
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
+        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
@@ -551,6 +555,7 @@ jobs:
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
+        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
@@ -651,6 +656,7 @@ jobs:
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
+        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
@@ -751,6 +757,7 @@ jobs:
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
 
       - name: Shutdown ${{ env.OS }} servers
+        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini

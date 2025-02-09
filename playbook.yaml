@@ -29,11 +29,20 @@
     - bridge
     - webtunnel
 
-- name: Setup webroot
+- name: Setup webserver
   hosts: all
   become: yes
   roles: 
-    - website
+    - webserver
   tags:
-    - website
-    - webroot
+    - webserver
+
+- name: Shutdown
+  hosts: test
+  become: yes
+  tags:
+    - never
+    - shutdown-server
+  tasks:
+    - name: Shutdown server {{ inventory_hostname }}
+      community.general.shutdown:

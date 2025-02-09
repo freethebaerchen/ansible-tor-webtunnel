@@ -1,0 +1,8 @@
+domain: rhel.nginx.jokester.cloud
+id: "rhelnginx"
+reverse_proxy: false
+deploy_webroot: true
+use_webserver: nginx
+tor:
+  nickname:
+  test: true

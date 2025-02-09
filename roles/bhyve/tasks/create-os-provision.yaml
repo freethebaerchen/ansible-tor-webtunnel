@@ -1,0 +1,34 @@
+---
+
+- name: Block for provisioning VMs
+  tags:
+    - create-server
+  block:
+    - name: Get images
+      ansible.builtin.shell: vm image list
+      register: vm_images
+
+    - name: Set image uuid fact
+      ansible.builtin.set_fact:
+        vm_image_uuid: "{{ vm_images.stdout_lines | select('search', os + '-template') | map('regex_replace', '^([^ ]+) .*$', '\\1') | list | first }}"
+
+    - name: Create templated vms
+      ansible.builtin.shell: vm image provision {{ vm_image_uuid }} {{ os }}-{{ item }}
+      loop: "{{ webserver_software }}"
+      register: provision_result
+      failed_when:
+        - "'ERROR: new guest already exists' not in provision_result.stderr"
+        - provision_result.rc != 0
+      changed_when: provision_result.rc == 0
+
+    - name: Render {{ vm[os].template }} template
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/{{ vm[os].template }}.conf.j2"
+        dest: "{{ bhyve.root_dir }}/{{ os }}-{{ item }}/{{ os }}-{{ item }}.conf"
+      loop: "{{ webserver_software }}"
+
+    - name: Set MAC-address for static mapping
+      ansible.builtin.lineinfile:
+        path: "{{ bhyve.root_dir }}/{{ os }}-{{ item }}/{{ os }}-{{ item }}.conf"
+        line: "network0_mac=\"{{ vm[os].mac_address[item] }}\""
+      loop: "{{ webserver_software }}"

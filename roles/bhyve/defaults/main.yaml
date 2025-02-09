@@ -1,0 +1,83 @@
+---
+
+os: ubuntu
+webserver_software:
+  - caddy
+  - nginx
+  - apache
+bhyve:
+  root_dir: /bhyve
+vm:
+  networking:
+    lan_interface: lan0
+  ubuntu:
+    name: ubuntu
+    template: Debian
+    mac_address:
+      caddy: 58:9c:fc:10:00:00
+      nginx: 58:9c:fc:11:00:00
+      apache: 58:9c:fc:12:00:00
+
+  alpine:
+    name: alpine
+    template: Alpine
+    mac_address:
+      caddy: 58:9c:fc:20:00:00
+      nginx: 58:9c:fc:21:00:00
+      apache: 58:9c:fc:22:00:00
+
+  archlinux:
+    name: archlinux
+    template: Archlinux
+    mac_address:
+      caddy: 58:9c:fc:30:00:00
+      nginx: 58:9c:fc:31:00:00
+      apache: 58:9c:fc:32:00:00
+
+  freebsd:
+    name: freebsd
+    template: FreeBSD
+    mac_address:
+      caddy: 58:9c:fc:40:00:00
+      nginx: 58:9c:fc:41:00:00
+      apache: 58:9c:fc:42:00:00
+
+  openbsd:
+    name: openbsd
+    template: OpenBSD
+    mac_address:
+      caddy: 58:9c:fc:50:00:00
+      nginx: 58:9c:fc:51:00:00
+      apache: 58:9c:fc:52:00:00
+
+  rhel:
+    name: rhel
+    template: RedHat
+    mac_address:
+      caddy: 58:9c:fc:60:00:00
+      nginx: 58:9c:fc:61:00:00
+      apache: 58:9c:fc:62:00:00
+
+  suse:
+    name: suse
+    template: Suse
+    mac_address:
+      caddy: 58:9c:fc:70:00:00
+      nginx: 58:9c:fc:71:00:00
+      apache: 58:9c:fc:72:00:00
+
+webtunnel:
+  ubuntu:
+    mac_address: "58:9c:fc:0b:20:10"
+  alpine:
+    mac_address: "58:9c:fc:0b:20:11"
+  archlinux:
+    mac_address: "58:9c:fc:0b:20:12"
+  freebsd:
+    mac_address: "58:9c:fc:0b:20:13"
+  openbsd:
+    mac_address: "58:9c:fc:0b:20:14"
+  rhel:
+    mac_address: "58:9c:fc:0b:20:15"
+  suse:
+    mac_address: "58:9c:fc:0b:20:16"

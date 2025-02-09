@@ -10,12 +10,14 @@
       ansible.builtin.shell: echo $(cat /dev/urandom | tr -cd "qwertyuiopasdfghjklzxcvbnmMNBVCXZLKJHGFDSAQWERTUIOP0987654321"|head -c 24)
       register: random_string
       delegate_to: localhost
+      become: false
 
     - name: Check if random string exists
       ansible.builtin.stat:
         path: "{{ role_path }}/files/{{ inventory_hostname }}.txt"
       register: random_string_file
       delegate_to: localhost
+      become: false
 
     - name: Create files with the random strings
       ansible.builtin.lineinfile:
@@ -23,4 +25,5 @@
         line: "{{ random_string.stdout }}"
         create: yes
       delegate_to: localhost
+      become: false
       when: not random_string_file.stat.exists

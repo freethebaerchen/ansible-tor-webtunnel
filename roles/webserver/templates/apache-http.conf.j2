@@ -1,0 +1,9 @@
+<VirtualHost *:80>
+    ServerName {{ domain }}
+
+    RewriteEngine On
+
+    RewriteRule ^/\.well-known/ - [L]
+
+    RewriteRule (.*) https://%{SERVER_NAME}$1 [R=301,E,QSA]
+</VirtualHost>

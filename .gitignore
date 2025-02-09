@@ -2,12 +2,17 @@ tmp
 .env.local
 group_vars/*
 !group_vars/*.yaml.example
+!group_vars/test.yaml
 roles/hetzner/files/*
 !roles/hetzner/files/.gitkeep
 inventory.ini
 host_vars/*
 !host_vars/your-bridge-*-0.yaml
+!host_vars/*-caddy.yaml
+!host_vars/*-nginx.yaml
+!host_vars/*-apache.yaml
 roles/tor/files/*
 !roles/tor/files/.gitkeep
 roles/system/files/*
 !roles/system/files/*-unattended-upgrades
+connection-strings.txt

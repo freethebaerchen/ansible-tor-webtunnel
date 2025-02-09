@@ -1,0 +1,19 @@
+---
+
+- name: Block for OS-Specific tasks (RedHat)
+  when: ansible_os_family == "RedHat"
+  block:
+
+    - name: Allow HTTP traffic
+      ansible.posix.firewalld:
+        service: "http"
+        permanent: true
+        state: enabled
+        immediate: true
+
+    - name: Allow HTTPS traffic
+      ansible.posix.firewalld:
+        service: "https"
+        permanent: true
+        state: enabled
+        immediate: true

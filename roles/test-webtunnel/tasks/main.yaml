@@ -1,0 +1,56 @@
+---
+
+- name: Slurp connection-string.txt content
+  ansible.builtin.slurp:
+    src: "{{ role_path }}/../../connection-strings.txt"
+  register: connection_strings
+  delegate_to: localhost
+  become: false
+
+- name: Serve HTTP-503
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/503.conf"
+    dest: /etc/nginx/http.d/503.conf
+
+- name: Unerve HTTP-200
+  ansible.builtin.file:
+    path: /etc/nginx/http.d/200.conf
+    state: absent
+
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+
+- name: Include webtunnel testing task
+  ansible.builtin.include_tasks: webtunnel-testing.yaml 
+  loop: "{{ connection_strings['content'] | b64decode | split('\n') }}"
+  loop_control:
+    extended: true
+
+- name: Serve HTTP-200
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/200.conf"
+    dest: /etc/nginx/http.d/200.conf
+
+- name: Unerve HTTP-503
+  ansible.builtin.file:
+    path: /etc/nginx/http.d/503.conf
+    state: absent
+
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+
+- name: Collect all debug messages
+  ansible.builtin.set_fact:
+    all_debug_messages: "{{ groups['all'] | map('extract', hostvars, 'tor_debug_messages') | select('defined') | flatten }}"
+
+- name: Display all debug messages at the end
+  ansible.builtin.debug:
+    msg: "{{ all_debug_messages }}"
+  run_once: true
+
+- name: Shutdown webtunnel-client
+  community.general.shutdown:

@@ -15,3 +15,8 @@
     name: dnf-automatic.timer
     state: restarted
     enabled: true
+
+- name: Restart system
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible for setting the hostname"
+    reboot_timeout: 300

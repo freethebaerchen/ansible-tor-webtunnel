@@ -1,0 +1,38 @@
+ServerName 127.0.1.1
+
+ServerRoot "{{ apache.server_root }}"
+
+Listen 80
+Listen 443
+
+{% if apache.modules_config is defined and apache.modules_config|length > 0 %}
+{% for module in apache.modules_config %}
+{{ module }}
+{% endfor %}
+{% endif %}
+
+<IfModule unixd_module>
+User {{ webserver.user }}
+Group {{ webserver.group }}
+</IfModule>
+
+<Directory "/var/www">
+    AllowOverride None
+    Require all granted
+</Directory>
+
+DocumentRoot "{{ dir.webroot }}"
+<Directory "{{ dir.webroot }}">
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
+
+<IfModule dir_module>
+    DirectoryIndex index.html
+</IfModule>
+
+ErrorLog "/dev/null"
+CustomLog "/dev/null" combined
+
+IncludeOptional {{ apache.config_dir }}/*.conf

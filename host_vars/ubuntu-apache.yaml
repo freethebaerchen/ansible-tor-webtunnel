@@ -1,0 +1,8 @@
+domain: ubuntu.apache.jokester.cloud
+id: "ubuntuapache"
+reverse_proxy: false
+deploy_webroot: true
+use_webserver: apache
+tor:
+  nickname:
+  test: true

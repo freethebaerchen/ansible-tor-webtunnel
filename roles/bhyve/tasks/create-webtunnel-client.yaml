@@ -1,0 +1,21 @@
+---
+
+- name: Block for creating webtunnel-client
+  tags:
+    - create-webtunnel-client
+  block:
+    - name: Create {{ vm[os].name }}-webtunnel-client
+      ansible.builtin.shell: vm image provision 118ef75d-e4c6-11ef-90dc-94de80212bf5 {{ os }}-webtunnel-client
+      register: provision_result
+      failed_when:
+        - "'ERROR: new guest already exists' not in provision_result.stderr"
+        - provision_result.rc != 0
+      changed_when: provision_result.rc == 0
+
+    - name: Render {{ vm[os].template }} template
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/webtunnel-client.conf.j2"
+        dest: "{{ bhyve.root_dir }}/{{ os }}-webtunnel-client/{{ os }}-webtunnel-client.conf"
+
+    - name: Start {{ vm[os].name }}-webtunnel-client
+      ansible.builtin.command: vm start {{ vm[os].name }}-webtunnel-client

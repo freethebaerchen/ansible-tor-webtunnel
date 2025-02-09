@@ -1,0 +1,42 @@
+---
+- name: Block for setting up the webroot
+  when: not reverse_proxy and deploy_webroot
+  block:
+    - name: Create /var/www folder
+      ansible.builtin.file:
+        path: /var/www
+        state: directory
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Create /var/www/html folder
+      ansible.builtin.file:
+        path: "{{ dir.webroot }}"
+        state: directory
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+
+    - name: Copy index.html
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/index.html"
+        dest: "{{ dir.webroot }}"
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+      notify: Restart {{ use_webserver }}
+
+    - name: Copy bear.svg
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/bear.svg"
+        dest: "{{ dir.webroot }}"
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+      notify: Restart {{ use_webserver }}
+
+    - name: Copy robots.txt
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/robots.txt"
+        dest: "{{ dir.webroot }}"
+        owner: "{{ webserver.user }}"
+        group: "{{ webserver.group }}"
+      notify: Restart {{ use_webserver }}
+      when: website.no_index

@@ -1,0 +1,8 @@
+domain: suse.caddy.jokester.cloud
+id: "susecaddy"
+reverse_proxy: false
+deploy_webroot: true
+use_webserver: caddy
+tor:
+  nickname:
+  test: true

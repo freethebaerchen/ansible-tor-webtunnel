@@ -1,0 +1,62 @@
+---
+root:
+  user: root
+  group: wheel
+
+webserver:
+  user: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- elif use_webserver == "nginx" -%}
+      nginx
+    {%- elif use_webserver == "apache" -%}
+      apache
+    {%- else -%}
+      www-data
+    {%- endif -%}
+  group: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- elif use_webserver == "apache" -%}
+      apache
+    {%- else -%}
+      www-data
+    {%- endif -%}
+
+system:
+  etc: /etc
+
+caddy:
+  config_dir: /etc/caddy
+nginx:
+  packages:
+    - nginx
+    - certbot
+  service_name: nginx
+  config_dir: /etc/nginx/http.d
+apache:
+  packages:
+    - apache2
+    - certbot
+    - apache2-ctl
+    - apache2-ssl
+    - apache2-proxy
+  service_name: apache2
+  server_root: /etc/apache2
+  config_dir: /etc/apache2/Includes
+  config_file: /etc/apache2/httpd.conf
+  extra_dirs: []
+  modules_config:
+    - LoadModule rewrite_module /usr/lib/apache2/mod_rewrite.so
+    - LoadModule ssl_module /usr/lib/apache2/mod_ssl.so
+    - LoadModule proxy_module /usr/lib/apache2/mod_proxy.so
+    - LoadModule proxy_http_module /usr/lib/apache2/mod_proxy_http.so
+    - LoadModule headers_module /usr/lib/apache2/mod_headers.so
+    - LoadModule mpm_worker_module /usr/lib/apache2/mod_mpm_worker.so
+    - LoadModule authz_core_module /usr/lib/apache2/mod_authz_core.so
+    - LoadModule log_config_module /usr/lib/apache2/mod_log_config.so
+    - LoadModule unixd_module /usr/lib/apache2/mod_unixd.so
+    - LoadModule dir_module /usr/lib/apache2/mod_dir.so
+    - LoadModule mime_module /usr/lib/apache2/mod_mime.so
+certbot:
+  config_dir: /etc/letsencrypt

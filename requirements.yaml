@@ -1,6 +1,7 @@
 collections:
-  - name: https://github.com/ansible-collections/community.general
-    type: git
-  - name: https://github.com/ansible-collections/hetzner.hcloud
-    type: git
+  - name: community.general
+  - name: hetzner.hcloud
   - name: ansible.posix
+#For git dependency:
+#  - name: https://github.com/some/repository
+#    type: git

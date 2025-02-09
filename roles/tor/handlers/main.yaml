@@ -1,29 +1,5 @@
 ---
 
-- name: Restart tor
-  ansible.builtin.service:
-    name: tor
-    state: restarted
-    enabled: true
-
-- name: Start caddy
-  ansible.builtin.service:
-    name: caddy
-    state: started
-    enabled: true
-
-- name: Restart caddy
-  ansible.builtin.service:
-    name: caddy
-    state: restarted
-    enabled: true
-
-- name: Restart portacl
-  ansible.builtin.service:
-    name: portacl
-    state: restarted
-    enabled: true
-
 - name: Reload daemon
   ansible.builtin.systemd:
     daemon_reload: yes

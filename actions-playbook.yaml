@@ -1,0 +1,16 @@
+---
+
+- name: Provision/Deprovision test server
+  hosts: bhyve-host
+  become: true
+  roles:
+    - role: bhyve
+
+- name: Shutdown
+  hosts: webtunnel_clients
+  become: yes
+  tags:
+    - never
+    - test-webtunnel
+  roles:
+    - role: test-webtunnel

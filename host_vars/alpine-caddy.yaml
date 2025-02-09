@@ -1,0 +1,8 @@
+domain: alpine.caddy.jokester.cloud
+id: "alpinecaddy"
+reverse_proxy: false
+deploy_webroot: true
+use_webserver: caddy
+tor:
+  nickname:
+  test: true

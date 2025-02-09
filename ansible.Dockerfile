@@ -1,4 +1,4 @@
-FROM willhallonline/ansible:2.16.4-alpine-3.18
+FROM willhallonline/ansible:2.16-alpine-3.16
 
 COPY ./scripts/wrapper.sh /workdir/scripts/wrapper.sh
 

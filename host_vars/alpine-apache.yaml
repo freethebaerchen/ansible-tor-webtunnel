@@ -1,0 +1,8 @@
+domain: alpine.apache.jokester.cloud
+id: "alpineapache"
+reverse_proxy: false
+deploy_webroot: true
+use_webserver: apache
+tor:
+  nickname:
+  test: true

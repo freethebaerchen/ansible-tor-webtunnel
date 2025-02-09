@@ -63,6 +63,14 @@
         state: present
       when: unattended_upgrades
 
+    - name: Replace hostname in rc.conf
+      ansible.builtin.lineinfile:
+        path: /etc/rc.conf
+        regexp: '^hostname='
+        line: "hostname={{ inventory_hostname }}"
+        state: present
+      notify: Restart system
+
 - name: Block for OS-Specific tasks (Alpine)
   when: ansible_os_family == "Alpine"
   block:
@@ -115,6 +123,12 @@
       ansible.builtin.rpm_key:
         state: present
         key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9
+
+    - name: Install epel-release
+      ansible.builtin.package:
+        name: 
+          - epel-release
+        state: present
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -181,6 +195,14 @@
         job: "/usr/local/bin/unattended-upgrades"
         state: present
 
+    - name: Replace hostname in /etc/myname
+      ansible.builtin.lineinfile:
+        path: /etc/myname
+        regexp: '^.*$'
+        line: "{{ inventory_hostname }}"
+        state: present
+      notify: Restart system
+
 - name: Block for OS-Specific tasks (Suse)
   when: ansible_os_family == "Suse"
   block:
@@ -193,21 +215,9 @@
           - cronie
         state: present
 
-    - name: Check /usr/bin/python3
-      ansible.builtin.stat:
-        path: /usr/bin/python3
-      register: python_binary
-
-    - name: Set python3.12 as default
-      ansible.builtin.file:
-        src: /usr/bin/python3.12
-        dest: /usr/bin/python3
-        state: link
-      when: not python_binary.stat.lnk_source == "/usr/bin/python3.12"
-
     - name: Symlink pyhton bin to /usr/local/bin
       ansible.builtin.file:
-        src: /usr/bin/python3
+        src: /usr/bin/python3.12
         dest: /usr/local/bin/python3
         state: link
 
@@ -236,6 +246,10 @@
 - name: Block for OS-Specific tasks (Archlinux)
   when: ansible_os_family == "Archlinux"
   block:
+    - name: Update package cache
+      ansible.builtin.command: pacman -Syu --noconfirm
+      become: yes
+
     - name: Install OS-specific packages
       ansible.builtin.package:
         name:
@@ -243,12 +257,6 @@
           - htop
           - cronie
         state: present
-
-    - name: Symlink pyhton bin to /usr/local/bin
-      ansible.builtin.file:
-        src: /usr/bin/python3
-        dest: /usr/local/bin/python3
-        state: link
 
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:
@@ -292,3 +300,16 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/hosts.j2"
         dest: /etc/hosts
+
+    - name: Set the hostname
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Replace hostname in /etc/hostname
+      ansible.builtin.lineinfile:
+        path: /etc/hostname
+        regexp: '^.*$'
+        line: "{{ inventory_hostname }}"
+        state: present
+      notify: Restart system
+      when: ansible_os_family != "OpenBSD" and ansible_os_family != "FreeBSD" 

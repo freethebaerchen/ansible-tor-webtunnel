@@ -5,12 +5,12 @@
   block:
     - name: Add the Caddy repository key
       ansible.builtin.apt_key:
-        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+        url: https:/dl.cloudsmith.io/public/caddy/stable/gpg.key
         state: present
 
     - name: Add the Caddy APT repository
       ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64] https://dl.cloudsmith.io/public/caddy/stable/deb/ubuntu focal main"
+        repo: "deb [arch=amd64] https:/dl.cloudsmith.io/public/caddy/stable/deb/ubuntu focal main"
         state: present
         filename: caddy-stable
 
@@ -84,10 +84,49 @@
     - name: Include webroot
       ansible.builtin.include_tasks: webroot.yaml
 
-    - name: Generate Caddyfile
+    - name: Create caddy subdirectory
+      ansible.builtin.file:
+        path: "{{ webserver_config[use_webserver].extra_dirs }}"
+        state: directory
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Check if Caddyfile differs from template
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/Caddyfile.j2"
+        dest: "/tmp/Caddyfile"
+        mode: '0644'
+
+    - name: Get checksum of rendered Caddyfile
+      ansible.builtin.stat:
+        path: "/tmp/Caddyfile"
+        checksum_algorithm: sha256
+      register: rendered_caddyfile
+
+    - name: Get checksum of original Caddyfile
+      ansible.builtin.stat:
+        path: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+        checksum_algorithm: sha256
+      register: orig_caddyfile
+
+    - name: Backup existing Caddyfile if different from template
+      ansible.builtin.copy:
+        src: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+        dest: "{{ webserver_config[use_webserver].extra_dirs }}/original-Caddyfile"
+        remote_src: true
+      when: rendered_caddyfile.stat.checksum != orig_caddyfile.stat.checksum
+
+    - name: Render new Caddyfile
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"
         dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+        mode: '0644'
+      notify: Restart caddy
+
+    - name: Render webtunnel-Caddyfile
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/webtunnel-Caddyfile.j2"
+        dest: "{{ webserver_config[use_webserver].extra_dirs }}/webtunnel-Caddyfile"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify:

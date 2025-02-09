@@ -29,7 +29,9 @@ system:
 
 webserver_config:
   caddy:
+    service_name: caddy
     config_dir: /etc/caddy
+    extra_dirs: /etc/caddy/configs
   nginx:
     packages:
       - nginx

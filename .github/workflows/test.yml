@@ -10,6 +10,9 @@ env:
 
 jobs:
   setup-ansible-on-runner:
+    strategy:
+      matrix:
+        runner: [runner-1, runner-2, runner-3, runner-4]
     runs-on: 
       group: ansible-runners
     steps:

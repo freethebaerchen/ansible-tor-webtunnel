@@ -22,7 +22,7 @@
         dest: "{{ webserver.webroot }}"
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
-      notify: Restart {{ use_webserver }}
+      notify: Validate {{ use_webserver }}
 
     - name: Copy bear.svg
       ansible.builtin.copy:
@@ -30,7 +30,7 @@
         dest: "{{ webserver.webroot }}"
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
-      notify: Restart {{ use_webserver }}
+      notify: Validate {{ use_webserver }}
 
     - name: Copy robots.txt
       ansible.builtin.copy:
@@ -38,5 +38,5 @@
         dest: "{{ webserver.webroot }}"
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
-      notify: Restart {{ use_webserver }}
+      notify: Validate {{ use_webserver }}
       when: website.no_index

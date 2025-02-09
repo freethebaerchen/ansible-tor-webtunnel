@@ -47,21 +47,11 @@
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   register: nginx_http
+  notify:
+    - Validate nginx
 
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml
-
-- name: Start nginx
-  ansible.builtin.service:
-    name: nginx
-    state: started
-    enabled: true
-
-- name: Restart nginx
-  ansible.builtin.service:
-    name: nginx
-    state: restarted
-  when: nginx_http.changed
 
 - name: Ensure nginx log directory exists
   ansible.builtin.file:
@@ -79,5 +69,4 @@
   vars:
     webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
   notify:
-    - Start nginx
-    - Restart nginx
+    - Validate nginx

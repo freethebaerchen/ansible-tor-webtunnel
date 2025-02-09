@@ -121,7 +121,8 @@
         src: "{{ role_path }}/templates/Caddyfile.j2"
         dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
         mode: '0644'
-      notify: Restart caddy
+      notify:
+        - Validate caddy
 
     - name: Render webtunnel-Caddyfile
       ansible.builtin.template:
@@ -130,7 +131,6 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify:
-        - Start caddy 
-        - Restart caddy
+        - Validate caddy
       vars:
         webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"

@@ -53,6 +53,8 @@
     state: present
   loop: "{{ webserver_config[use_webserver].modules }}"
   when: webserver_config[use_webserver].modules is defined
+  notify:
+    - Validate apache
 
 - name: Generate apache (http) config
   ansible.builtin.template:
@@ -60,6 +62,8 @@
     dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
+  notify:
+    - Validate apache
 
 - name: Ensure apache log directory exists
   ansible.builtin.file:
@@ -71,19 +75,6 @@
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml
 
-- name: Start apache
-  ansible.builtin.service:
-    name: "{{ webserver_config[use_webserver].service_name }}"
-    state: started
-    enabled: true
-  register: apache_start
-
-- name: Restart apache
-  ansible.builtin.service:
-    name: "{{ webserver_config[use_webserver].service_name }}"
-    state: restarted
-  when: not apache_start.changed
-
 - name: Generate apache (https) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/apache-https.conf.j2"
@@ -93,5 +84,4 @@
   vars:
     webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
   notify:
-    - Start apache
-    - Restart apache
+    - Validate apache

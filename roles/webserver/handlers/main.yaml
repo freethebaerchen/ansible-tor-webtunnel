@@ -1,5 +1,26 @@
 ---
 
+- name: Validate caddy
+  ansible.builin.command:
+    cmd: caddy validate
+    register: caddy_validate
+    notify:
+      - Start caddy
+
+- name: Validate nginx
+  ansible.builin.command:
+    cmd: nginx -t
+    register: nginx_validate
+    notify:
+      - Start nginx
+
+- name: Validate apache
+  ansible.builin.command:
+    cmd: apachectl configtest
+    register: apache_validate
+    notify:
+      - Start apache
+
 - name: Start caddy
   ansible.builtin.service:
     name: "{{ webserver_config[use_webserver].service_name }}"
@@ -8,6 +29,10 @@
   async: 120
   poll: 5 
   ignore_errors: true
+  when:
+    - caddy_validate is success
+  notify:
+    - Restart caddy
 
 - name: Restart caddy
   ansible.builtin.service:
@@ -17,6 +42,8 @@
   async: 120
   poll: 5 
   ignore_errors: true
+  when:
+    - caddy_validate is success
 
 - name: Start nginx
   ansible.builtin.service:
@@ -26,6 +53,10 @@
   async: 120
   poll: 5 
   ignore_errors: true
+  when:
+    - nginx_validate is success
+  notify:
+    - Restart nginx
 
 - name: Restart nginx
   ansible.builtin.service:
@@ -35,6 +66,8 @@
   async: 120
   poll: 5 
   ignore_errors: true
+  when:
+    - nginx_validate is success
 
 - name: Start apache
   ansible.builtin.service:
@@ -44,6 +77,10 @@
   async: 120
   poll: 5 
   ignore_errors: true
+  when:
+    - apache_validate is success
+  notify:
+    - Restart apache
 
 - name: Restart apache
   ansible.builtin.service:
@@ -53,6 +90,8 @@
   async: 120
   poll: 5 
   ignore_errors: true
+  when:
+    - apache_validate is success
 
 - name: Restart portacl
   ansible.builtin.service:

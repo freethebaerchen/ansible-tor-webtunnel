@@ -42,6 +42,8 @@ jobs:
 
   initialise-run-counter:
     runs-on: self-hosted
+    outputs:
+      webserver: ${{ steps.select-webserver.outputs.webserver }}
     steps:
       - name: Download run counter
         id: download-counter
@@ -66,7 +68,7 @@ jobs:
           WEBSERVERS=("caddy" "nginx" "apache")
           INDEX=$((RUN_COUNT % 3))
           WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
-          echo "WEBSERVER_SOFTWARE=$WEBSERVER_SOFTWARE" >> $GITHUB_ENV
+          echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
           echo "Using webserver: $WEBSERVER_SOFTWARE"
 
   setup-ubuntu:
@@ -76,6 +78,7 @@ jobs:
     runs-on: self-hosted
     env:
       OS: ubuntu
+      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -176,6 +179,7 @@ jobs:
     runs-on: self-hosted
     env:
       OS: alpine
+      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -277,6 +281,7 @@ jobs:
     runs-on: self-hosted
     env:
       OS: archlinux
+      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -378,6 +383,7 @@ jobs:
     runs-on: self-hosted
     env:
       OS: freebsd
+      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -479,6 +485,7 @@ jobs:
     runs-on: self-hosted
     env:
       OS: openbsd
+      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -580,6 +587,7 @@ jobs:
     runs-on: self-hosted
     env:
       OS: rhel
+      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -681,6 +689,7 @@ jobs:
     runs-on: self-hosted
     env:
       OS: suse
+      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

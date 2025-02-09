@@ -5,6 +5,7 @@
     src: "{{ role_path }}/../../connection-strings.txt"
   register: connection_strings
   delegate_to: localhost
+  become: false
 
 - name: Serve HTTP-503
   ansible.builtin.copy:

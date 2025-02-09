@@ -46,7 +46,6 @@ jobs:
       webserver: ${{ steps.select-webserver.outputs.webserver }}
     steps:
       - name: Download run counter
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: run-counter
@@ -84,7 +83,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -134,7 +132,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -185,7 +182,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -236,7 +232,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -287,7 +282,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -338,7 +332,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -389,7 +382,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -440,7 +432,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -491,7 +482,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -542,7 +532,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -593,7 +582,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -644,7 +632,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -695,7 +682,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel
@@ -746,7 +732,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        id: download-counter
         uses: actions/download-artifact@v4
         with:
           name: venv-ansible-webtunnel

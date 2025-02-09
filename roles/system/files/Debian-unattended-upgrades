@@ -1,6 +1,5 @@
 Unattended-Upgrade::Origins-Pattern {
-  "o=Ubuntu,a=stable";
-  "o=Ubuntu,a=stable-security";
-  "o=Ubuntu,a=stable-updates";
+        "origin=Ubuntu,archive=${distro_codename}-security";
+        "origin=Ubuntu,archive=${distro_codename}-updates";
 };
 Unattended-Upgrade::Automatic-Reboot "true";

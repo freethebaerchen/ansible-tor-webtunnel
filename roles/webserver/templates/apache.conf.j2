@@ -1,12 +1,12 @@
 ServerName 127.0.1.1
 
-ServerRoot "{{ apache.server_root }}"
+ServerRoot "{{ webserver_config[use_webserver].server_root }}"
 
 Listen 80
 Listen 443
 
-{% if apache.modules_config is defined and apache.modules_config|length > 0 %}
-{% for module in apache.modules_config %}
+{% if webserver_config[use_webserver].modules_config is defined and webserver_config[use_webserver].modules_config|length > 0 %}
+{% for module in webserver_config[use_webserver].modules_config %}
 {{ module }}
 {% endfor %}
 {% endif %}
@@ -21,8 +21,8 @@ Group {{ webserver.group }}
     Require all granted
 </Directory>
 
-DocumentRoot "{{ dir.webroot }}"
-<Directory "{{ dir.webroot }}">
+DocumentRoot "{{ webserver.webroot }}"
+<Directory "{{ webserver.webroot }}">
     Options Indexes FollowSymLinks
     AllowOverride None
     Require all granted
@@ -35,4 +35,4 @@ DocumentRoot "{{ dir.webroot }}"
 ErrorLog "/dev/null"
 CustomLog "/dev/null" combined
 
-IncludeOptional {{ apache.config_dir }}/*.conf
+IncludeOptional {{ webserver_config[use_webserver].config_dir }}/*.conf

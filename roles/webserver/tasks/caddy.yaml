@@ -87,7 +87,7 @@
     - name: Generate Caddyfile
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"
-        dest: "{{ caddy.config_dir }}/Caddyfile"
+        dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify:

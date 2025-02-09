@@ -16,37 +16,40 @@ webserver:
     {%- else -%}
       www-data
     {%- endif -%}
+  webroot: /var/www/html
 
 system:
   etc: /etc
 
-caddy:
-  config_dir: /etc/caddy
-nginx:
-  packages:
-    - nginx
-    - certbot
-  service_name: nginx
-  config_dir: /etc/nginx/sites-enabled
-apache:
-  packages:
-    - apache2
-    - certbot
-  service_name: apache2
-  server_root: /etc/apache2
-  config_dir: /etc/apache2/sites-enabled
-  config_file: /etc/apache2/apache.conf
-  extra_dirs: []
-  modules:
-    - rewrite
-    - ssl
-    - proxy
-    - proxy_http
-    - headers
-    - authz_core
-    - log_config
-    - unixd
-    - dir
-    - mime
+webserver_config:
+  caddy:
+    config_dir: /etc/caddy
+  nginx:
+    packages:
+      - nginx
+      - certbot
+    service_name: nginx
+    config_dir: /etc/nginx/sites-enabled
+  apache:
+    packages:
+      - apache2
+      - certbot
+    service_name: apache2
+    server_root: /etc/apache2
+    config_dir: /etc/apache2/sites-enabled
+    config_file: /etc/apache2/apache.conf
+    extra_dirs: []
+    modules:
+      - rewrite
+      - ssl
+      - proxy
+      - proxy_http
+      - headers
+      - authz_core
+      - log_config
+      - unixd
+      - dir
+      - mime
 certbot:
   config_dir: /etc/letsencrypt
+  webroot: /var/www/certbot

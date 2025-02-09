@@ -6,37 +6,40 @@ root:
 webserver:
   user: www
   group: www
+  webroot: /var/www/html
 
 system:
   etc: /usr/local/etc
 
-caddy:
-  config_dir: /usr/local/etc/caddy
-nginx:
-  packages:
-    - nginx
-    - security/py-certbot
-  service_name: nginx
-  config_dir: /usr/local/etc/nginx/http.d
-apache:
-  packages:
-    - apache24
-    - security/py-certbot
-  service_name: apache24
-  server_root: /usr/local/etc/apache24
-  config_dir: /usr/local/etc/apache24/Includes
-  config_file: /usr/local/etc/apache24/httpd.conf
-  extra_dirs: []
-  modules_config:
-    - LoadModule rewrite_module /usr/local/libexec/apache24/mod_rewrite.so
-    - LoadModule ssl_module /usr/local/libexec/apache24/mod_ssl.so
-    - LoadModule proxy_module /usr/local/libexec/apache24/mod_proxy.so
-    - LoadModule proxy_http_module /usr/local/libexec/apache24/mod_proxy_http.so
-    - LoadModule headers_module /usr/local/libexec/apache24/mod_headers.so
-    - LoadModule mpm_worker_module /usr/local/libexec/apache24/mod_mpm_worker.so
-    - LoadModule authz_core_module /usr/local/libexec/apache24/mod_authz_core.so
-    - LoadModule log_config_module /usr/local/libexec/apache24/mod_log_config.so
-    - LoadModule unixd_module /usr/local/libexec/apache24/mod_unixd.so
-    - LoadModule dir_module /usr/local/libexec/apache24/mod_dir.so
+webserver_config:
+  caddy:
+    config_dir: /usr/local/etc/caddy
+  nginx:
+    packages:
+      - nginx
+      - security/py-certbot
+    service_name: nginx
+    config_dir: /usr/local/etc/nginx/http.d
+  apache:
+    packages:
+      - apache24
+      - security/py-certbot
+    service_name: apache24
+    server_root: /usr/local/etc/apache24
+    config_dir: /usr/local/etc/apache24/Includes
+    config_file: /usr/local/etc/apache24/httpd.conf
+    extra_dirs: []
+    modules_config:
+      - LoadModule rewrite_module /usr/local/libexec/apache24/mod_rewrite.so
+      - LoadModule ssl_module /usr/local/libexec/apache24/mod_ssl.so
+      - LoadModule proxy_module /usr/local/libexec/apache24/mod_proxy.so
+      - LoadModule proxy_http_module /usr/local/libexec/apache24/mod_proxy_http.so
+      - LoadModule headers_module /usr/local/libexec/apache24/mod_headers.so
+      - LoadModule mpm_worker_module /usr/local/libexec/apache24/mod_mpm_worker.so
+      - LoadModule authz_core_module /usr/local/libexec/apache24/mod_authz_core.so
+      - LoadModule log_config_module /usr/local/libexec/apache24/mod_log_config.so
+      - LoadModule unixd_module /usr/local/libexec/apache24/mod_unixd.so
+      - LoadModule dir_module /usr/local/libexec/apache24/mod_dir.so
 certbot:
   config_dir: /usr/local/etc/letsencrypt
+  webroot: /var/www/certbot

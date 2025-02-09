@@ -2,7 +2,7 @@
 
 - name: Start caddy
   ansible.builtin.service:
-    name: caddy
+    name: "{{ webserver_config[use_webserver].service_name }}"
     state: started
     enabled: true
   async: 120
@@ -11,7 +11,7 @@
 
 - name: Restart caddy
   ansible.builtin.service:
-    name: caddy
+    name: "{{ webserver_config[use_webserver].service_name }}"
     state: restarted
     enabled: true
   async: 120
@@ -20,7 +20,7 @@
 
 - name: Start nginx
   ansible.builtin.service:
-    name: nginx
+    name: "{{ webserver_config[use_webserver].service_name }}"
     state: started
     enabled: true
   async: 120
@@ -29,7 +29,7 @@
 
 - name: Restart nginx
   ansible.builtin.service:
-    name: nginx
+    name: "{{ webserver_config[use_webserver].service_name }}"
     state: restarted
     enabled: true
   async: 120
@@ -38,7 +38,7 @@
 
 - name: Start apache
   ansible.builtin.service:
-    name: "{{ apache.service_name }}"
+    name: "{{ webserver_config[use_webserver].service_name }}"
     state: started
     enabled: true
   async: 120
@@ -47,7 +47,7 @@
 
 - name: Restart apache
   ansible.builtin.service:
-    name: "{{ apache.service_name }}"
+    name: "{{ webserver_config[use_webserver].service_name }}"
     state: restarted
     enabled: true
   async: 120

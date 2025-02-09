@@ -20,6 +20,9 @@ jobs:
         run: |
           sudo setup-ansible
 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Create virtual environment
         run: python3 -m venv venv
 

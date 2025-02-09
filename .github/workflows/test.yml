@@ -80,11 +80,11 @@ jobs:
           name: venv-ansible-webtunnel
           path: venv
 
-      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-      #  run: |
-      #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    source venv/bin/activate
-      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
@@ -179,11 +179,11 @@ jobs:
           name: venv-ansible-webtunnel
           path: venv
 
-      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-      #  run: |
-      #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    source venv/bin/activate
-      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
@@ -279,11 +279,11 @@ jobs:
           name: venv-ansible-webtunnel
           path: venv
 
-      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-      #  run: |
-      #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    source venv/bin/activate
-      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
@@ -379,11 +379,11 @@ jobs:
           name: venv-ansible-webtunnel
           path: venv
 
-      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-      #  run: |
-      #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    source venv/bin/activate
-      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
@@ -479,11 +479,11 @@ jobs:
           name: venv-ansible-webtunnel
           path: venv
 
-      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-      #  run: |
-      #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    source venv/bin/activate
-      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
@@ -579,11 +579,11 @@ jobs:
           name: venv-ansible-webtunnel
           path: venv
 
-      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-      #  run: |
-      #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    source venv/bin/activate
-      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
@@ -679,11 +679,11 @@ jobs:
           name: venv-ansible-webtunnel
           path: venv
 
-      #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-      #  run: |
-      #    echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-      #    source venv/bin/activate
-      #    ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |

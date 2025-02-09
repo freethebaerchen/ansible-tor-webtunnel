@@ -12,6 +12,7 @@
       ansible.builtin.service:
         name: tor
         state: restarted
+      ignore_errors: true
 
     - name: Wait for SOCKS5-Port to be available
       ansible.builtin.wait_for:

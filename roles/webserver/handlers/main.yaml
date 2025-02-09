@@ -2,7 +2,7 @@
 
 - name: Validate caddy
   ansible.builtin.command: 
-    cmd: caddy validate
+    cmd: caddy validate {{ websverer_config[use_webserver].config_dir }}/Caddyfile
   register: caddy_validate
   notify:
     - Start caddy

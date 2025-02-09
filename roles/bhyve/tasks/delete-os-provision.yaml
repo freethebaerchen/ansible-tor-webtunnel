@@ -7,6 +7,8 @@
     - name: Forcefully shutdown {{ vm[os].name }}-{{ webserver_software }}
       shell: vm poweroff -f {{ vm[os].name }}-{{ item }}
       loop: "{{ webserver_software }}"
+      register: shutdown_webserver
+      failed_when: "'ERROR: {{ vm[os].name }}-{{ item }} doesn't appear to be a running virtual machine' not in shutdown_webserver.stderr" and shutdown_webserver.rc != 0
 
     - name: Get stopped vms
       ansible.builtin.shell: vm list

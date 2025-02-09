@@ -42,7 +42,7 @@ This Project supports, as of right now the following distributions:
     - OpenSUSE-based (OpenSUSE Leap 15.6)\
     - OpenBSD-based (OpenBSD 7.6)\
     - Archlinux-based (Archlinux 2024.08.01)\
-    - FreeBSD-based (FreeBSD 14.1)
+    - FreeBSD-based (FreeBSD 14.1, FreeBSD 14.2)
 
 ### OS specialties
 #### Alpine

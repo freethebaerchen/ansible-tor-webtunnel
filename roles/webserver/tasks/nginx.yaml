@@ -48,22 +48,8 @@
     group: "{{ root.group }}"
   register: nginx_http
 
-- name: Check if port 80 is in use
-  wait_for:
-    port: 80
-    timeout: 1
-  register: port_check
-  ignore_errors: yes
-
-- name: Stop webserver
-  ansible.builtin.service:
-    name: "{{ webserver_config[use_webserver].service_name }}"
-    state: stopped
-  when: port_check.state is defined and port_check.state == "started"
-
-- name: Request certificate
-  ansible.builtin.shell: |
-    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+- name: Include certificate request
+  ansible.builtin.include_tasks: certificate.yaml
 
 - name: Start nginx
   ansible.builtin.service:

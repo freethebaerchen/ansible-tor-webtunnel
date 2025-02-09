@@ -61,32 +61,15 @@
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
 
-- name: Include certificate request
-  ansible.builtin.include_tasks: certificate.yaml
-
-#- name: Check if port 80 is in use
-#  wait_for:
-#    port: 80
-#    timeout: 1
-#  register: port_check
-#  ignore_errors: yes
-#
-#- name: Stop webserver
-#  ansible.builtin.service:
-#    name: "{{ apache.service_name }}"
-#    state: stopped
-#  when: port_check.state is defined and port_check.state == "started"
-#
-#- name: Request certificate
-#  ansible.builtin.shell: |
-#    certbot certonly --standalone --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
-#
 - name: Ensure apache log directory exists
   ansible.builtin.file:
     path: /var/log/apache
     state: directory
     owner: "{{ webserver.user }}"
     group: "{{ webserver.group }}"
+
+- name: Include certificate request
+  ansible.builtin.include_tasks: certificate.yaml
 
 - name: Start apache
   ansible.builtin.service:

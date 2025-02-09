@@ -5,93 +5,60 @@
     cmd: caddy validate --config {{ webserver_config[use_webserver].config_dir }}/Caddyfile
   register: caddy_validate
   notify:
-    - Start caddy
+    - Restart caddy
 
 - name: Validate nginx
   ansible.builtin.command: 
     cmd: nginx -t
   register: nginx_validate
   notify:
-    - Start nginx
+    - Restart nginx
 
 - name: Validate apache
   ansible.builtin.command: 
     cmd: apachectl configtest
   register: apache_validate
   notify:
-    - Start apache
-
-- name: Start caddy
-  ansible.builtin.service:
-    name: "{{ webserver_config[use_webserver].service_name }}"
-    state: started
-    enabled: true
-  async: 120
-  poll: 5 
-  ignore_errors: true
-  when:
-    - caddy_validate is success
-  notify:
-    - Restart caddy
+    - Restart apache
 
 - name: Restart caddy
   ansible.builtin.service:
     name: "{{ webserver_config[use_webserver].service_name }}"
-    state: restarted
+    state: "{{ item }}"
     enabled: true
   async: 120
   poll: 5 
   ignore_errors: true
-  when:
-    - caddy_validate is success
-
-- name: Start nginx
-  ansible.builtin.service:
-    name: "{{ webserver_config[use_webserver].service_name }}"
-    state: started
-    enabled: true
-  async: 120
-  poll: 5 
-  ignore_errors: true
-  when:
-    - nginx_validate is success
-  notify:
-    - Restart nginx
+  when: caddy_validate is success
+  loop:
+    - started
+    - restarted
 
 - name: Restart nginx
   ansible.builtin.service:
     name: "{{ webserver_config[use_webserver].service_name }}"
-    state: restarted
+    state: "{{ item }}"
     enabled: true
   async: 120
   poll: 5 
   ignore_errors: true
-  when:
-    - nginx_validate is success
-
-- name: Start apache
-  ansible.builtin.service:
-    name: "{{ webserver_config[use_webserver].service_name }}"
-    state: started
-    enabled: true
-  async: 120
-  poll: 5 
-  ignore_errors: true
-  when:
-    - apache_validate is success
-  notify:
-    - Restart apache
+  when: caddy_validate is success
+  loop:
+    - started
+    - restarted
 
 - name: Restart apache
   ansible.builtin.service:
     name: "{{ webserver_config[use_webserver].service_name }}"
-    state: restarted
+    state: "{{ item }}"
     enabled: true
   async: 120
   poll: 5 
   ignore_errors: true
-  when:
-    - apache_validate is success
+  when: caddy_validate is success
+  loop:
+    - started
+    - restarted
 
 - name: Restart portacl
   ansible.builtin.service:

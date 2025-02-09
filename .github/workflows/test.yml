@@ -10,10 +10,9 @@ env:
 
 jobs:
   setup-ansible-on-runner:
-    check-bats-version:
-      runs-on: 
-        group: ansible-runners
-        labels: self-hosted
+    runs-on: 
+      group: ansible-runners
+      labels: self-hosted
     steps:
       - name: Install apt packages
         run: |

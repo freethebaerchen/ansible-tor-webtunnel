@@ -43,7 +43,7 @@
 - name: Generate nginx (http) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/nginx-http.conf.j2"
-    dest: "{{ webserver_config[use_webserver].config_dir }}/http.conf"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   register: nginx_http
@@ -73,7 +73,7 @@
 - name: Generate nginx (https) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/nginx-https.conf.j2"
-    dest: "{{ webserver_config[use_webserver].config_dir }}/https.conf"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-https.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   vars:

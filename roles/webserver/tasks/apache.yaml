@@ -57,7 +57,7 @@
 - name: Generate apache (http) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/apache-http.conf.j2"
-    dest: "{{ webserver_config[use_webserver].config_dir }}/http.conf"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
 
@@ -87,7 +87,7 @@
 - name: Generate apache (https) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/apache-https.conf.j2"
-    dest: "{{ webserver_config[use_webserver].config_dir }}/https.conf"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-https.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   vars:

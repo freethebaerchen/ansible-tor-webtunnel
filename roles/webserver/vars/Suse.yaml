@@ -44,6 +44,7 @@ webserver_config:
     packages:
       - apache2
       - certbot
+      - apache2-utils
     service_name: apache2
     server_root: /etc/apache2
     config_dir: /etc/apache2/Includes

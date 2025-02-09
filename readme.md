@@ -35,7 +35,14 @@ For Debian-based distros it's pretty uncritical, but for the rest, do it at your
 You can disable them by setting `unattended_upgrades: no`or `unattended_upgrades: false` in the [host_vars]
 
 ## OS Support
-This Project supports, as of right now, Debian-based (Ubuntu 24.04), Alpine-based (Alpine 3.21.0), RHEL-based (Oracle Linux 9.5, CentOS Stream 9), OpenSUSE-based (OpenSUSE Leap 15.6), OpenBSD-based (OpenBSD 7.6), Archlinux-based (Archlinux 2024.08.01) and FreeBSD-based (FreeBSD 14.1) distributions.
+This Project supports, as of right now the following distributions:
+    - Debian-based (Ubuntu 24.04)\
+    - Alpine-based (Alpine 3.21.0)\
+    - RHEL-based (Oracle Linux 9.5, CentOS Stream 9, Almalinux 9.5)\
+    - OpenSUSE-based (OpenSUSE Leap 15.6)\
+    - OpenBSD-based (OpenBSD 7.6)\
+    - Archlinux-based (Archlinux 2024.08.01)\
+    - FreeBSD-based (FreeBSD 14.1)
 
 ### OS specialties
 #### Alpine

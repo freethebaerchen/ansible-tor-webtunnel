@@ -10,9 +10,6 @@ env:
 
 jobs:
   setup-ansible-on-runner:
-    strategy:
-      matrix:
-        runner: [runner-1, runner-2, runner-3, runner-4]
     runs-on: 
       group: ansible-runners
     steps:
@@ -35,6 +32,13 @@ jobs:
       - name: Install ansible-galaxy requirements
         run: |
           ansible-galaxy install -r requirements.yaml
+
+      - name: Upload venv artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
+          overwrite: true
 
   initialise-run-counter:
     runs-on: self-hosted
@@ -75,6 +79,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
@@ -119,6 +130,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -161,6 +179,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
@@ -206,6 +231,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -248,6 +280,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
@@ -293,6 +332,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -335,6 +381,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
@@ -380,6 +433,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -422,6 +482,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
@@ -467,6 +534,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -509,6 +583,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
@@ -554,6 +635,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
@@ -596,6 +684,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       #- name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
       #  run: |
@@ -640,6 +735,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Download venv
+        id: download-counter
+        uses: actions/download-artifact@v4
+        with:
+          name: venv-ansible-webtunnel
+          path: venv
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |

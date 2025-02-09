@@ -9,8 +9,10 @@
       loop: "{{ webserver_software }}"
       register: shutdown_webserver
       failed_when: 
-        - "'ERROR: .* appear to be a running virtual machine' not in shutdown_webserver.stderr"
         - shutdown_webserver.rc != 0
+        - >
+            "ERROR: .*doesn't appear to be a running virtual machine" 
+            not in shutdown_webserver.stderr
 
     - name: Get stopped vms
       ansible.builtin.shell: vm list

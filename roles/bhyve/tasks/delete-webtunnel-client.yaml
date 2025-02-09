@@ -8,8 +8,10 @@
       shell: vm poweroff -f {{ vm[os].name }}-webtunnel-client
       register: shutdown_webtunnel_client
       failed_when: 
-        - "'ERROR: .* appear to be a running virtual machine' not in shutdown_webtunnel_client.stderr"
         - shutdown_webtunnel_client.rc != 0
+        - >
+            "ERROR: .*doesn't appear to be a running virtual machine" 
+            not in shutdown_webtunnel_client.stderr
 
     - name: Wait until VM is stopped
       ansible.builtin.shell: vm list | grep "{{ vm[os].name }}-webtunnel-client" | awk '{print $NF}'

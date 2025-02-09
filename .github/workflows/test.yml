@@ -40,44 +40,28 @@ jobs:
           path: venv
           overwrite: true
 
-  initialise-run-counter:
+  select-webserver:
     runs-on: self-hosted
     outputs:
       webserver: ${{ steps.select-webserver.outputs.webserver }}
     steps:
-      - name: Download run counter
-        uses: actions/download-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/
-
-      - name: Read counter
-        id: read-counter
-        run: |
-          if [ -f .github/workflows/counter.txt ]; then
-            RUN_COUNT=$(cat .github/workflows/counter.txt)
-          else
-            RUN_COUNT=0
-          fi
-          echo "RUN_COUNT=$RUN_COUNT" >> $GITHUB_ENV
-
-      - name: Determine webserver
+      - name: Determine webserver randomly
         id: select-webserver
         run: |
           WEBSERVERS=("caddy" "nginx" "apache")
-          INDEX=$((RUN_COUNT % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$INDEX]}
+          RANDOM_INDEX=$((RANDOM % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$RANDOM_INDEX]}
           echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
           echo "Using webserver: $WEBSERVER_SOFTWARE"
 
   setup-ubuntu:
     needs:
       - setup-ansible-on-runner
-      - initialise-run-counter
+      - select-webserver
     runs-on: self-hosted
     env:
       OS: ubuntu
-      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -172,11 +156,11 @@ jobs:
   setup-alpine:
     needs:
       - setup-ansible-on-runner
-      - initialise-run-counter
+      - select-webserver
     runs-on: self-hosted
     env:
       OS: alpine
-      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -272,11 +256,11 @@ jobs:
   setup-archlinux:
     needs:
       - setup-ansible-on-runner
-      - initialise-run-counter
+      - select-webserver
     runs-on: self-hosted
     env:
       OS: archlinux
-      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -372,11 +356,11 @@ jobs:
   setup-freebsd:
     needs:
       - setup-ansible-on-runner
-      - initialise-run-counter
+      - select-webserver
     runs-on: self-hosted
     env:
       OS: freebsd
-      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -472,11 +456,11 @@ jobs:
   setup-openbsd:
     needs:
       - setup-ansible-on-runner
-      - initialise-run-counter
+      - select-webserver
     runs-on: self-hosted
     env:
       OS: openbsd
-      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -572,11 +556,11 @@ jobs:
   setup-rhel:
     needs:
       - setup-ansible-on-runner
-      - initialise-run-counter
+      - select-webserver
     runs-on: self-hosted
     env:
       OS: rhel
-      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -672,11 +656,11 @@ jobs:
   setup-suse:
     needs:
       - setup-ansible-on-runner
-      - initialise-run-counter
+      - select-webserver
     runs-on: self-hosted
     env:
       OS: suse
-      WEBSERVER_SOFTWARE: ${{ needs.initialise-run-counter.outputs.webserver }}
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -768,26 +752,3 @@ jobs:
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
-
-  increase-run-counter:
-    needs:
-      - setup-ubuntu
-      - setup-alpine
-      - setup-archlinux
-      - setup-freebsd
-      - setup-openbsd
-      - setup-rhel
-      - setup-suse
-    if: always()
-    runs-on: self-hosted
-    steps:
-      - name: Increment and save counter
-        run: |
-          echo $((RUN_COUNT + 1)) > .github/workflows/counter.txt
-
-      - name: Upload updated counter
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-counter
-          path: .github/workflows/counter.txt
-          overwrite: true

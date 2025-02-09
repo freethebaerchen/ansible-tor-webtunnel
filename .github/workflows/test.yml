@@ -20,6 +20,25 @@ jobs:
         run: |
           sudo setup-ansible
 
+  select-webserver:
+    runs-on: self-hosted
+    outputs:
+      webserver: ${{ steps.select-webserver.outputs.webserver }}
+    steps:
+      - name: Determine webserver randomly
+        id: select-webserver
+        run: |
+          WEBSERVERS=("caddy" "nginx" "apache")
+          RANDOM_INDEX=$((RANDOM % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$RANDOM_INDEX]}
+          echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
+          echo "Using webserver: $WEBSERVER_SOFTWARE"
+
+  install-project-requirements:
+    needs:
+      - setup-ansible-on-runner
+    runs-on: self-hosted
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -43,23 +62,9 @@ jobs:
           path: venv
           overwrite: true
 
-  select-webserver:
-    runs-on: self-hosted
-    outputs:
-      webserver: ${{ steps.select-webserver.outputs.webserver }}
-    steps:
-      - name: Determine webserver randomly
-        id: select-webserver
-        run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          RANDOM_INDEX=$((RANDOM % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$RANDOM_INDEX]}
-          echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
-          echo "Using webserver: $WEBSERVER_SOFTWARE"
-
   setup-ubuntu:
     needs:
-      - setup-ansible-on-runner
+      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -158,7 +163,7 @@ jobs:
 
   setup-alpine:
     needs:
-      - setup-ansible-on-runner
+      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -258,7 +263,7 @@ jobs:
 
   setup-archlinux:
     needs:
-      - setup-ansible-on-runner
+      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -358,7 +363,7 @@ jobs:
 
   setup-freebsd:
     needs:
-      - setup-ansible-on-runner
+      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -458,7 +463,7 @@ jobs:
 
   setup-openbsd:
     needs:
-      - setup-ansible-on-runner
+      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -558,7 +563,7 @@ jobs:
 
   setup-rhel:
     needs:
-      - setup-ansible-on-runner
+      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -658,7 +663,7 @@ jobs:
 
   setup-suse:
     needs:
-      - setup-ansible-on-runner
+      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:

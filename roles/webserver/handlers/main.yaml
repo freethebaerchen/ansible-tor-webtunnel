@@ -42,7 +42,7 @@
   async: 120
   poll: 5 
   ignore_errors: true
-  when: caddy_validate is success
+  when: nginx_validate is success
   loop:
     - started
     - restarted
@@ -55,7 +55,7 @@
   async: 120
   poll: 5 
   ignore_errors: true
-  when: caddy_validate is success
+  when: apache_validate is success
   loop:
     - started
     - restarted

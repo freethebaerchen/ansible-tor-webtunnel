@@ -12,7 +12,7 @@ jobs:
   setup-ansible-on-runner:
     strategy:
       matrix:
-        runner: [runner-1, runner-2, runner-3] #, runner-4]
+        runner: [runner-1, runner-2, runner-3, runner-4]
     runs-on: 
       group: ansible-runners
     steps:
@@ -37,6 +37,9 @@ jobs:
   install-project-requirements:
     needs:
       - setup-ansible-on-runner
+    strategy:
+      matrix:
+        runner: [runner-1, runner-2, runner-3, runner-4]
     runs-on: self-hosted
     steps:
       - name: Checkout repository

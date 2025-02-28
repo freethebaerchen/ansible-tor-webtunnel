@@ -50,6 +50,13 @@
   notify:
     - Validate nginx
 
+- name: Change SELinux for nginx
+  community.general.sefcontext:
+    target: "/var/www/html(/.*)?"
+    setype: httpd_sys_rw_content_t
+    state: present
+  when: ansible_os_family == "RedHat"
+
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml
 

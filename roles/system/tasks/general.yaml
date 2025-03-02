@@ -3,6 +3,11 @@
 - name: Block for OS-Specific tasks (Debian)
   when: ansible_os_family == "Debian"
   block:
+    - name: Run dist-upgrade
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+
     - name: Install OS-specific packages
       ansible.builtin.package:
         name:
@@ -13,11 +18,6 @@
           - golang
           - htop
         state: present
-
-    - name: Run dist-upgrade
-      ansible.builtin.apt:
-        upgrade: dist
-        update_cache: yes
 
     - name: Configure unattended-upgrades
       ansible.builtin.copy:

@@ -92,7 +92,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${ env.OS }} servers
+      - name: Start all ${{ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
@@ -192,7 +192,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${ env.OS }} servers
+      - name: Start all ${{ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
@@ -293,7 +293,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${ env.OS }} servers
+      - name: Start all ${{ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
@@ -394,7 +394,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${ env.OS }} servers
+      - name: Start all ${{ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
@@ -495,7 +495,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${ env.OS }} servers
+      - name: Start all ${{ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
@@ -596,7 +596,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${ env.OS }} servers
+      - name: Start all ${{ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
@@ -697,7 +697,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${ env.OS }} servers
+      - name: Start all ${{ env.OS }} servers
         run: |
           echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate

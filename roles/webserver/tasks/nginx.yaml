@@ -50,12 +50,17 @@
   notify:
     - Validate nginx
 
-- name: Change SELinux for nginx
-  community.general.sefcontext:
-    target: "/var/www/html(/.*)?"
-    setype: httpd_sys_rw_content_t
-    state: present
+- name: Block for RedHat (SElinux)
   when: ansible_os_family == "RedHat"
+  block:
+    - name: Change SELinux for nginx
+      community.general.sefcontext:
+        target: "/var/www/html(/.*)?"
+        setype: httpd_sys_rw_content_t
+        state: present
+
+    - name: Apply SELinux file context changes
+      command: restorecon -Rv /etc/letsencrypt /var/www/html
 
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml

@@ -140,7 +140,7 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
 
-      - name: Wait until the ${{ env.OS }} servers are reacheable
+      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
           python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -241,7 +241,7 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
 
-      - name: Wait until the ${{ env.OS }} servers are reacheable
+      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
           python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -342,7 +342,7 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
 
-      - name: Wait until the ${{ env.OS }} servers are reacheable
+      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
           python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -443,7 +443,7 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
 
-      - name: Wait until the ${{ env.OS }} servers are reacheable
+      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
           python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -544,7 +544,7 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
 
-      - name: Wait until the ${{ env.OS }} servers are reacheable
+      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
           python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -645,7 +645,7 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
 
-      - name: Wait until the ${{ env.OS }} servers are reacheable
+      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
           python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -746,7 +746,7 @@ jobs:
         with:
           name: connection-strings-${{ env.OS }}
 
-      - name: Wait until the ${{ env.OS }} servers are reacheable
+      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
           python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 

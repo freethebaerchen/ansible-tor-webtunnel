@@ -5,12 +5,12 @@
   block:
     - name: Add the Caddy repository key
       ansible.builtin.apt_key:
-        url: https:/dl.cloudsmith.io/public/caddy/stable/gpg.key
+        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
         state: present
 
     - name: Add the Caddy APT repository
       ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64] https:/dl.cloudsmith.io/public/caddy/stable/deb/ubuntu focal main"
+        repo: "deb [arch=amd64,arm64] https://dl.cloudsmith.io/public/caddy/stable/deb/ubuntu focal main"
         state: present
         filename: caddy-stable
 

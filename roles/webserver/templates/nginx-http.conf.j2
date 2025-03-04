@@ -2,10 +2,10 @@ server {
         listen 80;
         listen [::]:80;
 
-        server_name _;
+        server_name {{ domain }};
 
         location /.well-known/acme-challenge/ {
-                root {{ dir.certbot }};
+                root {{ webserver.webroot }};
         }
 
         location / {

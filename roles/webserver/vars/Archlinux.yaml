@@ -16,40 +16,45 @@ webserver:
     {%- else -%}
       http
     {%- endif -%}
+  webroot: /var/www/html
 
 system:
   etc: /etc
 
-caddy:
-  config_dir: /etc/caddy
-nginx:
-  packages:
-    - nginx
-    - certbot
-    - python3
-  service_name: nginx
-  config_dir: /etc/nginx/http.d
-apache:
-  packages:
-    - apache
-    - certbot
-    - python3
-  service_name: httpd
-  server_root: /etc/httpd
-  config_dir: /etc/httpd/conf/Includes
-  config_file: /etc/httpd/conf/httpd.conf
-  extra_dirs: []
-  modules_config:
-    - LoadModule rewrite_module modules/mod_rewrite.so
-    - LoadModule ssl_module modules/mod_ssl.so
-    - LoadModule proxy_module modules/mod_proxy.so
-    - LoadModule proxy_http_module modules/mod_proxy_http.so
-    - LoadModule headers_module modules/mod_headers.so
-    - LoadModule mpm_worker_module modules/mod_mpm_worker.so
-    - LoadModule authz_core_module modules/mod_authz_core.so
-    - LoadModule log_config_module modules/mod_log_config.so
-    - LoadModule unixd_module modules/mod_unixd.so
-    - LoadModule dir_module modules/mod_dir.so
-    - LoadModule mime_module modules/mod_mime.so
+webserver_config:
+  caddy:
+    service_name: caddy
+    config_dir: /etc/caddy
+    extra_dirs: /etc/caddy/configs
+  nginx:
+    packages:
+      - nginx
+      - certbot
+      - python3
+    service_name: nginx
+    config_dir: /etc/nginx/http.d
+  apache:
+    packages:
+      - apache
+      - certbot
+      - python3
+    service_name: httpd
+    server_root: /etc/httpd
+    config_dir: /etc/httpd/conf/Includes
+    config_file: /etc/httpd/conf/httpd.conf
+    extra_dirs: []
+    modules_config:
+      - LoadModule rewrite_module modules/mod_rewrite.so
+      - LoadModule ssl_module modules/mod_ssl.so
+      - LoadModule proxy_module modules/mod_proxy.so
+      - LoadModule proxy_http_module modules/mod_proxy_http.so
+      - LoadModule headers_module modules/mod_headers.so
+      - LoadModule mpm_worker_module modules/mod_mpm_worker.so
+      - LoadModule authz_core_module modules/mod_authz_core.so
+      - LoadModule log_config_module modules/mod_log_config.so
+      - LoadModule unixd_module modules/mod_unixd.so
+      - LoadModule dir_module modules/mod_dir.so
+      - LoadModule mime_module modules/mod_mime.so
 certbot:
   config_dir: /etc/letsencrypt
+  webroot: /var/www/certbot

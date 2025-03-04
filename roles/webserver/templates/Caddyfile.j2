@@ -1,9 +1,1 @@
-{{ domain }} {
-{% if reverse_proxy %}
-        reverse_proxy * {{ reverse_proxy_url }}:443
-{% else %}
-        root * {{ dir.webroot }}
-        file_server browse
-{% endif %}
-        reverse_proxy /{{ webtunnel_path }} 127.0.0.1:15000
-}
+import {{ webserver_config[use_webserver].extra_dirs }}/*

@@ -30,17 +30,17 @@ def get_inventory_data(inventory_file):
 
 def get_hosts(inventory_data, limit):
     """Get the list of hosts for the given `limit`, which can be a group or a single host."""
-    if limit in inventory_data:  # If it's a group
+    if limit in inventory_data:
         return inventory_data[limit]['hosts']
     
-    elif limit in inventory_data.get('_meta', {}).get('hostvars', {}):  # If it's a single host
-        return [limit]  # Return a single-element list
+    elif limit in inventory_data.get('_meta', {}).get('hostvars', {}):
+        return [limit]
 
     else:
         print(f"Host or group '{limit}' not found in the inventory.")
         sys.exit(1)
 
-def wait_for_hosts(inventory_file, limit, max_retries=60):
+def wait_for_hosts(inventory_file, limit, max_retries=100):
     """Check if the hosts in the limit (group or single) are reachable via SSH."""
     inventory_data = get_inventory_data(inventory_file)
     hosts = get_hosts(inventory_data, limit)
@@ -52,7 +52,7 @@ def wait_for_hosts(inventory_file, limit, max_retries=60):
     while attempts < max_retries:
         for host in hosts:
             host_info = inventory_data['_meta']['hostvars'].get(host, {})
-            ip = host_info.get('ansible_host', host)  # Use ansible_host if available, otherwise hostname
+            ip = host_info.get('ansible_host', host)
 
             print(f"Checking Host: {host} (IP: {ip})")
 
@@ -66,7 +66,7 @@ def wait_for_hosts(inventory_file, limit, max_retries=60):
                     time.sleep(5)
                 else:
                     print(f"❌ {host} ({ip}) is still unreachable after {max_retries} attempts.")
-                    sys.exit(1)  # Stop pipeline if any host is completely unreachable
+                    sys.exit(1)
         
         if all(retries[host] == 0 for host in hosts):
             print("✅ All hosts are reachable. Proceeding.")

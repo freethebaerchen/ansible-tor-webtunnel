@@ -11,7 +11,7 @@
 
     - name: Create /var/www/html folder
       ansible.builtin.file:
-        path: "{{ dir.webroot }}"
+        path: "{{ webserver.webroot }}"
         state: directory
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
@@ -19,24 +19,24 @@
     - name: Copy index.html
       ansible.builtin.copy:
         src: "{{ role_path }}/files/index.html"
-        dest: "{{ dir.webroot }}"
+        dest: "{{ webserver.webroot }}"
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
-      notify: Restart {{ use_webserver }}
+      notify: Validate {{ use_webserver }}
 
     - name: Copy bear.svg
       ansible.builtin.copy:
         src: "{{ role_path }}/files/bear.svg"
-        dest: "{{ dir.webroot }}"
+        dest: "{{ webserver.webroot }}"
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
-      notify: Restart {{ use_webserver }}
+      notify: Validate {{ use_webserver }}
 
     - name: Copy robots.txt
       ansible.builtin.copy:
         src: "{{ role_path }}/files/robots.txt"
-        dest: "{{ dir.webroot }}"
+        dest: "{{ webserver.webroot }}"
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
-      notify: Restart {{ use_webserver }}
+      notify: Validate {{ use_webserver }}
       when: website.no_index

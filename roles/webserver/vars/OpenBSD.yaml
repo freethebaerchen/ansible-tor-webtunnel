@@ -16,38 +16,44 @@ webserver:
     {%- else -%}
       www
     {%- endif -%}
+  webroot: /var/www/html
 
 system:
   etc: /etc
 
-caddy:
-  config_dir: /etc/caddy
-nginx:
-  packages:
-    - nginx
-    - certbot
-  service_name: nginx
-  config_dir: /etc/nginx/http.d
-apache:
-  packages:
-    - apache-httpd
-    - certbot
-  service_name: apache2
-  server_root: /etc/apache2
-  config_dir: /etc/apache2/Includes
-  config_file: /etc/apache2/httpd2.conf
-  extra_dirs: []
-  modules_config:
-    - LoadModule rewrite_module /usr/local/lib/apache2/mod_rewrite.so
-    - LoadModule ssl_module /usr/local/lib/apache2/mod_ssl.so
-    - LoadModule proxy_module /usr/local/lib/apache2/mod_proxy.so
-    - LoadModule proxy_http_module /usr/local/lib/apache2/mod_proxy_http.so
-    - LoadModule headers_module /usr/local/lib/apache2/mod_headers.so
-    - LoadModule mpm_worker_module /usr/local/lib/apache2/mod_mpm_worker.so
-    - LoadModule authz_core_module /usr/local/lib/apache2/mod_authz_core.so
-    - LoadModule log_config_module /usr/local/lib/apache2/mod_log_config.so
-    - LoadModule unixd_module /usr/local/lib/apache2/mod_unixd.so
-    - LoadModule dir_module /usr/local/lib/apache2/mod_dir.so
-    - LoadModule mime_module /usr/local/lib/apache2/mod_mime.so
+webserver_config:
+  caddy:
+    service_name: caddy
+    config_dir: /etc/caddy
+    extra_dirs: /etc/caddy/configs
+  nginx:
+    packages:
+      - nginx
+      - certbot
+    service_name: nginx
+    config_dir: /etc/nginx/http.d
+  apache:
+    packages:
+      - apache-httpd
+      - certbot
+    service_name: apache2
+    server_root: /etc/apache2
+    config_dir: /etc/apache2/Includes
+    config_file: /etc/apache2/httpd2.conf
+    extra_dirs:
+      - logs
+    modules_config:
+      - LoadModule rewrite_module /usr/local/lib/apache2/mod_rewrite.so
+      - LoadModule ssl_module /usr/local/lib/apache2/mod_ssl.so
+      - LoadModule proxy_module /usr/local/lib/apache2/mod_proxy.so
+      - LoadModule proxy_http_module /usr/local/lib/apache2/mod_proxy_http.so
+      - LoadModule headers_module /usr/local/lib/apache2/mod_headers.so
+      - LoadModule mpm_worker_module /usr/local/lib/apache2/mod_mpm_worker.so
+      - LoadModule authz_core_module /usr/local/lib/apache2/mod_authz_core.so
+      - LoadModule log_config_module /usr/local/lib/apache2/mod_log_config.so
+      - LoadModule unixd_module /usr/local/lib/apache2/mod_unixd.so
+      - LoadModule dir_module /usr/local/lib/apache2/mod_dir.so
+      - LoadModule mime_module /usr/local/lib/apache2/mod_mime.so
 certbot:
   config_dir: /etc/letsencrypt
+  webroot: /var/www/certbot

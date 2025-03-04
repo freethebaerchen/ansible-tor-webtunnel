@@ -4,6 +4,10 @@
   tags:
     - delete-webtunnel-client
   block:
+    - name: Forcefully shutdown {{ vm[os].name }}-webtunnel-client
+      shell: vm poweroff -f {{ vm[os].name }}-webtunnel-client
+      failed_when: no
+
     - name: Wait until VM is stopped
       ansible.builtin.shell: vm list | grep "{{ vm[os].name }}-webtunnel-client" | awk '{print $NF}'
       register: vm_status

@@ -1,58 +1,64 @@
 ---
 
-- name: Start caddy
-  ansible.builtin.service:
-    name: caddy
-    state: started
-    enabled: true
-  async: 120
-  poll: 5 
-  ignore_errors: true
+- name: Validate caddy
+  ansible.builtin.command: 
+    cmd: caddy validate --config {{ webserver_config[use_webserver].config_dir }}/Caddyfile
+  register: caddy_validate
+  notify:
+    - Restart caddy
+
+- name: Validate nginx
+  ansible.builtin.command: 
+    cmd: nginx -t
+  register: nginx_validate
+  notify:
+    - Restart nginx
+
+- name: Validate apache
+  ansible.builtin.command: 
+    cmd: apachectl configtest
+  register: apache_validate
+  notify:
+    - Restart apache
 
 - name: Restart caddy
   ansible.builtin.service:
-    name: caddy
-    state: restarted
+    name: "{{ webserver_config[use_webserver].service_name }}"
+    state: "{{ item }}"
     enabled: true
   async: 120
   poll: 5 
   ignore_errors: true
-
-- name: Start nginx
-  ansible.builtin.service:
-    name: nginx
-    state: started
-    enabled: true
-  async: 120
-  poll: 5 
-  ignore_errors: true
+  when: caddy_validate is success
+  loop:
+    - started
+    - restarted
 
 - name: Restart nginx
   ansible.builtin.service:
-    name: nginx
-    state: restarted
+    name: "{{ webserver_config[use_webserver].service_name }}"
+    state: "{{ item }}"
     enabled: true
   async: 120
   poll: 5 
   ignore_errors: true
-
-- name: Start apache
-  ansible.builtin.service:
-    name: "{{ apache.service_name }}"
-    state: started
-    enabled: true
-  async: 120
-  poll: 5 
-  ignore_errors: true
+  when: nginx_validate is success
+  loop:
+    - started
+    - restarted
 
 - name: Restart apache
   ansible.builtin.service:
-    name: "{{ apache.service_name }}"
-    state: restarted
+    name: "{{ webserver_config[use_webserver].service_name }}"
+    state: "{{ item }}"
     enabled: true
   async: 120
   poll: 5 
   ignore_errors: true
+  when: apache_validate is success
+  loop:
+    - started
+    - restarted
 
 - name: Restart portacl
   ansible.builtin.service:

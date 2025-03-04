@@ -6,9 +6,9 @@
   roles:
     - role: bhyve
 
-- name: Shutdown
+- name: Test the webtunnel
   hosts: webtunnel_clients
-  become: yes
+  become: true
   tags:
     - never
     - test-webtunnel

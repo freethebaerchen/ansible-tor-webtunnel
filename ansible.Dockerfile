@@ -5,7 +5,11 @@ COPY ./scripts/wrapper.sh /workdir/scripts/wrapper.sh
 COPY ./requirements.yaml /tmp/requirements.yaml
 COPY ./requirements.txt /tmp/requirements.txt
 
-RUN apk add --update --no-cache sshpass py3-pip figlet
+RUN apk add --update --no-cache sshpass py3-pip figlet perl
+
+RUN git clone https://github.com/tnalpgge/rank-amateur-cowsay.git && \
+    cd rank-amateur-cowsay && \
+    ./install.sh
 
 RUN pip install -r /tmp/requirements.txt
 RUN ansible-galaxy install -r /tmp/requirements.yaml

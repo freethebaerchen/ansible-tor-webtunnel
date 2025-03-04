@@ -1,8 +1,4 @@
 ---
 
-dir:
-  webroot: /var/www/html
-  certbot: /var/www/certbot
-
 website:
   no_index: true

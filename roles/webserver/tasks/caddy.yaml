@@ -95,7 +95,7 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"
         dest: "/tmp/Caddyfile"
-        mode: '0644'
+        mode: 0644
 
     - name: Get checksum of rendered Caddyfile
       ansible.builtin.stat:
@@ -120,7 +120,7 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"
         dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
-        mode: '0644'
+        mode: 0644
       notify:
         - Validate caddy
 

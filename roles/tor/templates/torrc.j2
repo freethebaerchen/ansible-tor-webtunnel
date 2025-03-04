@@ -11,7 +11,7 @@ ExtORPort auto
 ContactInfo {{ email | replace('@', '[at]') | replace('.', '[dot]') }}
 Nickname {{ tor.nickname }}{{ id }}
 SocksPort 0
-DataDirectory {{ system.tor.directory }}
+DataDirectory {{ tor.directory }}
 {% if tor.test %}
 BridgeDistribution None
 {% endif %}

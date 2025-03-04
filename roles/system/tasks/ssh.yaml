@@ -41,13 +41,12 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: Add SSH public keys for admins
-  ansible.builtin.authorized_key:
-    user: "{{ item.0.name }}"
-    key: "{{ item.1.key }}"
-  with_subelements:
-    - "{{ admins }}"
-    - vars.public-keys
+- name: Deploy authorized_keys for admins
+  ansible.builtin.template:
+    src: ./authorized_keys.j2
+    dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    mode: '0600'
+  with_items: "{{ admins }}"
 
 - name: Create .ssh directory for normal users
   ansible.builtin.file:
@@ -59,13 +58,12 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: Add SSH public keys for normal users
-  ansible.builtin.authorized_key:
-    user: "{{ item.0.name }}"
-    key: "{{ item.1.key }}"
-  with_subelements:
-    - "{{ users }}"
-    - vars.public-keys
+- name: Deploy authorized_keys for normal users
+  ansible.builtin.template:
+    src: ./authorized_keys.j2
+    dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    mode: '0600'
+  with_items: "{{ users }}"
 
 - name: "Add sudoers config for sudo group"
   ansible.builtin.copy:

@@ -2,26 +2,26 @@
 [Official Documentation of the Tor-Project](https://community.torproject.org/relay/setup/webtunnel/)
 
 ## Consideration
-The script can handle Setting up the infrastructure in Hetzner Cloud, but you should consider to not host your bridges at Hetzner, since the [Project's Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) recommends, to use another hoster for bridges/relays.
+The script can handle Setting up the infrastructure in Hetzner Cloud, but you should consider to not host your bridges at Hetzner, since the [Tor Projects Website](https://community.torproject.org/relay/community-resources/good-bad-isps/) recommends, to use another hoster for bridges/relays.
 If you are not able to provide other VMs or servers you can still host the relays in Hetzner Cloud, since it is better to host there, than to not contibute to the Tor project.
 
 If you have servers at another provider or want to create servers there you can follow the "non Hetzner instructions" below.
 
 ## General information
-The anible project sets up the HCloud servers with the [ansbile hcloud colection](https://docs.ansible.com/ansible/latest/collections/hetzner/hcloud/index.html).\
+The anible project sets up the HCloud servers with the [Ansible hcloud collection](https://docs.ansible.com/ansible/latest/collections/hetzner/hcloud/index.html).\
 The project is set up, so the Ansible control node is dockerized. This means, there is no need to setup ansible or a Python3 venv.
 
-In Hetzner there will be created, if you do not make any changes for the servers, three [CAX11](https://www.hetzner.com/cloud/) (arm) instances.
-They are spawned in the locations, the arm instances are available.
+In Hetzner there will be created, if you do not make any changes, three [CAX11](https://www.hetzner.com/cloud/) (arm) instances.
+They are spawned in the locations, where arm instances are available.
 So one will be created in Falkenstein, one in Nuremberg and one in Helsinki.
 
 When using Hetzner Cloud, and you are installing the OS via the "ISO Images" option, you may need to configure the IPv6-Address by yourself.
 You can look at this [documentation for some operating systems](https://docs.hetzner.com/de/cloud/servers/static-configuration/).
 
 In the [system role](roles/system) is a [templated /etc/hosts](roles/system/templates/hosts.j2) file.
-It adds a GitHub IPv6 "proxy", because GitHub, as of now, doesnt support IPv6.
+It adds a GitHub IPv6 "proxy", because GitHub, as of now, doesn't support IPv6.
 The proxy is provided by [Daniel Winzen](https://danwin1210.de/github-ipv6-proxy.php).
-If you dont want this, as it is not needed for the fetching of the WebSocket Bridge from the torproject GitLab, you can remove or comment out the following part from [this file](roles/system/tasks/general.yaml).
+If you dont want this, as it is not needed for the fetching of the WebSocket Bridge from the [Tor Projects GitLab](https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/webtunnel), you can remove or comment out the following part from [this file](roles/system/tasks/general.yaml).
 ```
     - name: Generate /etc/hosts file
       ansible.builtin.template:
@@ -31,11 +31,11 @@ If you dont want this, as it is not needed for the fetching of the WebSocket Bri
 
 # NO-RISK-NO-FUN
 Against all recommendations are unattended-upgrades for the supported Operating Systems configured.
-For Debian-based distros it's pretty uncritical, but for the rest, do it at your own risk.
-You can disable them by setting `unattended_upgrades: no`or `unattended_upgrades: false` in the [host_vars]
+For Debian- and RedHat-based distros it's pretty uncritical, but for the rest, do it at your own risk.
+You can disable them by setting `unattended_upgrades: no`or `unattended_upgrades: false` in the [host_vars](host_vars)
 
 ## OS Support
-This Project supports, as of right now the following distributions:
+This Project supports, as of right now the following distributions:\
     - Debian-based (Ubuntu 24.04)\
     - Alpine-based (Alpine 3.21.0)\
     - RHEL-based (Oracle Linux 9.5, CentOS Stream 9, Almalinux 9.5)\
@@ -44,27 +44,19 @@ This Project supports, as of right now the following distributions:
     - Archlinux-based (Archlinux 2024.08.01)\
     - FreeBSD-based (FreeBSD 14.1, FreeBSD 14.2)
 
-### OS specialties
-#### Alpine
-You either need to allow root login and specify the `ansible_user root` OR you need to install sudo before running the playbook.
-#### OpenSUSE
-You need to install `python312`.
-#### OpenBSD (at least in Hetzner Cloud)
-You need to install the `python` package.
-
 ## Prerequisites
 
 ### SSH
 At least one (ed25519) SSH-Key is needed.\
 If you need help generating one, run the following command:
 ```ssh-keygen -t ed25519```\
-Please consider encrypting the Key with a password, when you are asked for one.\
+Please consider encrypting the key with a password, when you are asked for one.\
 For the other options, you can leave the defaults.
 
 ### Docker
 You need a device, that is able to run Docker.
 
-### Hetzner
+### Hetzner (optinal)
 1. Create a Account at [Hetzner](https://accounts.hetzner.com/signUp)
 2. Create a HCloud project
 3. Create a [API-Token](https://docs.hetzner.cloud/#getting-started) with read/write privileges
@@ -85,15 +77,13 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 ## preparation of the code
 1. Copy the [group_vars example file](group_vars/all-example.yaml) to the [group_vars](group_vars) named all.yaml\
     1.1 Change the username\
-    1.2 Change the public key(s)\
-    1.3 Modify the servers to your fit\
-    1.4 Change the SSH public key(s).
-    1.5 Change the E-Mail you want to use for the certificate request AND as contact address for the bridge\
+    1.2 Modify the servers to your fit\
+    1.3 Change the SSH public key(s).
+    1.4 Change the E-Mail you want to use for the certificate request AND as contact address for the bridge\
     Info: For the bridge address the @ and . symbol will be replaced with [at] and [dot]\
-    1.6 Change the tor.nickname to a your fit
-2. Copy the [env file](.env) to .env.local\
+    1.5 Change the tor.nickname to your fit
+2. Copy the [env file](.env) to .env.local (optinal)\
     2.1 Exchange the comment with your HCloud API-Token from the [prerequisites](#hetzner) step
-
 3. Copy the [example host_var file](host_vars/your-bridge-0.yaml) to host_vars/<name-in-inventory.ini>.yaml
 4. Modify the variables, so they match your configuration
     4.1 The ID needs to be set, for the identifier of the or bridge. The name in the end will be <tor.nickname><id>, so with the default values it will be somenickname1, somenickname2, ...\
@@ -104,9 +94,8 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 INFO: Step 3 is only for a Hetzner Cloud setup
 1. ```./ansible-playbook.sh playbook.yaml```
 2. After that, the HCloud infrastructure is created\
-    2.1 Now the DNS-Record(s) need to be set.\
-    2.2 Set an AAAA-Record with the IPv6-Address of the server\
-    2.3 Set an A-Record with the IPv4-Address of the server
+    2.1 Set an A-Record with the IPv4-Address of the server\
+    2.2 Set an AAAA-Record with the IPv6-Address of the server (optinal)
 3. Run the script a second time.
 
 Now the Tor WebTunnel Bridge is created.\
@@ -120,8 +109,8 @@ You can check the status of your bridge relay at https://bridges.torproject.org/
 ```
 
 The link in the last line will not show a status until you ran the relay for some time.
-Please don't stress. Some status will soon show up.
+Please don't stress. Some status will soon show up after at most 3 hours.
 
 ## Additional information
-### Hetzner specdific
+### Hetzner specific
 If you add more servers, you need to copy and paste one of the servers in the [group_vars](group_vars/all-example.yaml).

@@ -91,8 +91,8 @@
     - name: Set {{ tor.directory }} owner- and groupship
       ansible.builtin.file:
         path: "{{ tor.directory }}"
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
+        owner: "{{ tor.user }}"
+        group: "{{ tor.group }}"
         state: directory
         recurse: true
 
@@ -109,11 +109,8 @@
     - name: Ensure User=tor and LimitNOFILE=65536 in systemd service
       ansible.builtin.lineinfile:
         path: "/usr/lib/systemd/system/tor.service"
-        line: "{{ item }}"
+        line: "LimitNOFILE=65536"
         insertafter: '^\[Service\]'
-      loop:
-        - 'LimitNOFILE=65536'
-        - 'User=tor'
       notify: Reload daemon
 
     - name: Set Limits in security/limits.conf

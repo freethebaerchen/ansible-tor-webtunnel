@@ -1,1 +1,8 @@
+{
+    log {
+        output file /var/log/caddy-error.log
+        level ERROR
+    }
+}
+
 import {{ webserver_config[use_webserver].extra_dirs }}/*

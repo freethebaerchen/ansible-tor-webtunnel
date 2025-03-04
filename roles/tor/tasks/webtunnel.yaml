@@ -88,9 +88,9 @@
         state: present
         reload: yes
 
-    - name: Set {{ system.tor.directory }} owner- and groupship
+    - name: Set {{ tor.directory }} owner- and groupship
       ansible.builtin.file:
-        path: "{{ system.tor.directory }}"
+        path: "{{ tor.directory }}"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
         state: directory
@@ -136,13 +136,13 @@
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:
-    path: "{{ system.tor.directory }}/fingerprint"
+    path: "{{ tor.directory }}/fingerprint"
     state: present
     timeout: 300
 
 - name: Get the connection strings for testing in Tor Browser
   get-connection-string:
-    fingerprint_path: "{{ system.tor.directory }}/fingerprint"
+    fingerprint_path: "{{ tor.directory }}/fingerprint"
     torrc_path: "{{ system.etc }}/tor/torrc"
   register: connection_string
 

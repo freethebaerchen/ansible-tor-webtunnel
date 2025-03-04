@@ -2,13 +2,13 @@
 root:
   user: root
   group: wheel
-
 caddy:
   user: www
   group: www
-
 system:
   etc: /usr/local/etc
   shell: /usr/local/bin/bash
-  tor:
-    directory: /var/db/tor
+tor:
+  user: _tor
+  group: _tor
+  directory: /var/db/tor

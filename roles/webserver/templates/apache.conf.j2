@@ -32,7 +32,7 @@ DocumentRoot "{{ webserver.webroot }}"
     DirectoryIndex index.html
 </IfModule>
 
-ErrorLog "/dev/null"
 CustomLog "/dev/null" combined
+ErrorLog /var/log/httpd-error.log
 
 IncludeOptional {{ webserver_config[use_webserver].config_dir }}/*.conf

@@ -1,10 +1,9 @@
 admins:
   - name: jochen
-    vars:
-      public-keys:
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 jochen@MacBook"
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPAjVNV2L+9Eq+pHpvz4P6JKAJctb0y5f4Z7ieUqFsPC jochen@avenit"
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y jochen@Handy"
+    public-keys:
+      - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 jochen@MacBook"
+      - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPAjVNV2L+9Eq+pHpvz4P6JKAJctb0y5f4Z7ieUqFsPC jochen@avenit"
+      - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y jochen@Handy"
 
 users: []
 

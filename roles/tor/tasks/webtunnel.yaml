@@ -103,7 +103,7 @@
         owner: "{{ tor.user }}"
         group: "{{ tor.group }}"
         state: directory
-        recurse: true
+        recurse: yes
 
     - name: Start tor
       ansible.builtin.service:

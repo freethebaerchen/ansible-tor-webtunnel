@@ -17,12 +17,21 @@
       - tor
     state: present
 
+- name: Read random-string.txt from remote host
+  ansible.builtin.slurp:
+    src: "{{ tor.directory }}/random-string.txt"
+  register: random_string
+
+- name: Decode file content
+  ansible.builtin.set_fact:
+    random_string: "{{ random_string_file['content'] | b64decode }}"
+
 - name: Configure WebSocket Bridge (torrc)
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: "{{ system.etc }}/tor/torrc"
   vars:
-    webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
+    webtunnel_path: "{{ random_string }}"
   register: torrc
 
 - name: Block for OS-Familiy Debian

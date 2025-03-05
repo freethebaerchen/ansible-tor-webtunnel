@@ -21,8 +21,8 @@
       ansible.builtin.lineinfile:
         path: "{{ tor.directory }}/random-string.txt"
         line: "{{ random_string.stdout }}"
-        owner: "{{ tor.user }}"
-        group: "{{ tor.group }}"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
         mode: 0500
         create: yes
       when: not random_string_file.stat.exists

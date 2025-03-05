@@ -20,11 +20,11 @@
 - name: Read random-string.txt from remote host
   ansible.builtin.slurp:
     src: "{{ tor.directory }}/random-string.txt"
-  register: random_string
+  register: random_string_file
 
 - name: Decode file content
   ansible.builtin.set_fact:
-    random_string: "{{ random_string_file['content'] | b64decode }}"
+    random_string: "{{ random_string_file.content | b64decode }}"
 
 - name: Configure WebSocket Bridge (torrc)
   ansible.builtin.template:

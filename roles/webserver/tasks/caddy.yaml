@@ -124,6 +124,15 @@
       notify:
         - Validate caddy
 
+    - name: Read random-string.txt
+      ansible.builtin.slurp:
+        src: "{{ tor.directory }}/random-string.txt"
+      register: random_string_file
+
+    - name: Decode file content
+      ansible.builtin.set_fact:
+        random_string: "{{ random_string_file.content | b64decode }}"
+
     - name: Render webtunnel-Caddyfile
       ansible.builtin.template:
         src: "{{ role_path }}/templates/webtunnel-Caddyfile.j2"
@@ -133,4 +142,4 @@
       notify:
         - Validate caddy
       vars:
-        webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
+        webtunnel_path: "{{ random_string }}"

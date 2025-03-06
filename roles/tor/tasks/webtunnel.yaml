@@ -34,6 +34,14 @@
     webtunnel_path: "{{ random_string }}"
   register: torrc
 
+- name: Set {{ tor.directory }} owner- and groupship
+  ansible.builtin.file:
+    path: "{{ tor.directory }}"
+    owner: "{{ tor.user }}"
+    group: "{{ tor.group }}"
+    state: directory
+    recurse: yes
+
 - name: Block for OS-Familiy Debian
   when: ansible_os_family == "Debian"
   block:
@@ -96,14 +104,6 @@
         value: 16000
         state: present
         reload: yes
-
-    - name: Set {{ tor.directory }} owner- and groupship
-      ansible.builtin.file:
-        path: "{{ tor.directory }}"
-        owner: "{{ tor.user }}"
-        group: "{{ tor.group }}"
-        state: directory
-        recurse: yes
 
     - name: Start tor
       ansible.builtin.service:

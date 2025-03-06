@@ -26,14 +26,9 @@
 
     Header always set Strict-Transport-Security "max-age=63072000"
 
-    <Location /{{ webtunnel_path }}>
-        # This lets Apache set the "X-Forwarded-For", "X-Forwarded-Host" and
-        # "X-Forwarded-Server" HTTP headers automatically if enabled (Default is 'On').
-        # "X-Forwarded-For" is set manually below to avoid the other two
-        # headers provided by this directive that we don't need.
+    <Location /{{ webtunnel_path | trim }}>
         ProxyAddHeaders Off
 
-        # Set Proxy headers
         RequestHeader unset Accept-Encoding
         RequestHeader set X-Real-IP         "%{REMOTE_ADDR}s"
         RequestHeader set X-Forwarded-For   "%{REMOTE_ADDR}s"

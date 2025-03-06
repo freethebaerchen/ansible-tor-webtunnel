@@ -2,15 +2,12 @@
 root:
   user: root
   group: wheel
-
 webserver:
   user: www
   group: www
   webroot: /var/www/html
-
 system:
   etc: /usr/local/etc
-
 webserver_config:
   caddy:
     service_name: caddy
@@ -45,3 +42,5 @@ webserver_config:
 certbot:
   config_dir: /usr/local/etc/letsencrypt
   webroot: /var/www/certbot
+tor:
+  directory: /var/db/tor

@@ -2,7 +2,6 @@
 root:
   user: root
   group: root
-
 webserver:
   user: >-
     {%- if use_webserver == "caddy" -%}
@@ -17,10 +16,8 @@ webserver:
       http
     {%- endif -%}
   webroot: /var/www/html
-
 system:
   etc: /etc
-
 webserver_config:
   caddy:
     service_name: caddy
@@ -58,3 +55,5 @@ webserver_config:
 certbot:
   config_dir: /etc/letsencrypt
   webroot: /var/www/certbot
+tor:
+  directory: /var/lib/tor

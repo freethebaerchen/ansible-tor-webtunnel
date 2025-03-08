@@ -27,7 +27,7 @@
 - [x] Save webserver error-logs, but not Access-Logs
 - [x] Fix server shutdown after successful test
 - [ ] Reverse Proxy
-- [ ] Grafana Monitoring
+- [ ] Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
 - [ ] Auto-Update Report via Mail
 - [ ] Security (SElinux/AppArmor, [Internal Firewall](https://community.torproject.org/relay/setup/post-install/))
 - [ ] Cleanup (defaults/group_vars/host_vars/...)

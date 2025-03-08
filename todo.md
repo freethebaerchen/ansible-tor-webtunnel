@@ -29,4 +29,5 @@
 - [ ] Reverse Proxy
 - [ ] Grafana Monitoring
 - [ ] Auto-Update Report via Mail
-- [ ] Security (SElinux/AppArmor, ...)
+- [ ] Security (SElinux/AppArmor, [Internal Firewall](https://community.torproject.org/relay/setup/post-install/))
+- [ ] Cleanup (defaults/group_vars/host_vars/...)

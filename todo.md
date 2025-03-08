@@ -31,3 +31,4 @@
 - [ ] Auto-Update Report via Mail
 - [ ] Security (SElinux/AppArmor, [Internal Firewall](https://community.torproject.org/relay/setup/post-install/))
 - [ ] Cleanup (defaults/group_vars/host_vars/...)
+- [ ] Refactor Tasks (OS-Vars, instead of ansible_os_family blocks)

@@ -3,17 +3,106 @@
 - name: Block for OS-Specific tasks (RedHat)
   when: ansible_os_family == "RedHat"
   block:
+    - name: Disbale and stop firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: stopped
+        enabled: false
 
-    - name: Allow HTTP traffic
-      ansible.posix.firewalld:
-        service: "http"
-        permanent: true
-        state: enabled
-        immediate: true
+- name: Block for BSDs
+  when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD"
+  block:
+    - name: Ensure PF is loaded (FreeBSD/OpenBSD)
+      ansible.builtin.sysctl:
+        name: net.pf.enable
+        value: "1"
+        state: present
+        reload: yes
 
-    - name: Allow HTTPS traffic
-      ansible.posix.firewalld:
-        service: "https"
-        permanent: true
-        state: enabled
-        immediate: true
+    - name: Enable PF on FreeBSD
+      community.general.sysrc:
+        name: pf_enable
+        value: "YES"
+        state: present
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Enable PF on OpenBSD
+      ansible.builtin.lineinfile:
+        path: "{{ system.etc }}/rc.conf.local"
+        line: pf=YES
+        create: yes
+      when: ansible_os_family == "OpenBSD"
+
+    - name: Configure PF rules file
+      community.general.sysrc:
+        name: pf_rules
+        value: "{{ system.etc }}/pf.conf"
+        state: present
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Ensure PF is enabled
+      ansible.builtin.service:
+        name: pf
+        state: started
+        enabled: true
+
+    - name: Configure PF rules file
+      ansible.builtin.copy:
+        src: "{{ role_path }}/templates/pf.conf.j2"
+        dest: "{{ system.etc }}/pf.conf"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: 0644
+      notify: Apply pf rules
+
+- name: Block for all (Linux) hosts
+  when: not ansible_os_familiy == "FreeBSD" or not ansible_os_family == "OpenBSD" 
+  block:
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - "{{ item }}"
+        state: present
+      loop: firewall.packages
+
+    - name: Ensure iptables directory exists
+      ansible.builtin.file:
+        path: "{{ system.etc }}/iptables"
+        state: directory
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Create ip4tables rules template for Linux
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/ip4tables_rules.j2"
+        dest: "{{ system.etc }}/iptables/ip4tables_rules"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: '0640'
+      notify: Apply ip4tables rules
+
+    - name: Create ip6tables rules template for Linux
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/ip6tables_rules.j2"
+        dest: "{{ system.etc }}/iptables/ip6tables_rules"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: '0640'
+      notify: Apply ip6tables rules
+
+    - name: Save iptables rules
+      ansible.builtin.shell: 
+        cmd: "{{ item }}"
+      loop:
+        - iptables-save > /etc/iptables/rules.v4
+        - ip6tables-save > /etc/iptables/rules.v6
+
+    - name: Cerate cronjob to restore iptables rules 
+      ansible.builtin.cron:
+        name: Restore iptables rules
+        job: "{{ item }}"
+        user: root
+        special_time: reboot
+      loop:
+        - /sbin/iptables-restore < /etc/iptables/rules.v4
+        - /sbin/ip6tables-restore < /etc/iptables/rules.v6

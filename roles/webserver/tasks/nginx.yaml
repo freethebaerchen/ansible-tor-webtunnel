@@ -72,6 +72,15 @@
     owner: "{{ webserver.user }}"
     group: "{{ webserver.group }}"
 
+- name: Read random-string.txt
+  ansible.builtin.slurp:
+    src: "{{ tor.directory }}/random-string.txt"
+  register: random_string_file
+
+- name: Decode file content
+  ansible.builtin.set_fact:
+    random_string: "{{ random_string_file.content | b64decode }}"
+
 - name: Generate nginx (https) config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/nginx-https.conf.j2"
@@ -79,6 +88,6 @@
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   vars:
-    webtunnel_path: "{{ lookup('file', playbook_dir + '/roles/tor/files/' + inventory_hostname + '.txt') }}"
+    webtunnel_path: "{{ random_string }}"
   notify:
     - Validate nginx

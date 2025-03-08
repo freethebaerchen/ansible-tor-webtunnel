@@ -1,6 +1,7 @@
 {% if ansible_os_family == "OpenBSD" %}
 RunAsDaemon 1
 {% endif %}
+User {{ tor.user }}
 BridgeRelay 1
 ORPort 127.0.0.1:auto
 AssumeReachable 1
@@ -11,7 +12,7 @@ ExtORPort auto
 ContactInfo {{ email | replace('@', '[at]') | replace('.', '[dot]') }}
 Nickname {{ tor.nickname }}{{ id }}
 SocksPort 0
-DataDirectory {{ system.tor.directory }}
+DataDirectory {{ tor.directory }}
 {% if tor.test %}
 BridgeDistribution None
 {% endif %}

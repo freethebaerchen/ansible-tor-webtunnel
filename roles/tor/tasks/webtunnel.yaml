@@ -17,13 +17,30 @@
       - tor
     state: present
 
+- name: Read random-string.txt
+  ansible.builtin.slurp:
+    src: "{{ tor.directory }}/random-string.txt"
+  register: random_string_file
+
+- name: Decode file content
+  ansible.builtin.set_fact:
+    random_string: "{{ random_string_file.content | b64decode }}"
+
 - name: Configure WebSocket Bridge (torrc)
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: "{{ system.etc }}/tor/torrc"
   vars:
-    webtunnel_path: "{{ lookup('file', role_path + '/files/' + inventory_hostname + '.txt') }}"
+    webtunnel_path: "{{ random_string }}"
   register: torrc
+
+- name: Set {{ tor.directory }} owner- and groupship
+  ansible.builtin.file:
+    path: "{{ tor.directory }}"
+    owner: "{{ tor.user }}"
+    group: "{{ tor.group }}"
+    state: directory
+    recurse: yes
 
 - name: Block for OS-Familiy Debian
   when: ansible_os_family == "Debian"
@@ -88,14 +105,6 @@
         state: present
         reload: yes
 
-    - name: Set {{ system.tor.directory }} owner- and groupship
-      ansible.builtin.file:
-        path: "{{ system.tor.directory }}"
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-        state: directory
-        recurse: true
-
     - name: Start tor
       ansible.builtin.service:
         name: tor
@@ -109,11 +118,8 @@
     - name: Ensure User=tor and LimitNOFILE=65536 in systemd service
       ansible.builtin.lineinfile:
         path: "/usr/lib/systemd/system/tor.service"
-        line: "{{ item }}"
+        line: "LimitNOFILE=65536"
         insertafter: '^\[Service\]'
-      loop:
-        - 'LimitNOFILE=65536'
-        - 'User=tor'
       notify: Reload daemon
 
     - name: Set Limits in security/limits.conf
@@ -136,13 +142,13 @@
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:
-    path: "{{ system.tor.directory }}/fingerprint"
+    path: "{{ tor.directory }}/fingerprint"
     state: present
     timeout: 300
 
 - name: Get the connection strings for testing in Tor Browser
   get-connection-string:
-    fingerprint_path: "{{ system.tor.directory }}/fingerprint"
+    fingerprint_path: "{{ tor.directory }}/fingerprint"
     torrc_path: "{{ system.etc }}/tor/torrc"
   register: connection_string
 

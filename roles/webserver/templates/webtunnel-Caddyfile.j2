@@ -5,5 +5,5 @@
         root * {{ webserver.webroot }}
         file_server browse
 {% endif %}
-        reverse_proxy /{{ webtunnel_path }} 127.0.0.1:15000
+        reverse_proxy /{{ webtunnel_path | trim }} 127.0.0.1:15000
 }

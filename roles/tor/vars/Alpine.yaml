@@ -2,9 +2,10 @@
 root:
   user: root
   group: wheel
-
 system:
   etc: /etc
   shell: /bin/bash
-  tor:
-    directory: /var/lib/tor/.tor
+tor:
+  user: tor
+  group: tor
+  directory: /var/lib/tor/.tor

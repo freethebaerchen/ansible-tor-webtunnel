@@ -25,7 +25,7 @@
 - [x] Change to certbot webroot validation
 - [x] Put random-string file to tor.directory
 - [x] Save webserver error-logs, but not Access-Logs
-- [ ] Fix server shutdown after sucessful test
+- [x] Fix server shutdown after successful test
 - [ ] Reverse Proxy
 - [ ] Grafana Monitoring
 - [ ] Auto-Update Report via Mail

@@ -5,4 +5,4 @@
     - name: Forcefully shutdown {{ vm[os].name }}-{{ webserver_software }}
       shell: vm poweroff -f {{ vm[os].name }}-{{ item }}
       loop: "{{ webserver_software }}"
-      failed_when: no
+      failed_when: false

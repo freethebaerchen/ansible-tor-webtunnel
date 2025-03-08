@@ -6,7 +6,7 @@
     - name: Run dist-upgrade
       ansible.builtin.apt:
         upgrade: dist
-        update_cache: yes
+        update_cache: true
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -79,7 +79,7 @@
         path: /etc/apk/repositories
         regexp: '^#(.*\/community)'
         line: '\1'
-        backrefs: yes
+        backrefs: true
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -248,7 +248,7 @@
   block:
     - name: Update package cache
       ansible.builtin.command: pacman -Syu --noconfirm
-      become: yes
+      become: true
 
     - name: Install OS-specific packages
       ansible.builtin.package:

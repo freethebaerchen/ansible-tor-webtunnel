@@ -17,7 +17,7 @@
     name: "{{ item.name }}"
     groups:
       - "{{ root.group }}"
-    append: yes
+    append: true
     shell: "{{ system.shell }}"
   loop: "{{ admins }}"
   loop_control:

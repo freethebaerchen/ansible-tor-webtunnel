@@ -40,7 +40,7 @@
     owner: "{{ tor.user }}"
     group: "{{ tor.group }}"
     state: directory
-    recurse: yes
+    recurse: true
 
 - name: Block for OS-Familiy Debian
   when: ansible_os_family == "Debian"
@@ -96,20 +96,20 @@
       ansible.builtin.lineinfile:
         path: "{{ system.etc }}/sysctl.conf"
         line: "kern.maxfiles=16000"
-        create: yes
+        create: true
 
     - name: Apply kern.maxfiles
       ansible.posix.sysctl:
         name: kern.maxfiles
         value: 16000
         state: present
-        reload: yes
+        reload: true
 
     - name: Start tor
       ansible.builtin.service:
         name: tor
         state: started
-        enabled: yes
+        enabled: true
       when: torrc.changed
 
 - name: Block for OS-Family Archlinux
@@ -135,7 +135,7 @@
   ansible.builtin.service:
     name: tor
     state: restarted
-    enabled: yes
+    enabled: true
   async: 120
   poll: 5 
   ignore_errors: true
@@ -156,7 +156,7 @@
   ansible.builtin.lineinfile:
     path: "{{ role_path }}/../../connection-strings.txt"
     line: "{{ item }} #{{ inventory_hostname }}"
-    create: yes
+    create: true
   with_items: "{{ connection_string.stdout_lines }}"
   delegate_to: localhost
   become: false

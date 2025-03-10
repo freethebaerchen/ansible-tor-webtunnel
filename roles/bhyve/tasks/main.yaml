@@ -10,6 +10,11 @@
   tags:
     - delete-server
 
+- name: Include shutdown provisioned server 
+  ansible.builtin.include_tasks: shutdown-os-provision.yaml
+  tags:
+    - shutdown-server
+
 - name: Include starting all vms
   ansible.builtin.include_tasks: start-vms.yaml
   tags:

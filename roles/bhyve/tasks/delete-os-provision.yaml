@@ -1,6 +1,6 @@
 ---
 
-- name: Block for provisioning VMs
+- name: Block for deleting VMs
   tags:
     - delete-server
   block:

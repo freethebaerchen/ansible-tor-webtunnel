@@ -1,4 +1,4 @@
-name: Test Ansible Playbook by Server
+name: Test Ansible Playbook
 
 on:
   push:
@@ -154,7 +154,7 @@ jobs:
         if: always()
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
@@ -255,7 +255,7 @@ jobs:
         if: always()
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
@@ -356,7 +356,7 @@ jobs:
         if: always()
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
@@ -457,7 +457,7 @@ jobs:
         if: always()
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
@@ -558,7 +558,7 @@ jobs:
         if: always()
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
@@ -659,7 +659,7 @@ jobs:
         if: always()
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
@@ -760,7 +760,7 @@ jobs:
         if: always()
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --tags=shutdown-server --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |

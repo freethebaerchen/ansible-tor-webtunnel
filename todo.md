@@ -30,3 +30,4 @@
 - [ ] Grafana Monitoring
 - [ ] Auto-Update Report via Mail
 - [ ] Security (SElinux/AppArmor, ...)
+- [ ] Python interpreter instead of Symlinking

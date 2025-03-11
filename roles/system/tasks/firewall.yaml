@@ -61,9 +61,7 @@
     - name: Install required packages
       ansible.builtin.package:
         name:
-          - "{{ item }}"
-        state: present
-      loop: firewall.packages
+          - iptables
 
     - name: Ensure iptables directory exists
       ansible.builtin.file:

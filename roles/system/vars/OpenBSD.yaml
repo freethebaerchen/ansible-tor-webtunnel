@@ -7,5 +7,3 @@ system:
   etc: /etc
   shell: /usr/local/bin/bash
   sudoers_file: sudoers
-firewall:
-  packages: []

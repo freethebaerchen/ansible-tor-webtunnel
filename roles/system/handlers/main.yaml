@@ -21,6 +21,13 @@
     msg: "Reboot initiated by Ansible for setting the hostname"
     reboot_timeout: 300
 
+- name: Start pf
+  ansible.builtin.service:
+    name: pf
+    state: started
+    enabled: true
+  notify: Apply pf rules
+
 - name: Apply pf rules
   ansible.builtin.shell:
     cmd: pfctl -f {{ system.etc }}/pf.conf

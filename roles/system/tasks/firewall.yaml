@@ -40,20 +40,14 @@
         state: present
       when: ansible_os_family == "FreeBSD"
 
-    - name: Ensure PF is enabled
-      ansible.builtin.service:
-        name: pf
-        state: started
-        enabled: true
-
     - name: Configure PF rules file
       ansible.builtin.copy:
         src: "{{ role_path }}/templates/pf.conf.j2"
         dest: "{{ system.etc }}/pf.conf"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
-        mode: 0644
-      notify: Apply pf rules
+        mode: 0640
+      notify: Start pf
 
 - name: Block for all (Linux) hosts
   when: not ansible_os_familiy == "FreeBSD" or not ansible_os_family == "OpenBSD" 

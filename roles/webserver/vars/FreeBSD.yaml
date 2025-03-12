@@ -13,12 +13,14 @@ webserver_config:
     service_name: caddy
     config_dir: /usr/local/etc/caddy
     extra_dirs: /usr/local/etc/caddy/configs
+    error_log: /var/log/caddy-error.log
   nginx:
     packages:
       - nginx
       - security/py-certbot
     service_name: nginx
     config_dir: /usr/local/etc/nginx/http.d
+    error_log: /var/log/nginx-error.log
   apache:
     packages:
       - apache24
@@ -28,6 +30,7 @@ webserver_config:
     config_dir: /usr/local/etc/apache24/Includes
     config_file: /usr/local/etc/apache24/httpd.conf
     extra_dirs: []
+    error_log: /var/log/httpd-error.log
     modules_config:
       - LoadModule rewrite_module /usr/local/libexec/apache24/mod_rewrite.so
       - LoadModule ssl_module /usr/local/libexec/apache24/mod_ssl.so

@@ -1,63 +1,35 @@
 ---
 
-- name: Install SELinux on RHEL/CentOS/AlmaLinux
-  when: ansible_facts.os_family == 'RedHat'
-  yum:
+- name: Install required packages
+  ansible.builtin.package:
     name:
-      - selinux-policy
-      - selinux-policy-targeted
-      - policycoreutils
+      - "{{ item }}"
     state: present
-
-- name: Install SELinux on Ubuntu/Debian
-  when: ansible_facts.os_family == 'Debian'
-  apt:
-    name:
-      - selinux-utils
-      - policycoreutils
-    state: present
-    update_cache: yes
+  loop: security.packages
 
 - name: Enable SELinux
-  lineinfile:
-    path: /etc/selinux/config
+  ansible.builtin.lineinfile:
+    path: "{{ system.etc }}/selinux/config"
     regexp: '^SELINUX='
     line: 'SELINUX=enforcing'
     create: yes
 
 - name: Set SELinux to Enforcing Mode
-  command: setenforce 1
+  ansible.builtin.shell: 
+    cmd: setenforce 1
   ignore_errors: yes
+  notify: Restart system
 
-# Step 2: Install and Enable Tor
-- name: Install Tor
-  package:
-    name: tor
-    state: present
-
-- name: Enable and Start Tor Service
-  service:
-    name: tor
-    state: started
-    enabled: yes
-
-# Step 3: Configure SELinux for Tor WebTunnel
 - name: Set SELinux context for Tor data directory
   community.general.sefcontext:
-    target: "/var/lib/tor(/.*)?"
+    target: "{{ tor.directory }}(/.*)?"
     setype: tor_var_lib_t
     state: present
 
 - name: Set SELinux context for Tor configuration files
   community.general.sefcontext:
-    target: "/etc/tor(/.*)?"
+    target: "{{ system.etc }}/tor(/.*)?"
     setype: tor_etc_t
-    state: present
-
-- name: Set SELinux context for Tor hidden service directories
-  community.general.sefcontext:
-    target: "/var/lib/tor/hidden_service(/.*)?"
-    setype: tor_var_lib_t
     state: present
 
 - name: Set SELinux context for Tor logs
@@ -67,9 +39,10 @@
     state: present
 
 - name: Apply SELinux file context changes for Tor
-  command: restorecon -Rv /var/lib/tor /etc/tor /var/log/tor
+  ansible.builtin.shell:
+    cmd: restorecon -Rv {{ tor.directory }} {{ system.etc }}/tor
+  notify: Restart system
 
-# Step 4: Configure SELinux for WebTunnel Binary
 - name: Set SELinux context for WebTunnel binary
   community.general.sefcontext:
     target: "/usr/local/bin/webtunnel"
@@ -77,17 +50,20 @@
     state: present
 
 - name: Allow WebTunnel binary to execute
-  command: restorecon -Rv /usr/local/bin/webtunnel
+  ansible.builtin.shell:
+    cmd: restorecon -Rv /usr/local/bin/webtunnel
+  notify: Restart system
 
-# Step 5: Allow Tor to Bind to WebTunnel Port 15000
 - name: Allow Tor to bind to WebTunnel port 15000
-  command: semanage port -a -t tor_port_t -p tcp 15000
+  ansible.builtin.shell:
+    cmd: semanage port -a -t tor_port_t -p tcp 15000
   ignore_errors: yes
 
 - name: Allow Tor to communicate with web servers
-  command: setsebool -P httpd_can_network_connect 1
+  ansible.builtin.shell:
+    cmd: setsebool -P httpd_can_network_connect 1
+  notify: Restart system
 
-# Step 6: Configure SELinux for Web Servers (Apache/Nginx/Caddy)
 - name: Set SELinux context for Web Server Reverse Proxy Directories
   community.general.sefcontext:
     target: "/var/www/html(/.*)?"
@@ -95,13 +71,11 @@
     state: present
 
 - name: Allow Web Server to Connect to Tor WebTunnel
-  command: setsebool -P httpd_can_network_relay 1
+  ansible.builtin.shell:
+    cmd: setsebool -P httpd_can_network_relay 1
+  notify: Restart system
 
 - name: Apply SELinux file context changes for Web Servers
-  command: restorecon -Rv /var/www/html /etc/nginx /etc/httpd /etc/caddy
-
-# Step 7: Reboot System to Apply SELinux Changes
-- name: Reboot system to apply changes
-  reboot:
-    reboot_timeout: 600
-  when: ansible_facts.os_family != 'Alpine'
+  ansible.builtin.shell:
+    cmd: restorecon -Rv /var/www/html {{ system.etc }}/{{ use_webserver }}
+  notify: Restart system

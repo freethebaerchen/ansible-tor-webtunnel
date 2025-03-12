@@ -1,49 +1,46 @@
 ---
 
-# Step 1: Enable Securelevel
-- name: Set Securelevel in /etc/rc.conf.local
-  lineinfile:
-    path: /etc/rc.conf.local
-    line: 'kern.securelevel=2'
-    create: yes
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - "{{ item }}"
+    state: present
+  loop: security.packages
 
-# Step 2: Lock Critical System Files
-- name: Set file flags on critical system files
-  command: chflags schg /etc/rc.conf.local /etc/sysctl.conf /etc/pf.conf
+- name: Enable Systrace
+  ansible.builtin.shell:
+    cmd sysctl kern.systrace_enabled=1
   ignore_errors: yes
+  notify: Restart system
 
-# Step 3: Enable and Configure Systrace
-- name: Enable Systrace in /etc/rc.conf.local
-  lineinfile:
-    path: /etc/rc.conf.local
-    line: 'systrace_flags=""'
-    create: yes
+- name: Create Systrace policy directory
+  ansible.builtin.file:
+    path: "{{ system.etc }}/systrace"
+    state: directory
+    mode: '0755'
 
-- name: Create basic Systrace policy file
-  copy:
-    dest: /etc/systrace/policy
-    content: |
-      # Example Systrace policy for web services
-      policy {
-        <nginx> permit
-        <httpd> permit
-      }
-    mode: '0600'
+- name: Generate Systrace policies for Tor
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/tor.systrace.j2"
+    dest: "{{ system.etc }}/systrace/tor"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: '0644'
 
-- name: Start Systrace service
-  command: /usr/sbin/systrace -A
+- name: Generate Systrace policies for WebTunnel
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/webtunnel.systrace.j2"
+    dest: "{{ system.etc }}/systrace/webtunnel"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: '0644'
 
-# Step 4: Enable PF Firewall
-- name: Enable PF Firewall in /etc/rc.conf.local
-  lineinfile:
-    path: /etc/rc.conf.local
-    line: 'pf=YES'
-    create: yes
+- name: Apply Systrace policies for Tor
+  ansible.builtin.shell:
+    cmd: systrace -a -c {{ system.etc }}/systrace/tor /usr/local/bin/tor
+  notify: Restart system
 
-- name: Restart PF firewall
-  command: pfctl -f /etc/pf.conf
-
-# Step 5: Reboot to Apply Securelevel
-- name: Reboot system to apply changes
-  reboot:
-    reboot_timeout: 600
+- name: Apply Systrace policies for WebTunnel
+  ansible.builtin.shell:
+    cmd: systrace -a -c {{ system.etc }}/systrace/webtunnel /usr/local/bin/webtunnel
+  notify: Restart system

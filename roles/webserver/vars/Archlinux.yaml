@@ -23,6 +23,7 @@ webserver_config:
     service_name: caddy
     config_dir: /etc/caddy
     extra_dirs: /etc/caddy/conf.d
+    error_log: /var/log/caddy-error.log
   nginx:
     packages:
       - nginx
@@ -30,6 +31,7 @@ webserver_config:
       - python3
     service_name: nginx
     config_dir: /etc/nginx/http.d
+    error_log: /var/log/nginx-error.log
   apache:
     packages:
       - apache
@@ -40,6 +42,7 @@ webserver_config:
     config_dir: /etc/httpd/conf/Includes
     config_file: /etc/httpd/conf/httpd.conf
     extra_dirs: []
+    error_log: /var/log/httpd-error.log
     modules_config:
       - LoadModule rewrite_module modules/mod_rewrite.so
       - LoadModule ssl_module modules/mod_ssl.so

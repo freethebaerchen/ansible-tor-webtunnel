@@ -1,45 +1,57 @@
 ---
 
-# Step 1: Enable MAC Security Modules
-- name: Enable MAC framework
-  lineinfile:
-    path: /etc/rc.conf
-    line: 'mac_bsdextended_enable="YES"'
+- name: Install required packages on FreeBSD
+  ansible.builtin.package:
+    name:
+      - "{{ item }}"
+    state: present
+  loop: security.packages
+
+- name: Load mac_bsdextended module on FreeBSD
+  ansible.builtin.sysctl:
+    name: security.mac.bsdextended.enable
+    value: 1
+    state: present
+
+- name: Enable MAC (mac_bsdextended) in /boot/loader.conf
+  ansible.builtin.lineinfile:
+    path: /boot/loader.conf
+    regexp: '^security.mac.bsdextended.enable'
+    line: 'security.mac.bsdextended.enable=1'
     create: yes
 
-- name: Load MAC module
-  command: kldload mac_bsdextended
+- name: Set MAC policy for Tor data directory
+  ansible.builtin.shell:
+    cmd: sysctl -w security.mac.bsdextended.tor_directory="{{ tor.directory }}"
   ignore_errors: yes
 
-# Step 2: Enable Securelevel (Immutable Mode)
-- name: Enable Securelevel
-  lineinfile:
-    path: /etc/rc.conf
-    line: 'kern_securelevel_enable="YES"'
-    create: yes
+- name: Set MAC policy for Tor configuration files
+  ansible.builtin.shell:
+    cmd: sysctl -w security.mac.bsdextended.tor_config="{{ system.etc }}/tor"
+  ignore_errors: yes
 
-- name: Set Securelevel to 2 (No File Modifications)
-  lineinfile:
-    path: /etc/rc.conf
-    line: 'kern_securelevel="2"'
-    create: yes
+- name: Set MAC policy for WebTunnel binary
+  ansible.builtin.shell:
+    cmd: sysctl -w security.mac.bsdextended.webtunnel="/usr/local/bin/webtunnel"
+  ignore_errors: yes
 
-# Step 3: Configure MAC Policies
-- name: Set MAC security policy
-  copy:
-    dest: /etc/mac.conf
-    content: |
-      /usr/local/www                type        "web_data"
-      /usr/local/etc/nginx/nginx.conf  type        "system_config"
-      /usr/local/etc/httpd.conf     type        "system_config"
-      /var/log/httpd-access.log     type        "log"
-      /var/log/nginx-access.log     type        "log"
-    mode: '0600'
+- name: Allow Tor to bind to WebTunnel port 15000
+  ansible.builtin.shell:
+    cmd: sysctl -w security.mac.bsdextended.tor_port_15000="1"
+  ignore_errors: yes
 
-- name: Restart MAC security policy service
-  command: service mac_bsdextended restart
+- name: Enable mac_bsdextended module
+  ansible.builtin.sysctl:
+    name: security.mac.bsdextended.enable
+    value: 1
+    state: present
 
-# Step 4: Reboot to Apply Securelevel and MAC Policies
-- name: Reboot system to apply changes
-  reboot:
-    reboot_timeout: 600
+- name: Set MAC policies for Tor and {{ use_webserver }}
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  loop:
+    - { name: "security.mac.bsdextended.tor_directory", value: "{{ tor.directory }}" }
+    - { name: "security.mac.bsdextended.{{ use_webserver }}_directory", value: "{{ webserver.webroot }}" }
+    - { name: "security.mac.bsdextended.{{ use_webserver }}_log", value: "{{ webserver_config[use_webserver].error_log }}" }

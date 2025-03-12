@@ -40,6 +40,6 @@
     </Location>
 
     CustomLog /dev/null combined
-    ErrorLog /var/log/httpd-error.log
+    ErrorLog {{ webserver_config[use_webserver].error_log }}
 
 </VirtualHost>

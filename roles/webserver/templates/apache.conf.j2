@@ -33,6 +33,6 @@ DocumentRoot "{{ webserver.webroot }}"
 </IfModule>
 
 CustomLog "/dev/null" combined
-ErrorLog /var/log/httpd-error.log
+ErrorLog {{ webserver_config[use_webserver].error_log }}
 
 IncludeOptional {{ webserver_config[use_webserver].config_dir }}/*.conf

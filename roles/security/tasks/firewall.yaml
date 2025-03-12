@@ -41,7 +41,7 @@
       when: ansible_os_family == "OpenBSD"
 
     - name: Configure PF rules file
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: "{{ role_path }}/templates/pf.conf.j2"
         dest: "{{ system.etc }}/pf.conf"
         owner: "{{ root.user }}"
@@ -50,7 +50,7 @@
       notify: Start pf
 
 - name: Block for all (Linux) hosts
-  when: ansible_os_familiy != "FreeBSD" and ansible_os_family != "OpenBSD" 
+  when: ansible_os_family != "FreeBSD" and ansible_os_family != "OpenBSD" 
   block:
     - name: Install required packages
       ansible.builtin.package:

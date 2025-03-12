@@ -20,22 +20,3 @@
   ansible.builtin.reboot:
     msg: "Reboot initiated by Ansible for setting the hostname"
     reboot_timeout: 300
-
-- name: Start pf
-  ansible.builtin.service:
-    name: pf
-    state: started
-    enabled: true
-  notify: Apply pf rules
-
-- name: Apply pf rules
-  ansible.builtin.shell:
-    cmd: pfctl -f {{ system.etc }}/pf.conf
-
-- name: Apply ip4tables rules
-  ansible.builtin.shell:
-    cmd: iptables-restore < {{ system.etc }}/iptables/ip4tables_rules
-
-- name: Apply ip4tables rules
-  ansible.builtin.shell:
-    cmd: iptables-restore < {{ system.etc }}/iptables/ip6tables_rules

@@ -1,18 +1,3 @@
 ---
 
 unattended_upgrades: true
-
-# Internal service, that should be accessible from the outside
-local_services: []
-# Example
-#  - port: 8080
-#  - ip: "10.0.0.5"
-#    port: 3000
-
-# External service, that should be accessible from the host itself
-remote_services: []
-# Example
-#  - ip: "10.0.0.0/8"
-#    port: 3306
-#  - ip: "192.168.1.5"
-#    port: 5432

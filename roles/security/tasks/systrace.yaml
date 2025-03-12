@@ -1,0 +1,49 @@
+---
+
+# Step 1: Enable Securelevel
+- name: Set Securelevel in /etc/rc.conf.local
+  lineinfile:
+    path: /etc/rc.conf.local
+    line: 'kern.securelevel=2'
+    create: yes
+
+# Step 2: Lock Critical System Files
+- name: Set file flags on critical system files
+  command: chflags schg /etc/rc.conf.local /etc/sysctl.conf /etc/pf.conf
+  ignore_errors: yes
+
+# Step 3: Enable and Configure Systrace
+- name: Enable Systrace in /etc/rc.conf.local
+  lineinfile:
+    path: /etc/rc.conf.local
+    line: 'systrace_flags=""'
+    create: yes
+
+- name: Create basic Systrace policy file
+  copy:
+    dest: /etc/systrace/policy
+    content: |
+      # Example Systrace policy for web services
+      policy {
+        <nginx> permit
+        <httpd> permit
+      }
+    mode: '0600'
+
+- name: Start Systrace service
+  command: /usr/sbin/systrace -A
+
+# Step 4: Enable PF Firewall
+- name: Enable PF Firewall in /etc/rc.conf.local
+  lineinfile:
+    path: /etc/rc.conf.local
+    line: 'pf=YES'
+    create: yes
+
+- name: Restart PF firewall
+  command: pfctl -f /etc/pf.conf
+
+# Step 5: Reboot to Apply Securelevel
+- name: Reboot system to apply changes
+  reboot:
+    reboot_timeout: 600

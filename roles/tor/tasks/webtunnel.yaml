@@ -42,7 +42,7 @@
     state: directory
     recurse: true
 
-- name: Block for OS-Familiy Debian
+- name: Block for OS-family Debian
   when: ansible_os_family == "Debian"
   block:
     - name: Add Tor GPG key
@@ -81,7 +81,7 @@
       ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
       when: apparomor.changed
 
-- name: Block for OS-Familiy OpenBSD
+- name: Block for OS-family OpenBSD
   when: ansible_os_family == "OpenBSD"
   block:
     - name: Ensure tor login class configuration in /etc/login.conf

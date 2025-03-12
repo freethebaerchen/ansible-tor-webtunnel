@@ -1,0 +1,45 @@
+---
+
+# Step 1: Enable MAC Security Modules
+- name: Enable MAC framework
+  lineinfile:
+    path: /etc/rc.conf
+    line: 'mac_bsdextended_enable="YES"'
+    create: yes
+
+- name: Load MAC module
+  command: kldload mac_bsdextended
+  ignore_errors: yes
+
+# Step 2: Enable Securelevel (Immutable Mode)
+- name: Enable Securelevel
+  lineinfile:
+    path: /etc/rc.conf
+    line: 'kern_securelevel_enable="YES"'
+    create: yes
+
+- name: Set Securelevel to 2 (No File Modifications)
+  lineinfile:
+    path: /etc/rc.conf
+    line: 'kern_securelevel="2"'
+    create: yes
+
+# Step 3: Configure MAC Policies
+- name: Set MAC security policy
+  copy:
+    dest: /etc/mac.conf
+    content: |
+      /usr/local/www                type        "web_data"
+      /usr/local/etc/nginx/nginx.conf  type        "system_config"
+      /usr/local/etc/httpd.conf     type        "system_config"
+      /var/log/httpd-access.log     type        "log"
+      /var/log/nginx-access.log     type        "log"
+    mode: '0600'
+
+- name: Restart MAC security policy service
+  command: service mac_bsdextended restart
+
+# Step 4: Reboot to Apply Securelevel and MAC Policies
+- name: Reboot system to apply changes
+  reboot:
+    reboot_timeout: 600

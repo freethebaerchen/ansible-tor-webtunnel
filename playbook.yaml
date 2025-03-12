@@ -36,3 +36,11 @@
     - webserver
   tags:
     - webserver
+
+- name: Setup firewall/mandatory access control
+  hosts: all
+  become: true
+  roles:
+    - security
+  tags:
+    - security

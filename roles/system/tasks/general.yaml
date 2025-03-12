@@ -312,4 +312,4 @@
         line: "{{ inventory_hostname }}"
         state: present
       notify: Restart system
-      when: ansible_os_family != "OpenBSD" and ansible_os_family != "FreeBSD" 
+      when: ansible_os_family != "FreeBSD" 

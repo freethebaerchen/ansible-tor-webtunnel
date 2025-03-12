@@ -14,14 +14,14 @@
 - name: Include firewall
   ansible.builtin.include_tasks: firewall.yaml
 
-#- name: Include SELinux
-#  ansible.builtin.include_tasks: selinux.yaml
-#  when: ansible_os_family != "FreeBSD" and  ansible_os_family != "OpenBSD"
-#
-#- name: Include MAC (FreeBSD)
-#  ansible.builtin.include_tasks: mandatory_access_control.yaml
-#  when: ansible_os_family == "FreeBSD"
-#
-#- name: Include systrace (OpenBSD)
-#  ansible.builtin.include_tasks: systrace.yaml
-#  when: ansible_os_family == "OpenBSD"
+- name: Include SELinux
+  ansible.builtin.include_tasks: selinux.yaml
+  when: ansible_os_family != "FreeBSD" and  ansible_os_family != "OpenBSD"
+
+- name: Include MAC (FreeBSD)
+  ansible.builtin.include_tasks: mandatory_access_control.yaml
+  when: ansible_os_family == "FreeBSD"
+
+- name: Include systrace (OpenBSD)
+  ansible.builtin.include_tasks: systrace.yaml
+  when: ansible_os_family == "OpenBSD"

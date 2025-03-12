@@ -50,7 +50,7 @@
       notify: Start pf
 
 - name: Block for all (Linux) hosts
-  when: not ansible_os_familiy == "FreeBSD" and not ansible_os_family == "OpenBSD" 
+  when: ansible_os_familiy != "FreeBSD" and ansible_os_family != "OpenBSD" 
   block:
     - name: Install required packages
       ansible.builtin.package:

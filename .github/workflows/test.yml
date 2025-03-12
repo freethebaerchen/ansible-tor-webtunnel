@@ -155,6 +155,11 @@ jobs:
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
+      - name: Test HTTP/HTTPS connection
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
+
       - name: Shutdown ${{ env.OS }} servers
         if: always()
         run: |
@@ -260,6 +265,11 @@ jobs:
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connection
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
         if: always()
@@ -367,6 +377,11 @@ jobs:
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
+      - name: Test HTTP/HTTPS connection
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
+
       - name: Shutdown ${{ env.OS }} servers
         if: always()
         run: |
@@ -472,6 +487,11 @@ jobs:
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connection
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
         if: always()
@@ -579,6 +599,11 @@ jobs:
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
+      - name: Test HTTP/HTTPS connection
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
+
       - name: Shutdown ${{ env.OS }} servers
         if: always()
         run: |
@@ -685,6 +710,11 @@ jobs:
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
+      - name: Test HTTP/HTTPS connection
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
+
       - name: Shutdown ${{ env.OS }} servers
         if: always()
         run: |
@@ -790,6 +820,11 @@ jobs:
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connection
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
         if: always()

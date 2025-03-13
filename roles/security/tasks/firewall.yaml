@@ -68,12 +68,9 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
 
-    - name: Ensure IPv4 ipsets exist
-      community.general.ipset:
-        name: "{{ item }}"
-        state: present
-        type: hash:ip
-        family: inet
+    - name: Ensure IPv4 ipsets exist using shell
+      ansible.builtin.shell:
+        cmd: ipset list {{ item }} || ipset create {{ item }} hash:ip family inet
       loop:
         - tor-trust
         - tor-ddos-15000
@@ -117,12 +114,9 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
 
-    - name: Ensure IPv6 ipsets exist
-      community.general.ipset:
-        name: "{{ item }}"
-        state: present
-        type: hash:ip
-        family: inet6
+    - name: Ensure IPv6 ipsets exist using shell
+      ansible.builtin.shell:
+        cmd: ipset list {{ item }} || ipset create {{ item }} hash:ip family inet6
       loop:
         - tor-trust6
         - tor-ddos6-15000

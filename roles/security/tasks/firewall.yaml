@@ -49,8 +49,12 @@
         mode: 0640
       notify: Start pf
 
-- name: Block for all (Linux) hosts
-  when: ansible_os_family != "FreeBSD" and ansible_os_family != "OpenBSD" 
+- name: Block for all (Linux) hosts (IPv4)
+  when: 
+    - ansible_os_family != "FreeBSD"
+    - ansible_os_family != "OpenBSD" 
+    - ansible_default_ipv4.address is defined
+    - ansible_default_ipv4.address =! ""
   block:
     - name: Install required packages
       ansible.builtin.package:
@@ -64,6 +68,16 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
 
+    - name: Ensure IPv4 ipsets exist
+      community.general.ipset:
+        name: "{{ item }}"
+        state: present
+        type: hash:ip
+        family: inet
+      loop:
+        - tor-trust
+        - tor-ddos-15000
+
     - name: Create ip4tables rules template for Linux
       ansible.builtin.template:
         src: "{{ role_path }}/templates/ip4tables_rules.j2"
@@ -72,6 +86,46 @@
         group: "{{ root.group }}"
         mode: '0640'
       notify: Apply ip4tables rules
+
+    - name: Save ip4tables rules
+      ansible.builtin.shell: 
+        cmd: iptables-save > /etc/iptables/rules.v4
+
+    - name: Cerate cronjob to restore ip4tables rules 
+      ansible.builtin.cron:
+        name: Restore ip4tables rules
+        job: /sbin/iptables-restore < /etc/iptables/rules.v4
+        user: root
+        special_time: reboot
+
+- name: Block for all (Linux) hosts (IPv6)
+  when: 
+    - ansible_os_family != "FreeBSD"
+    - ansible_os_family != "OpenBSD" 
+    - ansible_default_ipv6.address is defined
+    - ansible_default_ipv6.address =! ""
+  block:
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - iptables
+
+    - name: Ensure iptables directory exists
+      ansible.builtin.file:
+        path: "{{ system.etc }}/iptables"
+        state: directory
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Ensure IPv6 ipsets exist
+      community.general.ipset:
+        name: "{{ item }}"
+        state: present
+        type: hash:ip
+        family: inet6
+      loop:
+        - tor-trust6
+        - tor-ddos6-15000
 
     - name: Create ip6tables rules template for Linux
       ansible.builtin.template:
@@ -82,19 +136,13 @@
         mode: '0640'
       notify: Apply ip6tables rules
 
-    - name: Save iptables rules
+    - name: Save ip6tables rules
       ansible.builtin.shell: 
-        cmd: "{{ item }}"
-      loop:
-        - iptables-save > /etc/iptables/rules.v4
-        - ip6tables-save > /etc/iptables/rules.v6
+        cmd: ip6tables-save > /etc/iptables/rules.v6
 
-    - name: Cerate cronjob to restore iptables rules 
+    - name: Cerate cronjob to restore ip4tables rules 
       ansible.builtin.cron:
-        name: Restore iptables rules
-        job: "{{ item }}"
+        name: Restore ip6tables rules
+        job:  /sbin/ip6tables-restore < /etc/iptables/rules.v6
         user: root
         special_time: reboot
-      loop:
-        - /sbin/iptables-restore < /etc/iptables/rules.v4
-        - /sbin/ip6tables-restore < /etc/iptables/rules.v6

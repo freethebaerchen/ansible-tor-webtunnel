@@ -3,6 +3,7 @@
 # Based on https://github.com/toralf/torutils/blob/main/ipv4-rules.sh
 # and https://github.com/toralf/torutils/blob/main/ipv6-rules.sh
 
+{% if ansible_default_ipv4.address is defined and ansible_default_ipv4.address != "" %}
 # Tables for IPv4
 table <tor_trust> persist {
     # Tor authorities and snowflakes
@@ -13,6 +14,14 @@ table <tor_trust> persist {
     193.187.88.46, 141.212.118.18
 }
 
+# Hetzner monitoring IPs (IPv4)
+table <hetzner_sysmon> persist {
+    188.40.24.211, 213.133.113.82, 213.133.113.83, 
+    213.133.113.84, 213.133.113.86
+}
+{% endif %}
+
+{% if ansible_default_ipv6.address is defined and ansible_default_ipv6.address != "" %}
 # Tables for IPv6
 table <tor_trust6> persist {
     # Tor authorities and snowflakes
@@ -21,23 +30,12 @@ table <tor_trust6> persist {
     2a02:16a8:662:2203::1
 }
 
-# DDoS tables for Tor webtunnel ports (IPv4)
-table <tor_ddos_15000> persist
-
-# DDoS tables for Tor webtunnel ports (IPv6)
-table <tor_ddos6_15000> persist
-
-# Hetzner monitoring IPs (IPv4)
-table <hetzner_sysmon> persist {
-    188.40.24.211, 213.133.113.82, 213.133.113.83, 
-    213.133.113.84, 213.133.113.86
-}
-
 # Hetzner monitoring IPs (IPv6)
 table <hetzner_sysmon6> persist {
     2a01:4f8:0:a101::5:1, 2a01:4f8:0:a101::6:1, 2a01:4f8:0:a101::6:2, 
     2a01:4f8:0:a101::6:3, 2a01:4f8:0:a112::c:1
 }
+{% endif %}
 
 # Options
 set block-policy drop
@@ -51,29 +49,21 @@ pass out all keep state
 pass in proto tcp flags S/SA keep state
 pass in proto udp keep state
 
-# Allow IPv6 Multicast
-pass in proto udp from fe80::/10 to ff02::/80
-
-# SSH (IPv4 and IPv6)
+# SSH
 pass in proto tcp to any port {{ ansible_port | default(22) }} flags S/SA keep state
+
+{% if ansible_default_ipv4.address is defined and ansible_default_ipv4.address != "" %}
+# DDoS tables for Tor webtunnel ports (IPv4)
+table <tor_ddos_15000> persist
 
 # Rate-limited ICMP (IPv4)
 pass in inet proto icmp icmp-type echoreq keep state max-src-conn-rate 6/10
 
-# Rate-limited ICMP (IPv6)
-pass in inet6 proto icmp6 icmp6-type echoreq keep state max-src-conn-rate 6/10
-
 # DHCP (IPv4)
 pass in proto udp to any port 68 keep state
 
-# DHCPv6 (IPv6)
-pass in proto udp to any port 546 keep state
-
 # Hetzner monitoring (IPv4)
 pass in from <hetzner_sysmon> to any
-
-# Hetzner monitoring (IPv6)
-pass in from <hetzner_sysmon6> to any
 
 # Tor webtunnel rules (IPv4)
 # Rules for Tor webtunnel at {{ ansible_default_ipv4.address }}:15000
@@ -81,16 +71,37 @@ pass in proto tcp from <tor_trust> to {{ ansible_default_ipv4.address }} port 15
 block in proto tcp from <tor_ddos_15000> to {{ ansible_default_ipv4.address }} port 15000
 pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 15000 flags S/SA keep state (max-src-conn 9, max-src-conn-rate 9/60, overload <tor_ddos_15000> flush global)
 
+# Custom services (IPv4)
+{% for service in local_services | default([]) %}
+pass in proto tcp from any to {{ service.ip | default(ansible_default_ipv4.address) }} port {{ service.port }} flags S/SA keep state
+{% endfor %}
+
+# Website on port 80 (IPv4 and IPv6)
+pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 80 flags S/SA keep state
+pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 80 flags S/SA keep state
+{% endif %}
+
+{% if ansible_default_ipv6.address is defined and ansible_default_ipv6.address != "" %}
+# DDoS tables for Tor webtunnel ports (IPv6)
+table <tor_ddos6_15000> persist
+
+# Allow IPv6 Multicast
+pass in proto udp from fe80::/10 to ff02::/80
+
+# Rate-limited ICMP (IPv6)
+pass in inet6 proto icmp6 icmp6-type echoreq keep state max-src-conn-rate 6/10
+
+# DHCPv6 (IPv6)
+pass in proto udp to any port 546 keep state
+
+# Hetzner monitoring (IPv6)
+pass in from <hetzner_sysmon6> to any
+
 # Tor webtunnel rules (IPv6)
 # Rules for Tor webtunnel at {{ ansible_default_ipv6.address }}:15000
 pass in proto tcp from <tor_trust6> to {{ ansible_default_ipv6.address }} port 15000 flags S/SA keep state
 block in proto tcp from <tor_ddos6_15000> to {{ ansible_default_ipv6.address }} port 15000
 pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 15000 flags S/SA keep state (max-src-conn 9, max-src-conn-rate 9/60, overload <tor_ddos6_15000> flush global)
-
-# Custom services (IPv4)
-{% for service in local_services | default([]) %}
-pass in proto tcp from any to {{ service.ip | default(ansible_default_ipv4.address) }} port {{ service.port }} flags S/SA keep state
-{% endfor %}
 
 {% for service in remote_services | default([]) %}
 pass in proto tcp from {{ service.ip }} to any port {{ service.port }} flags S/SA keep state
@@ -105,9 +116,7 @@ pass in proto tcp from any to {{ service.ip | default(ansible_default_ipv6.addre
 pass in proto tcp from {{ service.ip }} to any port {{ service.port }} flags S/SA keep state
 {% endfor %}
 
-# Website on port 80 (IPv4 and IPv6)
-pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 80 flags S/SA keep state
-pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 80 flags S/SA keep state
 # Website on port 443 (IPv4 and IPv6)
 pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 443 flags S/SA keep state
 pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 443 flags S/SA keep state
+{% endif %}

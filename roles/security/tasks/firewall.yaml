@@ -54,7 +54,7 @@
     - ansible_os_family != "FreeBSD"
     - ansible_os_family != "OpenBSD" 
     - ansible_default_ipv4.address is defined
-    - ansible_default_ipv4.address =! ""
+    - ansible_default_ipv4.address != ""
   block:
     - name: Install required packages
       ansible.builtin.package:
@@ -100,7 +100,7 @@
     - ansible_os_family != "FreeBSD"
     - ansible_os_family != "OpenBSD" 
     - ansible_default_ipv6.address is defined
-    - ansible_default_ipv6.address =! ""
+    - ansible_default_ipv6.address != ""
   block:
     - name: Install required packages
       ansible.builtin.package:

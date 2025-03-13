@@ -60,6 +60,7 @@
       ansible.builtin.package:
         name:
           - iptables
+          - ipset
 
     - name: Ensure iptables directory exists
       ansible.builtin.file:

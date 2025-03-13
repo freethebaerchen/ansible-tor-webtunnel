@@ -15,7 +15,7 @@
   ansible.builtin.shell:
     cmd: iptables-restore < {{ system.etc }}/iptables/ip4tables_rules
 
-- name: Apply ip4tables rules
+- name: Apply ip6tables rules
   ansible.builtin.shell:
     cmd: iptables-restore < {{ system.etc }}/iptables/ip6tables_rules
 

@@ -7,3 +7,7 @@ system:
   etc: /etc
 security:
   packages: []
+  kernel:
+    modules:
+      - ip_set
+      - xt_set

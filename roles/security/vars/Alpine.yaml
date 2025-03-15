@@ -7,3 +7,7 @@ system:
   etc: /etc
 security:
   packages: []
+  kernel:
+    modules:
+      - ip_set
+      - ip_set_hash_ip

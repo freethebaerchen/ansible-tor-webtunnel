@@ -64,6 +64,13 @@
           - iptables
           - ipset
 
+    - name: Load ip_set module
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+      loop: security.kernel.modules
+      when: security.kernel.modules is defined
+
     - name: Ensure iptables directory exists
       ansible.builtin.file:
         path: "{{ system.etc }}/iptables"
@@ -71,7 +78,7 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
 
-    - name: Ensure IPv4 ipsets exist using shell
+    - name: Ensure IPv4 ipsets exist
       ansible.builtin.shell:
         cmd: ipset list {{ item }} || ipset create {{ item }} hash:ip family inet
       loop:
@@ -112,6 +119,14 @@
       ansible.builtin.package:
         name:
           - iptables
+          - ipset
+
+    - name: Load ip_set module
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+      loop: security.kernel.modules
+      when: security.kernel.modules is defined
 
     - name: Ensure iptables directory exists
       ansible.builtin.file:
@@ -120,7 +135,7 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
 
-    - name: Ensure IPv6 ipsets exist using shell
+    - name: Ensure IPv6 ipsets exist
       ansible.builtin.shell:
         cmd: ipset list {{ item }} || ipset create {{ item }} hash:ip family inet6
       loop:

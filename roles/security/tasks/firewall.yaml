@@ -50,11 +50,11 @@
       notify: Start pf
 
 - name: Block for all (Linux) hosts (IPv4)
-  when: 
+  when:
     - ansible_os_family != "FreeBSD"
     - ansible_os_family != "OpenBSD"
     - ansible_default_ipv4 is defined
-    - ansible_default_ipv4 
+    - ansible_default_ipv4
     - ansible_default_ipv4.address is defined
     - ansible_default_ipv4.address != ""
   block:
@@ -64,12 +64,14 @@
           - iptables
           - ipset
 
-    - name: Load ip_set module
+    - name: Load kernel modules
       community.general.modprobe:
         name: "{{ item }}"
         state: present
       loop: "{{ security.kernel.modules }}"
-      when: security.kernel.modules is defined
+      when:
+        - security.kernel is defined
+        - security.kernel.modules is defined
 
     - name: Ensure iptables directory exists
       ansible.builtin.file:
@@ -126,7 +128,9 @@
         name: "{{ item }}"
         state: present
       loop: "{{ security.kernel.modules }}"
-      when: security.kernel.modules is defined
+      when:
+        - security.kernel is defined
+        - security.kernel.modules is defined
 
     - name: Ensure iptables directory exists
       ansible.builtin.file:

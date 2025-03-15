@@ -68,7 +68,7 @@
       community.general.modprobe:
         name: "{{ item }}"
         state: present
-      loop: security.kernel.modules
+      loop: "{{ security.kernel.modules }}"
       when: security.kernel.modules is defined
 
     - name: Ensure iptables directory exists
@@ -125,7 +125,7 @@
       community.general.modprobe:
         name: "{{ item }}"
         state: present
-      loop: security.kernel.modules
+      loop: "{{ security.kernel.modules }}"
       when: security.kernel.modules is defined
 
     - name: Ensure iptables directory exists

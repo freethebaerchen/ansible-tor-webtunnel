@@ -123,7 +123,7 @@
           - iptables
           - ipset
 
-    - name: Load ip_set module
+    - name: Load kernel modules
       community.general.modprobe:
         name: "{{ item }}"
         state: present

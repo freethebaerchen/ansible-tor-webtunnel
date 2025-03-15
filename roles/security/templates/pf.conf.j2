@@ -3,7 +3,7 @@
 # Based on https://github.com/toralf/torutils/blob/main/ipv4-rules.sh
 # and https://github.com/toralf/torutils/blob/main/ipv6-rules.sh
 
-{% if ansible_default_ipv4.address is defined and ansible_default_ipv4.address != "" %}
+{% if ansible_default_ipv4 is defined and ansible_default_ipv4 and ansible_default_ipv4.address is defined and ansible_default_ipv4.address != "" %}
 # Tables for IPv4
 table <tor_trust> persist {
     # Tor authorities and snowflakes
@@ -21,7 +21,7 @@ table <hetzner_sysmon> persist {
 }
 {% endif %}
 
-{% if ansible_default_ipv6.address is defined and ansible_default_ipv6.address != "" %}
+{% if ansible_default_ipv6 is defined and ansible_default_ipv6 and ansible_default_ipv6.address is defined and ansible_default_ipv6.address != "" %}
 # Tables for IPv6
 table <tor_trust6> persist {
     # Tor authorities and snowflakes
@@ -52,7 +52,7 @@ pass in proto udp keep state
 # SSH
 pass in proto tcp to any port {{ ansible_port | default(22) }} flags S/SA keep state
 
-{% if ansible_default_ipv4.address is defined and ansible_default_ipv4.address != "" %}
+{% if ansible_default_ipv4 is defined and ansible_default_ipv4 and ansible_default_ipv4.address is defined and ansible_default_ipv4.address != "" %}
 # DDoS tables for Tor webtunnel ports (IPv4)
 table <tor_ddos_15000> persist
 
@@ -81,7 +81,7 @@ pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 80 flags S
 pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 80 flags S/SA keep state
 {% endif %}
 
-{% if ansible_default_ipv6.address is defined and ansible_default_ipv6.address != "" %}
+{% if ansible_default_ipv6 is defined and ansible_default_ipv6 and ansible_default_ipv6.address is defined and ansible_default_ipv6.address != "" %}
 # DDoS tables for Tor webtunnel ports (IPv6)
 table <tor_ddos6_15000> persist
 

@@ -6,7 +6,8 @@ root:
 system:
   etc: /etc
 security:
-  packages: []
+  packages: 
+    - linux-lts
   kernel:
     modules:
       - ip_set

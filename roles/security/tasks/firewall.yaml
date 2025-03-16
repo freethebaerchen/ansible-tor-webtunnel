@@ -123,6 +123,14 @@
           - iptables
           - ipset
 
+    - name: Install additional packages
+      ansible.builtin.package:
+        name:
+          - "{{ item }}"
+      when:
+        - security.packages is defined
+        - security.packages != ""
+
     - name: Load kernel modules
       community.general.modprobe:
         name: "{{ item }}"

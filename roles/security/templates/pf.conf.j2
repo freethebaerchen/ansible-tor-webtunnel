@@ -76,9 +76,9 @@ pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 15000 flag
 pass in proto tcp from any to {{ service.ip | default(ansible_default_ipv4.address) }} port {{ service.port }} flags S/SA keep state
 {% endfor %}
 
-# Website on port 80 (IPv4 and IPv6)
+# Website on port 80 and 443 (IPv4)
 pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 80 flags S/SA keep state
-pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 80 flags S/SA keep state
+pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 443 flags S/SA keep state
 {% endif %}
 
 {% if ansible_default_ipv6 is defined and ansible_default_ipv6 and ansible_default_ipv6.address is defined and ansible_default_ipv6.address != "" %}
@@ -116,7 +116,7 @@ pass in proto tcp from any to {{ service.ip | default(ansible_default_ipv6.addre
 pass in proto tcp from {{ service.ip }} to any port {{ service.port }} flags S/SA keep state
 {% endfor %}
 
-# Website on port 443 (IPv4 and IPv6)
-pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 443 flags S/SA keep state
+# Website on port 80 and 443 (IPv6)
+pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 80 flags S/SA keep state
 pass in proto tcp from any to {{ ansible_default_ipv6.address }} port 443 flags S/SA keep state
 {% endif %}

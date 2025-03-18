@@ -32,3 +32,5 @@
 - [ ] Security (SElinux/AppArmor, [Internal Firewall](https://community.torproject.org/relay/setup/post-install/))
 - [ ] Cleanup (defaults/group_vars/host_vars/...)
 - [ ] Refactor Tasks (OS-Vars, instead of ansible_os_family blocks)
+- [ ] Certificate renewal Cronjob
+- [ ] Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)

@@ -20,17 +20,19 @@
 
 
 ## Other
-- [x] Change from root to tor user
-- [x] Change SSH-Key setup to template
-- [x] Change to certbot webroot validation
-- [x] Put random-string file to tor.directory
-- [x] Save webserver error-logs, but not Access-Logs
-- [x] Fix server shutdown after successful test
-- [ ] Reverse Proxy
-- [ ] Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
-- [ ] Auto-Update Report via Mail
+- [x] (Refactor) Change from root to tor user
+- [x] (Refactor) Change SSH-Key setup to template
+- [x] (Refactor) Change to certbot webroot validation
+- [x] (Fix) Put random-string file to tor.directory
+- [x] (Feature/Fix) Save webserver error-logs, but not Access-Logs
+- [x] (Fix) server shutdown after successful test
+- [ ] (Feature) Reverse Proxy
+- [ ] (Feature) Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
+- [ ] (Feature) Auto-Update Report via Mail
 - [ ] Security (SElinux/AppArmor, [Internal Firewall](https://community.torproject.org/relay/setup/post-install/))
-- [ ] Cleanup (defaults/group_vars/host_vars/...)
-- [ ] Refactor Tasks (OS-Vars, instead of ansible_os_family blocks)
-- [ ] Certificate renewal Cronjob
-- [ ] Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
+- [ ] (Refactor) Cleanup (defaults/group_vars/host_vars/...)
+- [ ] (Refactor Tasks (OS-Vars, instead of ansible_os_family blocks)
+- [ ] (Fix) Certificate renewal Cronjob
+- [ ] (Actions) Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
+- [ ] (Feature) Build tor from source
+- [ ] (Actions) Cache venv/dependencies

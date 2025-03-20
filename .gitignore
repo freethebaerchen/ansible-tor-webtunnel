@@ -1,5 +1,7 @@
+venv
 tmp
-.env.local
+*.local
+
 group_vars/*
 !group_vars/*.yaml.example
 !group_vars/test.yaml

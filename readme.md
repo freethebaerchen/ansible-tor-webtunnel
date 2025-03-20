@@ -53,8 +53,8 @@ If you need help generating one, run the following command:
 Please consider encrypting the key with a password, when you are asked for one.\
 For the other options, you can leave the defaults.
 
-### Docker
-You need a device, that is able to run Docker.
+### Python
+You need Python >= 3.12 installed
 
 ### Hetzner (optinal)
 1. Create a Account at [Hetzner](https://accounts.hetzner.com/signUp)
@@ -92,11 +92,12 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 
 ## executing ansible
 INFO: Step 3 is only for a Hetzner Cloud setup
-1. ```./ansible-playbook.sh playbook.yaml```
-2. After that, the HCloud infrastructure is created\
+1. `source .envrc`
+2. `ansible-playbook playbook.yaml `
+3. After that, the HCloud infrastructure is created\
     2.1 Set an A-Record with the IPv4-Address of the server\
     2.2 Set an AAAA-Record with the IPv6-Address of the server (optinal)
-3. Run the script a second time.
+4. Run the script a second time.
 
 Now the Tor WebTunnel Bridge is created.\
 You can SSH to your server and run ```sudo journalctl -xeu tor@default```.\

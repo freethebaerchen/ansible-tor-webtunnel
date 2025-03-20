@@ -17,10 +17,11 @@
       delegate_to: localhost
       become: false
 
-    - name: Add domain to new motd file
+    - name: Add domain to motd file
       ansible.builtin.lineinfile:
         path: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
         line: "{{ domain }}"
+        create: true
       delegate_to: localhost
       become: false
 

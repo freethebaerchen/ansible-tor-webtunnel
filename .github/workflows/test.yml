@@ -9,17 +9,6 @@ env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
 
 jobs:
-  setup-ansible-on-runner:
-    strategy:
-      matrix:
-        runner: [runner-1, runner-2, runner-3, runner-4]
-    runs-on: 
-      group: ansible-runners
-    steps:
-      - name: Install apt packages
-        run: |
-          sudo setup-ansible
-
   select-webserver:
     runs-on: self-hosted
     outputs:
@@ -34,42 +23,8 @@ jobs:
           echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
           echo "Using webserver: $WEBSERVER_SOFTWARE"
 
-  install-project-requirements:
-    needs:
-      - setup-ansible-on-runner
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Create virtual environment
-        run: python3 -m venv venv
-
-      - name: Install dependencies
-        run: |
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Install ansible-galaxy requirements
-        run: |
-          ansible-galaxy install -r requirements.yaml
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-      
-      - name: Upload venv to S3
-        shell: bash
-        run: |
-          mc cp -r venv/ default/actions-artifacts/venv/
-
   setup-ubuntu:
     needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -190,7 +145,6 @@ jobs:
 
   setup-alpine:
     needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -312,7 +266,6 @@ jobs:
 
   setup-archlinux:
     needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -434,7 +387,6 @@ jobs:
 
   setup-freebsd:
     needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -556,7 +508,6 @@ jobs:
 
   setup-openbsd:
     needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -678,7 +629,6 @@ jobs:
 
   setup-rhel:
     needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -800,7 +750,6 @@ jobs:
 
   setup-suse:
     needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:

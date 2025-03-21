@@ -8,7 +8,6 @@ system:
 security:
   packages: 
     - linux-lts
-    - linux-lts-headers
   kernel:
     modules:
       - ip_set

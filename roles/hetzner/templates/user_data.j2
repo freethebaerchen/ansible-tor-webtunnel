@@ -6,7 +6,7 @@ users:
     shell: /bin/bash
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
-    {% for key in admin.vars['public-keys'] %}
+    {% for key in admin['public-keys'] %}
       - {{ key.key }}
     {% endfor %}
 {% endfor %}

@@ -4,4 +4,5 @@ hcloud
 charset-normalizer
 ansible>=11.0.0
 ansible-core>=2.18.0
+pyfiglet>=1.0.2
 dotenv

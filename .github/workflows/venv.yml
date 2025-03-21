@@ -3,7 +3,9 @@ name: Update venv
 on:
   schedule:
     - cron: '0 0 */3 * *'
-  workflow_dispatch:
+  push:
+    paths:
+      - 'requirements.txt'
 
 jobs:
   install-project-requirements:

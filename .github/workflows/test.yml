@@ -45,7 +45,8 @@ jobs:
       - name: Download venv from S3
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Uploades venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |

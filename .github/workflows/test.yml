@@ -47,7 +47,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -99,7 +100,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -163,7 +165,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -216,7 +219,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -280,7 +284,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -333,7 +338,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -397,7 +403,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -450,7 +457,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -514,7 +522,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -567,7 +576,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -631,7 +641,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -684,7 +695,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -748,7 +760,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -801,7 +814,8 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully."
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |

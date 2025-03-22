@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - 'requirements.txt'
+      - .github/workflows/venv.yaml
 
 jobs:
   install-project-requirements:

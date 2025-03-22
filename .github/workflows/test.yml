@@ -6,7 +6,8 @@ on:
       - main
 
 env:
-  ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+  PY_COLORS: 1
+  ANSIBLE_FORCE_COLOR: 1
 
 jobs:
   select-webserver:
@@ -48,19 +49,19 @@ jobs:
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
@@ -102,7 +103,7 @@ jobs:
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -117,7 +118,7 @@ jobs:
 
       - name: Test connections
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -139,7 +140,7 @@ jobs:
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -168,19 +169,19 @@ jobs:
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
@@ -223,7 +224,7 @@ jobs:
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -238,7 +239,7 @@ jobs:
 
       - name: Test connections
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -260,7 +261,7 @@ jobs:
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -289,19 +290,19 @@ jobs:
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
@@ -344,7 +345,7 @@ jobs:
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -359,7 +360,7 @@ jobs:
 
       - name: Test connections
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -381,7 +382,7 @@ jobs:
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -410,19 +411,19 @@ jobs:
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
@@ -465,7 +466,7 @@ jobs:
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -480,7 +481,7 @@ jobs:
 
       - name: Test connections
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -502,7 +503,7 @@ jobs:
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -531,19 +532,19 @@ jobs:
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
@@ -586,7 +587,7 @@ jobs:
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -601,7 +602,7 @@ jobs:
 
       - name: Test connections
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -623,7 +624,7 @@ jobs:
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -652,19 +653,19 @@ jobs:
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
@@ -707,7 +708,7 @@ jobs:
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -722,7 +723,7 @@ jobs:
 
       - name: Test connections
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -744,7 +745,7 @@ jobs:
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -773,19 +774,19 @@ jobs:
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
@@ -828,7 +829,7 @@ jobs:
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
@@ -843,7 +844,7 @@ jobs:
 
       - name: Test connections
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
@@ -865,6 +866,6 @@ jobs:
 
       - name: Delete ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
+          echo -e "\nANSIBLE_USER_PASSWORD=${{ secrets.ANSIBLE_USER_PASSWORD }}" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"

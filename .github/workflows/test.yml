@@ -47,8 +47,7 @@ jobs:
         shell: bash
         run: |
           mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully." >/dev/null && \
-          echo "Uploades venv successfully."
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |

@@ -8,16 +8,20 @@ import re
 def get_inventory_data(inventory_file):
     """Retrieve the full inventory data as JSON."""
     command = f"ansible-inventory -i {inventory_file} --list"
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    if result.returncode != 0:
-        print(f"❌ Error executing ansible-inventory: {result.stderr}")
+    stdout, stderr = process.communicate()
+
+    if process.returncode != 0:
+        sys.stdout.write(f"❌ Error executing ansible-inventory: {stderr}\n")
+        sys.stdout.flush()
         sys.exit(1)
-    
+
     try:
-        return json.loads(result.stdout)
+        return json.loads(stdout)
     except json.JSONDecodeError:
-        print("❌ Error parsing inventory data.")
+        sys.stdout.write("❌ Error parsing inventory data.\n")
+        sys.stdout.flush()
         sys.exit(1)
 
 def get_hosts_with_vars(inventory_data, limit):
@@ -27,7 +31,8 @@ def get_hosts_with_vars(inventory_data, limit):
     elif limit in inventory_data.get('_meta', {}).get('hostvars', {}):
         hosts = [limit]
     else:
-        print(f"❌ Host or group '{limit}' not found in the inventory.")
+        sys.stdout.write(f"❌ Host or group '{limit}' not found in the inventory.\n")
+        sys.stdout.flush()
         sys.exit(1)
 
     host_var_list = []
@@ -39,51 +44,73 @@ def get_hosts_with_vars(inventory_data, limit):
 
     return host_var_list
 
-def check_http_redirect(host, ip, domain):
-    """Check if HTTP response is 301 and HTTPS response is 200."""
-    http_code = subprocess.run(
-        ["curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", f"http://{domain}"],
-        capture_output=True, text=True
-    ).stdout.strip()
-
-    https_code = subprocess.run(
-        ["curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", f"https://{domain}"],
-        capture_output=True, text=True
-    ).stdout.strip()
-
-    if http_code == "301" and https_code == "200":
-        print(f"✅ {host} ({ip}): HTTP 301 and HTTPS 200 detected.")
-    else:
-        print(f"❌ {host} ({ip}): Unexpected HTTP codes (HTTP: {http_code}, HTTPS: {https_code}).")
-
-def check_page_title(host, ip, domain):
-    """Check if the page title is Bear Follows Cursor'."""
-    result = subprocess.run(
-        ["curl", "-s", f"https://{domain}"],
-        capture_output=True, text=True
+def run_curl_command(url):
+    """Run curl command and return output as a string."""
+    process = subprocess.Popen(
+        ["curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", url],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
 
-    match = re.search(r"<title>(.*?)</title>", result.stdout, re.IGNORECASE)
+    for line in process.stdout:
+        sys.stdout.write(line)
+        sys.stdout.flush()
+
+    stdout, stderr = process.communicate()
+    return stdout.strip()
+
+def check_http_redirect(host, ip, domain):
+    """Check if HTTP response is 301 and HTTPS response is 200."""
+    sys.stdout.write(f"🔄 Checking HTTP redirect for {host} ({ip})\n")
+    sys.stdout.flush()
+
+    http_code = run_curl_command(f"http://{domain}")
+    https_code = run_curl_command(f"https://{domain}")
+
+    if http_code == "301" and https_code == "200":
+        sys.stdout.write(f"✅ {host} ({ip}): HTTP 301 and HTTPS 200 detected.\n")
+    else:
+        sys.stdout.write(f"❌ {host} ({ip}): Unexpected HTTP codes (HTTP: {http_code}, HTTPS: {https_code}).\n")
+
+    sys.stdout.flush()
+
+def check_page_title(host, ip, domain):
+    """Check if the page title is 'Bear Follows Cursor'."""
+    sys.stdout.write(f"🔄 Checking page title for {host} ({ip})\n")
+    sys.stdout.flush()
+
+    process = subprocess.Popen(
+        ["curl", "-s", f"https://{domain}"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
+
+    stdout, stderr = process.communicate()
+
+    match = re.search(r"<title>(.*?)</title>", stdout, re.IGNORECASE)
     if match:
         title = match.group(1).strip()
         if title == "Bear Follows Cursor":
-            print(f"✅ {host} ({ip}): Title matches 'Bear Follows Cursor'.")
+            sys.stdout.write(f"✅ {host} ({ip}): Title matches 'Bear Follows Cursor'.\n")
         else:
-            print(f"❌ {host} ({ip}): Title mismatch. Found '{title}'.")
+            sys.stdout.write(f"❌ {host} ({ip}): Title mismatch. Found '{title}'.\n")
     else:
-        print(f"❌ {host} ({ip}): No title found in response.")
+        sys.stdout.write(f"❌ {host} ({ip}): No title found in response.\n")
+
+    sys.stdout.flush()
 
 def check_host_vars(inventory_file, limit):
     inventory_data = get_inventory_data(inventory_file)
     hosts_with_vars = get_hosts_with_vars(inventory_data, limit)
 
     for host, ip, domain in hosts_with_vars:
-        print(f"🔄 Checking host: {host} (IP: {ip})")
+        sys.stdout.write(f"🔄 Checking host: {host} (IP: {ip})\n")
+        sys.stdout.flush()
+        
         if domain:
             check_http_redirect(host, ip, domain)
             check_page_title(host, ip, domain)
         else:
-            print(f"⚠️ {host} ({ip}): No 'domain' variable found.")
+            sys.stdout.write(f"⚠️ {host} ({ip}): No 'domain' variable found.\n")
+            sys.stdout.flush()
 
 def main():
     parser = argparse.ArgumentParser(description="Check Ansible hosts for HTTP redirects and page title.")

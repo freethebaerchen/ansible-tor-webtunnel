@@ -16,16 +16,20 @@ def check_port(ip, port=22, timeout=2):
 def get_inventory_data(inventory_file):
     """Retrieve the full inventory data as JSON."""
     command = f"ansible-inventory -i {inventory_file} --list"
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    if result.returncode != 0:
-        print(f"Error executing command: {result.stderr}")
+    output, error = process.communicate()
+
+    if process.returncode != 0:
+        sys.stdout.write(f"Error executing command: {error}\n")
+        sys.stdout.flush()
         sys.exit(1)
     
     try:
-        return json.loads(result.stdout)
+        return json.loads(output)
     except json.JSONDecodeError:
-        print("Error parsing inventory data.")
+        sys.stdout.write("Error parsing inventory data.\n")
+        sys.stdout.flush()
         sys.exit(1)
 
 def get_hosts(inventory_data, limit):
@@ -37,7 +41,8 @@ def get_hosts(inventory_data, limit):
         return [limit]
 
     else:
-        print(f"Host or group '{limit}' not found in the inventory.")
+        sys.stdout.write(f"Host or group '{limit}' not found in the inventory.\n")
+        sys.stdout.flush()
         sys.exit(1)
 
 def wait_for_hosts(inventory_file, limit, max_retries=100):
@@ -54,22 +59,27 @@ def wait_for_hosts(inventory_file, limit, max_retries=100):
             host_info = inventory_data['_meta']['hostvars'].get(host, {})
             ip = host_info.get('ansible_host', host)
 
-            print(f"Checking Host: {host} (IP: {ip})")
+            sys.stdout.write(f"Checking Host: {host} (IP: {ip})\n")
+            sys.stdout.flush()
 
             if check_port(ip):
-                print(f"✅ {host} ({ip}) is reachable.")
+                sys.stdout.write(f"✅ {host} ({ip}) is reachable.\n")
+                sys.stdout.flush()
                 retries[host] = 0  # Reset retry counter
             else:
                 retries[host] += 1
                 if retries[host] < max_retries:
-                    print(f"⏳ {host} ({ip}) is unreachable. Retrying in 5 seconds...")
+                    sys.stdout.write(f"⏳ {host} ({ip}) is unreachable. Retrying in 5 seconds...\n")
+                    sys.stdout.flush()
                     time.sleep(5)
                 else:
-                    print(f"❌ {host} ({ip}) is still unreachable after {max_retries} attempts.")
+                    sys.stdout.write(f"❌ {host} ({ip}) is still unreachable after {max_retries} attempts.\n")
+                    sys.stdout.flush()
                     sys.exit(1)
         
         if all(retries[host] == 0 for host in hosts):
-            print("✅ All hosts are reachable. Proceeding.")
+            sys.stdout.write("✅ All hosts are reachable. Proceeding.\n")
+            sys.stdout.flush()
             sys.exit(0)
 
         time.sleep(1)

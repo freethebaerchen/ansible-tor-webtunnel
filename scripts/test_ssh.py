@@ -7,16 +7,20 @@ import sys
 def get_inventory_data(inventory_file):
     """Retrieve the full inventory data as JSON."""
     command = f"ansible-inventory -i {inventory_file} --list"
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    if result.returncode != 0:
-        print(f"❌ Error executing ansible-inventory: {result.stderr}")
+    stdout, stderr = process.communicate()
+
+    if process.returncode != 0:
+        sys.stdout.write(f"❌ Error executing ansible-inventory: {stderr}\n")
+        sys.stdout.flush()
         sys.exit(1)
     
     try:
-        return json.loads(result.stdout)
+        return json.loads(stdout)
     except json.JSONDecodeError:
-        print("❌ Error parsing inventory data.")
+        sys.stdout.write("❌ Error parsing inventory data.\n")
+        sys.stdout.flush()
         sys.exit(1)
 
 def get_hosts_with_ips(inventory_data, limit):
@@ -26,7 +30,8 @@ def get_hosts_with_ips(inventory_data, limit):
     elif limit in inventory_data.get('_meta', {}).get('hostvars', {}):
         hosts = [limit]
     else:
-        print(f"❌ Host or group '{limit}' not found in the inventory.")
+        sys.stdout.write(f"❌ Host or group '{limit}' not found in the inventory.\n")
+        sys.stdout.flush()
         sys.exit(1)
 
     host_ip_list = []
@@ -40,14 +45,28 @@ def get_hosts_with_ips(inventory_data, limit):
 def run_ssh_command(host, ip, command):
     """Run an SSH command on a remote host and return the output."""
     try:
-        output = subprocess.check_output(
+        process = subprocess.Popen(
             ["ssh", ip, command],
-            stderr=subprocess.STDOUT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True
-        ).strip()
-        return output
+        )
+
+        for line in process.stdout:
+            sys.stdout.write(line)
+            sys.stdout.flush()
+
+        stdout, stderr = process.communicate()
+
+        if process.returncode != 0:
+            sys.stdout.write(f"❌ {host} ({ip}): ERROR running SSH command. Details:\n{stderr}\n")
+            sys.stdout.flush()
+            sys.exit(1)
+
+        return stdout.strip()
     except subprocess.CalledProcessError as e:
-        print(f"❌ {host} ({ip}): ERROR running SSH command. Details:\n{e.output}")
+        sys.stdout.write(f"❌ {host} ({ip}): SSH command failed.\n{e.output}\n")
+        sys.stdout.flush()
         sys.exit(1)
 
 def check_uname(inventory_file, limit):
@@ -56,11 +75,13 @@ def check_uname(inventory_file, limit):
     hosts_with_ips = get_hosts_with_ips(inventory_data, limit)
 
     for host, ip in hosts_with_ips:
-        print(f"🔄 Checking host: {host} (IP: {ip})")
+        sys.stdout.write(f"🔄 Checking host: {host} (IP: {ip})\n")
+        sys.stdout.flush()
 
         output = run_ssh_command(host, ip, "uname -a")
         if output is None:
-            print(f"❌ {host} ({ip}): SSH command failed.")
+            sys.stdout.write(f"❌ {host} ({ip}): SSH command failed.\n")
+            sys.stdout.flush()
             sys.exit(1)
 
         if "linux" in output.lower():
@@ -73,9 +94,11 @@ def check_uname(inventory_file, limit):
             os_type = "Unknown"
 
         if os_type != "Unknown":
-            print(f"✅ {host} ({ip}): {os_type} detected.")
+            sys.stdout.write(f"✅ {host} ({ip}): {os_type} detected.\n")
         else:
-            print(f"⚠️ {host} ({ip}): OS not recognized. Output: {output}")
+            sys.stdout.write(f"⚠️ {host} ({ip}): OS not recognized. Output: {output}\n")
+
+        sys.stdout.flush()
 
 def main():
     parser = argparse.ArgumentParser(description="Run 'ssh <host> \"uname -a\"' on hosts in an Ansible inventory and filter for Linux/OpenBSD/FreeBSD.")

@@ -72,6 +72,13 @@
       when:
         - security.packages is defined
         - security.packages != ""
+      register: additional_packages
+
+    - name: Restart system
+      ansible.builtin.reboot:
+        msg: "Reboot initiated by Ansible for setting the hostname"
+        reboot_timeout: 300
+      when: additional_packages.changed
 
     - name: Load kernel modules
       community.general.modprobe:
@@ -81,13 +88,6 @@
       when:
         - security.kernel is defined
         - security.kernel.modules is defined
-      register: kernel_modules
-
-    - name: Restart system
-      ansible.builtin.reboot:
-        msg: "Reboot initiated by Ansible for setting the hostname"
-        reboot_timeout: 300
-      when: kernel_modules.changed
 
     - name: Ensure iptables directory exists
       ansible.builtin.file:

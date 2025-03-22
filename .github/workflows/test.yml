@@ -67,6 +67,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
@@ -115,6 +116,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
@@ -186,6 +188,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
@@ -234,6 +237,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
@@ -305,6 +309,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
@@ -353,6 +358,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
@@ -424,6 +430,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
@@ -472,6 +479,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
@@ -543,6 +551,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
@@ -591,6 +600,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
@@ -662,6 +672,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
@@ -710,6 +721,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections
@@ -781,6 +793,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
@@ -829,6 +842,7 @@ jobs:
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
       - name: Test connections

@@ -55,6 +55,7 @@ def wait_for_hosts(inventory_file, limit, max_retries=100):
     attempts = 0
 
     while attempts < max_retries:
+        all_reachable = True  # Assume all hosts are reachable at the start of each attempt
         for host in hosts:
             host_info = inventory_data['_meta']['hostvars'].get(host, {})
             ip = host_info.get('ansible_host', host)
@@ -67,6 +68,7 @@ def wait_for_hosts(inventory_file, limit, max_retries=100):
                 sys.stdout.flush()
                 retries[host] = 0  # Reset retry counter
             else:
+                all_reachable = False
                 retries[host] += 1
                 if retries[host] < max_retries:
                     sys.stdout.write(f"⏳ {host} ({ip}) is unreachable. Retrying for {attempts+1}. time in 5 seconds...\n")
@@ -76,14 +78,18 @@ def wait_for_hosts(inventory_file, limit, max_retries=100):
                     sys.stdout.write(f"❌ {host} ({ip}) is still unreachable after {max_retries} attempts.\n")
                     sys.stdout.flush()
                     sys.exit(1)
-        
-        if all(retries[host] == 0 for host in hosts):
+
+        if all_reachable:
             sys.stdout.write("✅ All hosts are reachable. Proceeding.\n")
             sys.stdout.flush()
             sys.exit(0)
 
         time.sleep(1)
         attempts += 1
+
+    sys.stdout.write("❌ Max retries exceeded. Some hosts are still unreachable.\n")
+    sys.stdout.flush()
+    sys.exit(1)
 
 def main():
     parser = argparse.ArgumentParser(description="Check host reachability in an Ansible inventory.")

@@ -44,6 +44,15 @@ This Project supports, as of right now the following distributions:\
     - Archlinux-based (Archlinux 2024.08.01)\
     - FreeBSD-based (FreeBSD 14.1, FreeBSD 14.2)
 
+The OS-Version in Brackets were tested. Regularily tested are the following:
+    - Ubuntu 24.04
+    - Alpine 3.21.0
+    - AlmaLinux 9.5
+    - OpenSUSE Leap 15.6
+    - OpenBSD 7.6
+    - Archlinux 2024.08.01
+    - FreeBSD 14.2
+
 ## Prerequisites
 
 ### SSH
@@ -56,7 +65,7 @@ For the other options, you can leave the defaults.
 ### Python
 You need Python >= 3.12 installed
 
-### Hetzner (optinal)
+### Hetzner (optional)
 1. Create a Account at [Hetzner](https://accounts.hetzner.com/signUp)
 2. Create a HCloud project
 3. Create a [API-Token](https://docs.hetzner.cloud/#getting-started) with read/write privileges

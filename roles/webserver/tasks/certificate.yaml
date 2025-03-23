@@ -16,3 +16,12 @@
     - name: Request certificate
       ansible.builtin.shell: |
         certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+
+    - name: Create LetsEncrypt certificate renewal cronjob
+      ansible.builtin.cron:
+        name: "Renew Certbot Certificate"
+        minute: "0"
+        hour: "12"
+        weekday: "7"
+        user: root
+        job: "certbot renew"

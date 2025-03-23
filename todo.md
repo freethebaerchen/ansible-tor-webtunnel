@@ -35,4 +35,4 @@
 - [ ] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
 - [x] (Fix) Certificate renewal Cronjob
 - [x] (Actions) Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
-- [ ] (Feature) Build tor from source
+- [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)

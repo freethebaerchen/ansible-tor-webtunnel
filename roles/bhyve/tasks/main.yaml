@@ -11,7 +11,7 @@
     - delete-server
 
 - name: Include shutdown provisioned server 
-  ansible.builtin.include_tasks: shutdown-os-client.yaml
+  ansible.builtin.include_tasks: shutdown-os-provision.yaml
   tags:
     - shutdown-server
 

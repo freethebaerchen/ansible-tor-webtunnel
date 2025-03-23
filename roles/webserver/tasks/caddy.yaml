@@ -116,6 +116,12 @@
         remote_src: true
       when: rendered_caddyfile.stat.checksum != orig_caddyfile.stat.checksum
 
+    - name: Remove import of subdirectory
+      ansible.builtin.lineinfile:
+        path: "{{ webserver_config[use_webserver].extra_dirs }}/original-Caddyfile"
+        state: absent
+        regexp: '^import {{ webserver_config[use_webserver].extra_dirs }}'
+
     - name: Render new Caddyfile
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"

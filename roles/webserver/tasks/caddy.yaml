@@ -122,6 +122,14 @@
         state: absent
         regexp: '^import {{ webserver_config[use_webserver].extra_dirs }}'
 
+    - name: Remove global options from original Caddyfile
+      ansible.builtin.replace:
+        path: "{{ webserver_config[use_webserver].extra_dirs }}/original-Caddyfile"
+        regexp: '^(?P<indent>\s*)(?P<option>[^#{}\s].*?)$'
+        replace: '\g<indent>#\g<option>'
+        after: '{'
+        before: '}'
+
     - name: Render new Caddyfile
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"

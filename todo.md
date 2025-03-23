@@ -32,6 +32,6 @@
 - [ ] (Feature) Security (SElinux/AppArmor, [Internal Firewall](https://community.torproject.org/relay/setup/post-install/))
 - [ ] (Refactor) Cleanup (defaults/group_vars/host_vars/...)
 - [ ] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
-- [ ] (Fix) Certificate renewal Cronjob
+- [x] (Fix) Certificate renewal Cronjob
 - [x] (Actions) Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
 - [ ] (Feature) Build tor from source

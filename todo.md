@@ -7,6 +7,8 @@
 - [x] openSuse
 - [x] Alpine
 - [x] OpenBSD
+- [ ] NixOS
+- [ ] MacOS
 ### x64
 - [x] Ubuntu
 - [x] FreeBSD
@@ -36,3 +38,4 @@
 - [x] (Fix) Certificate renewal Cronjob
 - [x] (Actions) Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
 - [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)
+- [ ] (Feature) Docker Setup (Webtunnel, Nginx)

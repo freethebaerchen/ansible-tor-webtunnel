@@ -1,14 +1,5 @@
 ---
 
-- name: Block for OS-Specific tasks (RedHat)
-  when: ansible_os_family == "RedHat"
-  block:
-    - name: Disbale and stop firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: stopped
-        enabled: false
-
 - name: Block for BSDs
   when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD"
   block:

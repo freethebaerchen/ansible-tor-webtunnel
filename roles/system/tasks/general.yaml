@@ -156,6 +156,12 @@
       notify: Restart dnf-automatic
       when: unattended_upgrades
 
+    - name: Disbale and stop firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: stopped
+        enabled: false
+
 - name: Block for OS-Specific tasks (OpenBSD)
   when: ansible_os_family == "OpenBSD"
   block:

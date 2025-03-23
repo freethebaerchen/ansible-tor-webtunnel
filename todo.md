@@ -29,7 +29,8 @@
 - [ ] (Feature) Reverse Proxy
 - [ ] (Feature) Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
 - [ ] (Feature) Auto-Update Report via Mail
-- [ ] (Feature) Security (SElinux/AppArmor, [Internal Firewall](https://community.torproject.org/relay/setup/post-install/))
+- [x] (Feature) Security [Internal Firewall](https://community.torproject.org/relay/setup/post-install/)
+- [ ] (Feature) Security SElinux/AppArmor (WIP, disabled for the moment)
 - [ ] (Refactor) Cleanup (defaults/group_vars/host_vars/...)
 - [ ] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
 - [x] (Fix) Certificate renewal Cronjob

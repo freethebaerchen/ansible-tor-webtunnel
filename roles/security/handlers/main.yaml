@@ -25,7 +25,7 @@
 
 - name: Apply ip6tables rules
   ansible.builtin.shell:
-    cmd: iptables-restore < {{ system.etc }}/iptables/ip6tables_rules
+    cmd: ip6tables-restore < {{ system.etc }}/iptables/ip6tables_rules
 
 - name: Restart bsdextend
   ansible.builtin.service:

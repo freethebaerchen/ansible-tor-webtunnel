@@ -12,7 +12,7 @@
 -A INPUT -i lo -m comment --comment "DDoS IPv6 {{ ansible_date_time.date }}" -j ACCEPT
 
 # IPv6 Multicast
--A INPUT -p udp --source fe80::/10 --dst ff02::/80 -j ACCEPT
+-A INPUT -p udp --source fe80::/10 --dst ff02::/16 -j ACCEPT
 
 # Strict TCP state checking
 -A INPUT -p tcp ! --syn -m state --state NEW -j DROP

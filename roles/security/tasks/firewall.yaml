@@ -47,7 +47,9 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
         mode: 0640
-      notify: Start pf
+      notify: 
+        - Start pf (OreeBSD)
+        - Start pf (OpenBSD)
 
 - name: Block for all (Linux) hosts (IPv4)
   when:

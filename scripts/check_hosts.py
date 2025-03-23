@@ -69,7 +69,7 @@ def wait_for_hosts(inventory_file, limit, max_retries=100):
             else:
                 retries[host] += 1
                 if retries[host] < max_retries:
-                    sys.stdout.write(f"⏳ {host} ({ip}) is unreachable. Retrying in 5 seconds...\n")
+                    sys.stdout.write(f"⏳ {host} ({ip}) is unreachable. Retrying for {attempts+1}. time in 5 seconds...\n")
                     sys.stdout.flush()
                     time.sleep(5)
                 else:

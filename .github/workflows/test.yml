@@ -14,6 +14,9 @@ jobs:
   generate-host-vars:
     runs-on: self-hosted
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Login to S3
         uses: mc-actions/configure@v1
         with:

@@ -13,6 +13,8 @@ env:
 jobs:
   generate-host-vars:
     runs-on: self-hosted
+    env:
+      TEST_SERVER_TLD: ${{ secrets.TEST_SERVER_TLD }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

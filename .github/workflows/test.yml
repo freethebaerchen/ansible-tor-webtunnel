@@ -11,6 +11,33 @@ env:
   ANSIBLE_FORCE_COLOR: 1
 
 jobs:
+  generate-host-vars:
+    runs-on: self-hosted
+    steps:
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+    
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Generate host_vars/os-webserver.yaml
+        run: |
+          source venv/bin/activate
+          python3 scripts/generate_host_vars.py
+
+      - name: Upload test_host_vars to S3
+        shell: bash
+        run: |
+          mc cp -r test_host_vars/ default/actions-artifacts/test_host_vars/
+
   select-webserver:
     runs-on: self-hosted
     outputs:
@@ -42,6 +69,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash
@@ -96,6 +129,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash
@@ -163,6 +202,12 @@ jobs:
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
 
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
+
       - name: Download venv from S3
         shell: bash
         run: |
@@ -217,6 +262,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash
@@ -284,6 +335,12 @@ jobs:
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
 
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
+
       - name: Download venv from S3
         shell: bash
         run: |
@@ -338,6 +395,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash
@@ -405,6 +468,12 @@ jobs:
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
 
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
+
       - name: Download venv from S3
         shell: bash
         run: |
@@ -459,6 +528,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash
@@ -526,6 +601,12 @@ jobs:
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
 
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
+
       - name: Download venv from S3
         shell: bash
         run: |
@@ -580,6 +661,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash
@@ -647,6 +734,12 @@ jobs:
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
 
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
+
       - name: Download venv from S3
         shell: bash
         run: |
@@ -701,6 +794,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash
@@ -768,6 +867,12 @@ jobs:
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
 
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
+
       - name: Download venv from S3
         shell: bash
         run: |
@@ -822,6 +927,12 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully.
 
       - name: Download venv from S3
         shell: bash

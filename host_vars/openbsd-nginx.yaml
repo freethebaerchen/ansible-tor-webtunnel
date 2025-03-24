@@ -1,8 +1,0 @@
-domain: openbsd.nginx.jokester.cloud
-id: "openbsdnginx"
-reverse_proxy: false
-deploy_webroot: true
-use_webserver: nginx
-tor:
-  nickname:
-  test: true

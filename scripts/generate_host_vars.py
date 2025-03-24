@@ -19,7 +19,7 @@ tor:
 
 template = Template(template_str)
 
-target_dir = "../test_host_vars/"
+target_dir = "test_host_vars/"
 os.makedirs(target_dir, exist_ok=True)
 
 for os_name in os_list:

@@ -54,6 +54,7 @@ jobs:
 
   setup-ubuntu:
     needs:
+      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -186,6 +187,7 @@ jobs:
 
   setup-alpine:
     needs:
+      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -319,6 +321,7 @@ jobs:
 
   setup-archlinux:
     needs:
+      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -452,6 +455,7 @@ jobs:
 
   setup-freebsd:
     needs:
+      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -585,6 +589,7 @@ jobs:
 
   setup-openbsd:
     needs:
+      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -718,6 +723,7 @@ jobs:
 
   setup-rhel:
     needs:
+      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -851,6 +857,7 @@ jobs:
 
   setup-suse:
     needs:
+      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:

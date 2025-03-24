@@ -38,4 +38,5 @@ jobs:
       - name: Upload venv to S3
         shell: bash
         run: |
-          mc cp -r venv/ default/actions-artifacts/venv/
+          mc cp -r venv/ default/actions-artifacts/venv/ >/dev/null && \
+          echo "Uploaded venv successfully."

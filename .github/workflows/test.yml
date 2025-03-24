@@ -41,7 +41,8 @@ jobs:
       - name: Upload test_host_vars to S3
         shell: bash
         run: |
-          mc cp -r test_host_vars/ default/actions-artifacts/test_host_vars/
+          mc cp -r test_host_vars/ default/actions-artifacts/test_host_vars/ >/dev/null && \
+          echo "Uploaded test_host_vars successfully."
 
   select-webserver:
     runs-on: self-hosted

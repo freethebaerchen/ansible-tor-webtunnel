@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - 'requirements.txt'
+      - 'requirements.yaml'
       - '.github/workflows/venv.yaml'
 
 jobs:

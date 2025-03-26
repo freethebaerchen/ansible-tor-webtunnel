@@ -6,6 +6,7 @@
   register: caddy_validate
   notify:
     - Restart caddy
+  changed_when: false
 
 - name: Validate nginx
   ansible.builtin.command:
@@ -13,6 +14,7 @@
   register: nginx_validate
   notify:
     - Restart nginx
+  changed_when: false
 
 - name: Validate apache
   ansible.builtin.command:
@@ -20,6 +22,7 @@
   register: apache_validate
   notify:
     - Restart apache
+  changed_when: false
 
 - name: Restart caddy
   ansible.builtin.service:

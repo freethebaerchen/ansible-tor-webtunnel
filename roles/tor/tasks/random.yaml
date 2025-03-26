@@ -7,12 +7,8 @@
     - random-string
   block:
     - name: Generate random string with 24 characters
-      ansible.builtin.command: |
-        set -o pipefail
-        echo "$(cat /dev/urandom | tr -cd 'qwertyuiopasdfghjklzxcvbnmMNBVCXZLKJHGFDSAQWERTUIOP0987654321' | head -c 24)"
-      register: random_string
-      delegate_to: localhost
-      become: false
+      ansible.builtin.set_fact:
+        random_string: "{{ lookup('community.general.random_string', length=24, special=False) }}"
 
     - name: Check if random string exists
       ansible.builtin.stat:
@@ -22,7 +18,7 @@
     - name: Create files with the random strings
       ansible.builtin.lineinfile:
         path: "{{ tor.directory }}/random-string.txt"
-        line: "{{ random_string.stdout }}"
+        line: "{{ random_string }}"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
         mode: 0500

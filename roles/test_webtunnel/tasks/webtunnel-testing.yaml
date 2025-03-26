@@ -23,8 +23,15 @@
         timeout: 30
       register: socks_port_check
 
+      # - name: Test tor connection
+      #   ansible.builtin.command: curl -sS --socks5 127.0.0.1:1080 https://check.torproject.org/api/ip
+      #   register: tor_result
+
     - name: Test tor connection
-      ansible.builtin.command: curl -sS --socks5 127.0.0.1:1080 https://check.torproject.org/api/ip
+      curl_proxy:
+        url: "https://check.torproject.org/api/ip"
+        proxy_type: "socks5"
+        proxy: "127.0.0.1:1080"
       register: tor_result
 
     - name: Set IsTor fact

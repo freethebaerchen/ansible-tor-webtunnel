@@ -13,5 +13,3 @@ warn_list:
   - no-changed-when
   - no-handler
   - ignore-errors
-  # temporary
-  - command-instead-of-module

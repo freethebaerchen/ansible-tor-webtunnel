@@ -7,6 +7,7 @@
     - name: Get images
       ansible.builtin.command: vm image list
       register: vm_images
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
     - name: Set image uuid fact
       ansible.builtin.set_fact:

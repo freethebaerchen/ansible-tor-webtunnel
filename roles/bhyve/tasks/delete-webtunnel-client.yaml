@@ -7,6 +7,7 @@
     - name: Forcefully shutdown {{ vm[os].name }}-webtunnel-client
       ansible.builtin.command: vm poweroff -f {{ vm[os].name }}-webtunnel-client
       failed_when: false
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
     - name: Wait until VM is stopped
       ansible.builtin.shell: |
@@ -16,6 +17,8 @@
       retries: 10
       delay: 3
       until: vm_status.stdout == "Stopped"
+      changed_when: false # No changes will be applied. Set just for ansible-lint.
 
     - name: Delete selected vms
       ansible.builtin.command: vm destroy {{ vm[os].name }}-webtunnel-client
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.

@@ -12,20 +12,24 @@
   ansible.builtin.command: pfctl -e
   register: pfctl_status
   failed_when: "'pfctl: pf already enabled' not in pfctl_status.stdout"
+  changed_when: "'pfctl: pf already enabled' not in pfctl_status.stdout"
   when: ansible_os_family == "OpenBSD"
   notify: Apply pf rules
 
 - name: Apply pf rules
   ansible.builtin.command:
     cmd: pfctl -f {{ system.etc }}/pf.conf
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
 - name: Apply ip4tables rules
   ansible.builtin.command:
     cmd: iptables-restore < {{ system.etc }}/iptables/ip4tables_rules
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
 - name: Apply ip6tables rules
   ansible.builtin.command:
     cmd: ip6tables-restore < {{ system.etc }}/iptables/ip6tables_rules
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
 - name: Restart bsdextend
   ansible.builtin.service:
@@ -35,5 +39,6 @@
 
 - name: Restart system
   ansible.builtin.reboot:
-    msg: "Reboot initiated by Ansible for setting the hostname"
-    reboot_timeout: 300
+    msg: "Reboot initiated by Ansible for loading kernel modules"
+    reboot_timeout: 600
+  when: additional_packages.changed

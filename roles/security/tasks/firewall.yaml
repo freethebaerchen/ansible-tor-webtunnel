@@ -37,7 +37,7 @@
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
         mode: 0640
-      notify: 
+      notify:
         - Start pf (FreeBSD)
         - Start pf (OpenBSD)
 
@@ -64,13 +64,10 @@
       when:
         - security.packages is defined
         - security.packages != ""
-      register: additional_packages
+      notify: Restart system
 
-    - name: Restart system
-      ansible.builtin.reboot:
-        msg: "Reboot initiated by Ansible for setting the hostname"
-        reboot_timeout: 600
-      when: additional_packages.changed
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
 
     - name: Load kernel modules
       community.general.modprobe:
@@ -105,10 +102,6 @@
         group: "{{ root.group }}"
         mode: '0640'
       notify: Apply ip4tables rules
-
-    - name: Save ip4tables rules
-      ansible.builtin.command:
-        cmd: iptables-save > /etc/iptables/rules.v4 
 
     - name: Cerate cronjob to restore ip4tables rules
       ansible.builtin.cron:
@@ -174,10 +167,6 @@
         group: "{{ root.group }}"
         mode: '0640'
       notify: Apply ip6tables rules
-
-    - name: Save ip6tables rules
-      ansible.builtin.command:
-        cmd: ip6tables-save > /etc/iptables/rules.v6
 
     - name: Cerate cronjob to restore ip4tables rules
       ansible.builtin.cron:

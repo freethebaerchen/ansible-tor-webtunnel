@@ -8,3 +8,4 @@
       ansible.builtin.command: vm poweroff -f {{ vm[os].name }}-{{ item }}
       loop: "{{ webserver_software }}"
       failed_when: false
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.

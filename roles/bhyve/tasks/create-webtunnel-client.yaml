@@ -7,6 +7,7 @@
     - name: Get images
       ansible.builtin.command: vm image list
       register: webtunnel_images
+      changed_when: false # No changes will be applied. Set just for ansible-lint.
 
     - name: Set image uuid fact
       ansible.builtin.set_fact:
@@ -30,3 +31,4 @@
 
     - name: Start {{ vm[os].name }}-webtunnel-client
       ansible.builtin.command: vm start {{ vm[os].name }}-webtunnel-client
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.

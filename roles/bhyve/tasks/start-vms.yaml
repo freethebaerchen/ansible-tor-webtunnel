@@ -7,3 +7,4 @@
     - name: Start VMs
       ansible.builtin.command: vm start {{ os }}-{{ item }}
       loop: "{{ webserver_software }}"
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.

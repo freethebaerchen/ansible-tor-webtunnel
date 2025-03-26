@@ -16,6 +16,7 @@
       register: figlet
       delegate_to: localhost
       become: false
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
     - name: Add domain to motd file
       ansible.builtin.lineinfile:

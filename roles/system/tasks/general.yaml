@@ -256,8 +256,7 @@
   when: ansible_os_family == "Archlinux"
   block:
     - name: Update package cache
-      ansible.builtin.commnd: pacman -Syu --noconfirm
-      become: true
+      ansible.builtin.command: pacman -Syu --noconfirm
 
     - name: Install OS-specific packages
       ansible.builtin.package:

@@ -127,7 +127,7 @@
           @tor    hard    nofile    65536
 
 - name: Flush handlers
-  ansible.builtin.meta: flush_hanlders
+  ansible.builtin.meta: flush_handlers
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

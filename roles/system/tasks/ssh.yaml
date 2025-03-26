@@ -36,6 +36,7 @@
     path: "/home/{{ item.name }}/.ssh"
     state: directory
     owner: "{{ item.name }}"
+    group: "{{ item.name }}"
     mode: 0700
   loop: "{{ admins }}"
   loop_control:
@@ -45,6 +46,8 @@
   ansible.builtin.template:
     src: ./authorized_keys.j2
     dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
     mode: 0600
   with_items: "{{ admins }}"
 
@@ -53,6 +56,7 @@
     path: "/home/{{ item.name }}/.ssh"
     state: directory
     owner: "{{ item.name }}"
+    group: "{{ item.name }}"
     mode: 0700
   loop: "{{ users }}"
   loop_control:
@@ -62,6 +66,8 @@
   ansible.builtin.template:
     src: ./authorized_keys.j2
     dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
     mode: 0600
   with_items: "{{ users }}"
 

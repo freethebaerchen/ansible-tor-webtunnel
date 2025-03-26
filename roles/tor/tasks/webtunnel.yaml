@@ -135,7 +135,8 @@
     enabled: true
   async: 120
   poll: 5
-  ignore_errors: true
+  register: tor_restart
+  failed_when: not tor_restart.changed
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

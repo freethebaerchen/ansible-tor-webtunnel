@@ -8,7 +8,7 @@
         state: directory
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
-        mode: "0644"
+        mode: "0755"
 
     - name: Create /var/www/html folder
       ansible.builtin.file:
@@ -16,7 +16,7 @@
         state: directory
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
-        mode: "0644"
+        mode: "0755"
 
     - name: Copy index.html
       ansible.builtin.copy:

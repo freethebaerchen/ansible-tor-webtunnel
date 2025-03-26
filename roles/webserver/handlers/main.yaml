@@ -28,7 +28,6 @@
     enabled: true
   async: 120
   poll: 5
-  ignore_errors: true
   when: caddy_validate is success
   loop:
     - started
@@ -41,7 +40,6 @@
     enabled: true
   async: 120
   poll: 5
-  ignore_errors: true
   when: nginx_validate is success
   loop:
     - started
@@ -54,7 +52,6 @@
     enabled: true
   async: 120
   poll: 5
-  ignore_errors: true
   when: apache_validate is success
   loop:
     - started

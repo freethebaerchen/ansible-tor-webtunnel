@@ -11,11 +11,12 @@
         group: "{{ root.group }}"
         mode: "0644"
 
-    - name: Restart tor service
+    - name: Restart tor
       ansible.builtin.service:
         name: tor
         state: restarted
-      ignore_errors: true
+      register: tor_restart
+      failed_when: "'Timeout exceeded' not in tor_restart.msg"
 
     - name: Wait for SOCKS5-Port to be available
       ansible.builtin.wait_for:

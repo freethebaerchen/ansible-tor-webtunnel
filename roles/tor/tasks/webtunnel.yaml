@@ -35,7 +35,7 @@
     mode: "0644"
   vars:
     webtunnel_path: "{{ random_string }}"
-  register: torrc
+  notify: Restart tor
 
 - name: Set {{ tor.directory }} owner- and groupship
   ansible.builtin.file:
@@ -94,6 +94,7 @@
           tor:\
               :openfiles-max=13500:\
               :tc=daemon:
+      notify: Start tor
 
     - name: Apply kern.maxfiles
       ansible.posix.sysctl:
@@ -101,13 +102,10 @@
         value: 16000
         state: present
         reload: true
+      notify: Start tor
 
-    - name: Start tor
-      ansible.builtin.service:
-        name: tor
-        state: started
-        enabled: true
-      when: torrc.changed
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
 
 - name: Block for OS-Family Archlinux
   when: ansible_os_family == "Archlinux"
@@ -128,15 +126,8 @@
           @tor    soft    nofile    65536
           @tor    hard    nofile    65536
 
-- name: Restart tor
-  ansible.builtin.service:
-    name: tor
-    state: restarted
-    enabled: true
-  async: 120
-  poll: 5
-  register: tor_restart
-  failed_when: not tor_restart.changed
+- name: Flush handlers
+  ansible.builtin.meta: flush_hanlders
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:

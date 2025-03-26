@@ -28,6 +28,7 @@ jobs:
 
       - name: Install ansible-galaxy requirements
         run: |
+          source venv/bin/activate
           ansible-galaxy install -r requirements.yaml
 
       - name: Login to S3

@@ -6,6 +6,10 @@ on:
   push:
     branches-ignore:
       - main
+    paths-ignore:
+      - 'requirements.txt'
+      - '.github/workflows/venv.yaml'
+      
 
 env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}

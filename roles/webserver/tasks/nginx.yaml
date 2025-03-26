@@ -63,6 +63,11 @@
 
     - name: Apply SELinux file context changes
       ansible.builtin.command: restorecon -Rv /etc/letsencrypt /var/www/html
+      register: apply_selinux
+      changed_when: "'' not in apply_selinux.stdout"
+
+- name: Flsuh handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml

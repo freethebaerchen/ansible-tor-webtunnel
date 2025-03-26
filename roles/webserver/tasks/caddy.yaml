@@ -72,6 +72,7 @@
   block:
     - name: Enable the Caddy COPR repository
       ansible.builtin.command: dnf copr enable @caddy/caddy -y
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
 - name: Block for all OS-Families
   block:

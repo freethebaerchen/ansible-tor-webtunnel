@@ -2,17 +2,6 @@
 
 - name: Block for certificate request
   block:
-    - name: Ensure {{ use_webserver }} is started
-      ansible.builtin.service:
-        name: "{{ webserver_config[use_webserver].service_name }}"
-        state: started
-        enabled: true
-
-    - name: Ensure {{ use_webserver }} is restarted (apply config-changes)
-      ansible.builtin.service:
-        name: "{{ webserver_config[use_webserver].service_name }}"
-        state: restarted
-
     - name: Request certificate
       ansible.builtin.shell: |
         certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}

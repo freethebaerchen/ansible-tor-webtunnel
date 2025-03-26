@@ -15,3 +15,7 @@
     name: tor
     state: restarted
     enabled: true
+
+- name: Reload apparmor
+  ansible.builtin.command: apparmor_parser -r /etc/apparmor.d/system_tor
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.

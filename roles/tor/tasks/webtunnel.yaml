@@ -78,11 +78,10 @@
         path: /etc/apparmor.d/system_tor
         insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
         block: '  /usr/local/bin/webtunnel ix,'
-      register: apparomor
+      notify: Reload apparomor
 
-    - name: Reload apparmor
-      ansible.builtin.command: apparmor_parser -r /etc/apparmor.d/system_tor
-      when: apparomor.changed
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
 
 - name: Block for OS-family OpenBSD
   when: ansible_os_family == "OpenBSD"

@@ -6,7 +6,10 @@
     - name: Generate torrc file
       ansible.builtin.template:
         src: "{{ role_path }}/templates/torrc.j2"
-        dest: /etc/tor/torrc 
+        dest: /etc/tor/torrc
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
 
     - name: Restart tor service
       ansible.builtin.service:
@@ -26,13 +29,13 @@
 
     - name: Set IsTor fact
       ansible.builtin.set_fact:
-        isTor: "{{ tor_result.stdout | from_json | json_query('IsTor') }}"
+        is_tor: "{{ tor_result.stdout | from_json | json_query('IsTor') }}"
 
     - name: Display IsTor value
       ansible.builtin.debug:
-        msg: "{{ isTor }} for node {{ item | regex_replace('.*#', '') }}"
-      failed_when: isTor == false
+        msg: "{{ is_tor }} for node {{ item | regex_replace('.*#', '') }}"
+      failed_when: is_tor == false
 
     - name: Merge isTor messages
       ansible.builtin.set_fact:
-        tor_debug_messages: "{{ (tor_debug_messages | default([])) + [ 'Tor check result: ' + (isTor | string) + ' for node ' + (item | regex_replace('.*#', '')) ] }}"
+        tor_debug_messages: "{{ (tor_debug_messages | default([])) + ['Tor check result: ' + (isTor | string) + ' for node ' + (item | regex_replace('.*#', ''))] }}"

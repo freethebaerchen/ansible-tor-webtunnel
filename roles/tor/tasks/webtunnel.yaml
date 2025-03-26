@@ -6,7 +6,7 @@
     dest: /tmp/webtunnel
 
 - name: Build WebSocket Bridge
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: "go build -o /usr/local/bin/webtunnel"
     chdir: /tmp/webtunnel/main/server
     creates: /usr/local/bin/webtunnel
@@ -30,6 +30,9 @@
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: "{{ system.etc }}/tor/torrc"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
   vars:
     webtunnel_path: "{{ random_string }}"
   register: torrc
@@ -78,7 +81,7 @@
       register: apparomor
 
     - name: Reload apparmor
-      ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
+      ansible.builtin.command: apparmor_parser -r /etc/apparmor.d/system_tor
       when: apparomor.changed
 
 - name: Block for OS-family OpenBSD
@@ -91,12 +94,6 @@
           tor:\
               :openfiles-max=13500:\
               :tc=daemon:
-    
-    - name: Iincrease kern.maxfiles
-      ansible.builtin.lineinfile:
-        path: "{{ system.etc }}/sysctl.conf"
-        line: "kern.maxfiles=16000"
-        create: true
 
     - name: Apply kern.maxfiles
       ansible.posix.sysctl:
@@ -137,7 +134,7 @@
     state: restarted
     enabled: true
   async: 120
-  poll: 5 
+  poll: 5
   ignore_errors: true
 
 - name: Wait until fingerprint file exists
@@ -157,6 +154,7 @@
     path: "{{ role_path }}/../../connection-strings.txt"
     line: "{{ item }} #{{ inventory_hostname }}"
     create: true
+    mode: "0644"
   with_items: "{{ connection_string.stdout_lines }}"
   delegate_to: localhost
   become: false

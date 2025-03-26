@@ -2,7 +2,7 @@
 
 - name: Install required packages
   ansible.builtin.package:
-    name: 
+    name:
       - "{{ item }}"
   loop: "{{ webserver_config[use_webserver].packages }}"
 
@@ -15,6 +15,7 @@
     state: directory
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
+    mode: "0644"
   loop: "{{ webserver_config[use_webserver].extra_dirs }}"
 
 - name: Symlink mime types
@@ -30,6 +31,7 @@
     dest: "{{ webserver_config[use_webserver].config_file }}"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
+    mode: "0644"
 
 - name: Ensure apache configdir exists
   ansible.builtin.file:
@@ -37,6 +39,7 @@
     state: directory
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
+    mode: "0644"
 
 - name: Remove apache default configuration
   ansible.builtin.file:
@@ -62,6 +65,7 @@
     dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
+    mode: "064"
   notify:
     - Validate apache
 
@@ -71,6 +75,7 @@
     state: directory
     owner: "{{ webserver.user }}"
     group: "{{ webserver.group }}"
+    mode: "0644"
 
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml
@@ -90,6 +95,7 @@
     dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-https.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
+    mode: "0644"
   vars:
     webtunnel_path: "{{ random_string }}"
   notify:

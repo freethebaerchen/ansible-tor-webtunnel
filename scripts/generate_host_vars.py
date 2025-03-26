@@ -7,7 +7,8 @@ tld = os.getenv("TEST_SERVER_TLD")
 if tld is None:
     raise ValueError("TEST_SERVER_TLD environment variable is required")
 
-template_str = """domain: {{ os }}.{{ webserver }}.{{ tld }}
+template_str = """---
+domain: {{ os }}.{{ webserver }}.{{ tld }}
 id: "{{ os }}{{ webserver }}"
 reverse_proxy: false
 deploy_webroot: true
@@ -15,6 +16,7 @@ use_webserver: {{ webserver }}
 tor:
   nickname:
   test: true
+
 """
 
 template = Template(template_str)

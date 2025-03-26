@@ -22,7 +22,7 @@
         name: caddy_user
         value: "{{ webserver.user }}"
         state: value_present
-      
+
     - name: Set caddy-group
       community.general.sysrc:
         name: caddy_group
@@ -71,14 +71,13 @@
   when: ansible_os_family == "RedHat"
   block:
     - name: Enable the Caddy COPR repository
-      ansible.builtin.shell:
-        cmd: dnf copr enable @caddy/caddy -y
+      ansible.builtin.command: dnf copr enable @caddy/caddy -y
 
 - name: Block for all OS-Families
   block:
     - name: Install caddy
       ansible.builtin.package:
-        name: 
+        name:
           - caddy
 
     - name: Include webroot
@@ -90,6 +89,7 @@
         state: directory
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
+        mode: "0644"
 
     - name: Check if Caddyfile differs from template
       ansible.builtin.template:
@@ -113,6 +113,9 @@
       ansible.builtin.copy:
         src: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
         dest: "{{ webserver_config[use_webserver].extra_dirs }}/original-Caddyfile"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
         remote_src: true
       when: rendered_caddyfile.stat.checksum != orig_caddyfile.stat.checksum
 
@@ -153,6 +156,7 @@
         dest: "{{ webserver_config[use_webserver].extra_dirs }}/webtunnel-Caddyfile"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
+        mode: "0644"
       notify:
         - Validate caddy
       vars:

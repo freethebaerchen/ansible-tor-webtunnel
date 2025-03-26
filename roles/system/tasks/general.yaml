@@ -23,6 +23,9 @@
       ansible.builtin.copy:
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
         dest: "{{ system.etc }}/apt/apt.conf.d/50unattended-upgrades"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
       when: unattended_upgrades
 
     - name: Symlink pyhton bin to /usr/local/bin
@@ -50,7 +53,7 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
       register: upgrade_result
       changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
 
@@ -103,7 +106,7 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
       register: upgrade_result
       changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
 
@@ -126,13 +129,13 @@
 
     - name: Install epel-release
       ansible.builtin.package:
-        name: 
+        name:
           - epel-release
         state: present
 
     - name: Install OS-specific packages
       ansible.builtin.package:
-        name: 
+        name:
           - dnf-command(copr)
           - golang
           - dnf-automatic
@@ -189,7 +192,7 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
       register: upgrade_result
       changed_when: '"Updating packages..." in upgrade_result.stdout_lines'
 
@@ -214,7 +217,7 @@
   block:
     - name: Install OS-specific packages
       ansible.builtin.package:
-        name: 
+        name:
           - go
           - htop
           - python312
@@ -236,7 +239,7 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
       register: upgrade_result
       changed_when: not '"Nothing to do." in upgrade_result.stdout_lines'
 
@@ -253,7 +256,7 @@
   when: ansible_os_family == "Archlinux"
   block:
     - name: Update package cache
-      ansible.builtin.command: pacman -Syu --noconfirm
+      ansible.builtin.commnd: pacman -Syu --noconfirm
       become: true
 
     - name: Install OS-specific packages
@@ -273,7 +276,7 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
       register: upgrade_result
       changed_when: not '"there is nothing to do" in upgrade_result.stdout_lines'
 
@@ -306,6 +309,9 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/hosts.j2"
         dest: /etc/hosts
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
 
     - name: Set the hostname
       ansible.builtin.hostname:
@@ -318,4 +324,4 @@
         line: "{{ inventory_hostname }}"
         state: present
       notify: Restart system
-      when: ansible_os_family != "FreeBSD" 
+      when: ansible_os_family != "FreeBSD"

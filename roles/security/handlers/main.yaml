@@ -16,20 +16,20 @@
   notify: Apply pf rules
 
 - name: Apply pf rules
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: pfctl -f {{ system.etc }}/pf.conf
 
 - name: Apply ip4tables rules
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: iptables-restore < {{ system.etc }}/iptables/ip4tables_rules
 
 - name: Apply ip6tables rules
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: ip6tables-restore < {{ system.etc }}/iptables/ip6tables_rules
 
 - name: Restart bsdextend
   ansible.builtin.service:
-    name: mac_bsdextended 
+    name: mac_bsdextended
     state: restarted
     enabled: true
 

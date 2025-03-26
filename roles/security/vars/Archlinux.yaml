@@ -6,7 +6,7 @@ root:
 system:
   etc: /etc
 security:
-  packages: 
+  packages:
     - linux-lts
     - linux-lts-headers
   kernel:

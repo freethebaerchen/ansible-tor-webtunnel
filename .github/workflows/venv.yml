@@ -1,3 +1,5 @@
+---
+
 name: Update venv
 
 on:
@@ -34,7 +36,7 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-      
+
       - name: Upload venv to S3
         shell: bash
         run: |

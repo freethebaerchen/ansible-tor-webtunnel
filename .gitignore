@@ -1,6 +1,8 @@
 venv
 tmp
 *.local
+.ansible
+roles/*/library/__pycache__
 
 group_vars/*
 !group_vars/*.yaml.example

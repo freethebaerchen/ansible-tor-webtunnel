@@ -1,3 +1,5 @@
+---
+
 name: Test Ansible Playbook
 
 on:
@@ -25,7 +27,7 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-    
+
       - name: Download venv from S3
         shell: bash
         run: |
@@ -121,7 +123,7 @@ jobs:
           mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-ubuntu:
-    needs: 
+    needs:
       - setup-ubuntu
     runs-on: self-hosted
     env:
@@ -249,7 +251,7 @@ jobs:
           mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-alpine:
-    needs: 
+    needs:
       - setup-alpine
     runs-on: self-hosted
     env:
@@ -377,7 +379,7 @@ jobs:
           mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-archlinux:
-    needs: 
+    needs:
       - setup-archlinux
     runs-on: self-hosted
     env:
@@ -505,7 +507,7 @@ jobs:
           mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-freebsd:
-    needs: 
+    needs:
       - setup-freebsd
     runs-on: self-hosted
     env:
@@ -633,7 +635,7 @@ jobs:
           mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-openbsd:
-    needs: 
+    needs:
       - setup-openbsd
     runs-on: self-hosted
     env:
@@ -761,7 +763,7 @@ jobs:
           mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-rhel:
-    needs: 
+    needs:
       - setup-rhel
     runs-on: self-hosted
     env:
@@ -889,7 +891,7 @@ jobs:
           mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-suse:
-    needs: 
+    needs:
       - setup-suse
     runs-on: self-hosted
     env:

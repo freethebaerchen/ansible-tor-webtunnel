@@ -4,11 +4,11 @@
   when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD"
   block:
     - name: Ensure PF is loaded (FreeBSD/OpenBSD)
-      ansible.builtin.sysctl:
+      ansible.posix.sysctl:
         name: net.pf.enable
         value: "1"
         state: present
-        reload: yes
+        reload: true
 
     - name: Enable PF on FreeBSD
       community.general.sysrc:
@@ -28,7 +28,6 @@
       ansible.builtin.lineinfile:
         path: "{{ system.etc }}/rc.conf.local"
         line: pf=YES
-        create: yes
       when: ansible_os_family == "OpenBSD"
 
     - name: Configure PF rules file
@@ -88,6 +87,7 @@
         state: directory
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
+        mode: "0644 "
 
     - name: Ensure IPv4 ipsets exist
       ansible.builtin.shell:
@@ -107,10 +107,10 @@
       notify: Apply ip4tables rules
 
     - name: Save ip4tables rules
-      ansible.builtin.shell: 
-        cmd: iptables-save > /etc/iptables/rules.v4
+      ansible.builtin.command:
+        cmd: iptables-save > /etc/iptables/rules.v4 
 
-    - name: Cerate cronjob to restore ip4tables rules 
+    - name: Cerate cronjob to restore ip4tables rules
       ansible.builtin.cron:
         name: Restore ip4tables rules
         job: /sbin/iptables-restore < /etc/iptables/rules.v4
@@ -118,9 +118,9 @@
         special_time: reboot
 
 - name: Block for all (Linux) hosts (IPv6)
-  when: 
+  when:
     - ansible_os_family != "FreeBSD"
-    - ansible_os_family != "OpenBSD" 
+    - ansible_os_family != "OpenBSD"
     - ansible_default_ipv6 is defined
     - ansible_default_ipv6
     - ansible_default_ipv6.address is defined
@@ -156,6 +156,7 @@
         state: directory
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
+        mode: "0644"
 
     - name: Ensure IPv6 ipsets exist
       ansible.builtin.shell:
@@ -175,12 +176,12 @@
       notify: Apply ip6tables rules
 
     - name: Save ip6tables rules
-      ansible.builtin.shell: 
+      ansible.builtin.command:
         cmd: ip6tables-save > /etc/iptables/rules.v6
 
-    - name: Cerate cronjob to restore ip4tables rules 
+    - name: Cerate cronjob to restore ip4tables rules
       ansible.builtin.cron:
         name: Restore ip6tables rules
-        job:  /sbin/ip6tables-restore < /etc/iptables/rules.v6
+        job: /sbin/ip6tables-restore < /etc/iptables/rules.v6
         user: root
         special_time: reboot

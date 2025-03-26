@@ -5,15 +5,17 @@
     - delete-webtunnel-client
   block:
     - name: Forcefully shutdown {{ vm[os].name }}-webtunnel-client
-      shell: vm poweroff -f {{ vm[os].name }}-webtunnel-client
+      ansible.builtin.command: vm poweroff -f {{ vm[os].name }}-webtunnel-client
       failed_when: false
 
     - name: Wait until VM is stopped
-      ansible.builtin.shell: vm list | grep "{{ vm[os].name }}-webtunnel-client" | awk '{print $NF}'
+      ansible.builtin.shell: |
+        set -o pipefail
+        vm list | grep "{{ vm[os].name }}-webtunnel-client" | awk '{print $NF}'
       register: vm_status
       retries: 10
       delay: 3
       until: vm_status.stdout == "Stopped"
 
     - name: Delete selected vms
-      ansible.builtin.shell: vm destroy {{ vm[os].name }}-webtunnel-client
+      ansible.builtin.command: vm destroy {{ vm[os].name }}-webtunnel-client

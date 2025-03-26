@@ -22,6 +22,7 @@
         path: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
         line: "{{ domain }}"
         create: true
+        mode: "0644"
       delegate_to: localhost
       become: false
 

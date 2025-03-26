@@ -5,7 +5,7 @@
     - create-webtunnel-client
   block:
     - name: Get images
-      ansible.builtin.shell: vm image list
+      ansible.builtin.command: vm image list
       register: webtunnel_images
 
     - name: Set image uuid fact
@@ -13,7 +13,7 @@
         webtunnel_image_uuid: "{{ webtunnel_images.stdout_lines | select('search', 'webtunnel-client') | map('regex_replace', '^([^ ]+) .*$', '\\1') | list | first }}"
 
     - name: Create templated webtunnel-client
-      ansible.builtin.shell: vm image provision {{ webtunnel_image_uuid }} {{ os }}-webtunnel-client
+      ansible.builtin.command: vm image provision {{ webtunnel_image_uuid }} {{ os }}-webtunnel-client
       register: provision_result
       failed_when:
         - "'ERROR: new guest already exists' not in provision_result.stderr"
@@ -24,6 +24,9 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/webtunnel-client.conf.j2"
         dest: "{{ bhyve.root_dir }}/{{ os }}-webtunnel-client/{{ os }}-webtunnel-client.conf"
+        owner: root
+        group: wheel
+        mode: "0644"
 
     - name: Start {{ vm[os].name }}-webtunnel-client
       ansible.builtin.command: vm start {{ vm[os].name }}-webtunnel-client

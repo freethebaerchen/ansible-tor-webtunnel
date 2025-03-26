@@ -1,3 +1,5 @@
+---
+
 plugin: hetzner.hcloud.hcloud
 
 compose:

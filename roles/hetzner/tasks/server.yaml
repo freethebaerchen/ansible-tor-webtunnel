@@ -4,6 +4,7 @@
   ansible.builtin.template:
     src: templates/user_data.j2
     dest: "{{ role_path }}/files/{{ item.image }}-user_data.yaml"
+    mode: "0644"
   become: false
   vars:
     root_group: "{{ 'sudo' if item.image in ['ubuntu-20.04', 'ubuntu-22.04', 'ubuntu-24.04', 'debian-10', 'debian-11', 'debian-12'] else 'wheel' }}"

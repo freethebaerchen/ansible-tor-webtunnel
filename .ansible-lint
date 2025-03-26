@@ -1,0 +1,15 @@
+---
+
+skip_list:
+  - 'meta-no-info'
+  - var-naming[no-role-prefix]
+  - name[template]
+  - latest[git]
+
+warn_list:
+  - package-latest
+  - yaml[trailing-spaces]
+  - yaml[new-line-at-end-of-file]
+  - no-changed-when
+  - no-handler
+  - ignore-errors

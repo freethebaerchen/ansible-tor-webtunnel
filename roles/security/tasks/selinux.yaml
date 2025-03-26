@@ -12,12 +12,15 @@
     path: "{{ system.etc }}/selinux/config"
     regexp: '^SELINUX='
     line: 'SELINUX=enforcing'
-    create: yes
+    owner: "{{ root.user }}"
+    group: "{ root.group }"
+    mode: "0644"
+    create: true
 
 - name: Set SELinux to Enforcing Mode
-  ansible.builtin.shell: 
+  ansible.builtin.command:
     cmd: setenforce 1
-  ignore_errors: yes
+  ignore_errors: true
   notify: Restart system
 
 - name: Set SELinux context for Tor data directory
@@ -39,7 +42,7 @@
     state: present
 
 - name: Apply SELinux file context changes for Tor
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: restorecon -Rv {{ tor.directory }} {{ system.etc }}/tor
   notify: Restart system
 
@@ -50,17 +53,17 @@
     state: present
 
 - name: Allow WebTunnel binary to execute
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: restorecon -Rv /usr/local/bin/webtunnel
   notify: Restart system
 
 - name: Allow Tor to bind to WebTunnel port 15000
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: semanage port -a -t tor_port_t -p tcp 15000
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: Allow Tor to communicate with web servers
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: setsebool -P httpd_can_network_connect 1
   notify: Restart system
 
@@ -71,11 +74,11 @@
     state: present
 
 - name: Allow Web Server to Connect to Tor WebTunnel
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: setsebool -P httpd_can_network_relay 1
   notify: Restart system
 
 - name: Apply SELinux file context changes for Web Servers
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: restorecon -Rv /var/www/html {{ system.etc }}/{{ use_webserver }}
   notify: Restart system

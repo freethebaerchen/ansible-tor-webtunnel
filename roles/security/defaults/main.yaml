@@ -1,3 +1,4 @@
+---
 # Internal service, that should be accessible from the outside
 local_services: []
 # Example

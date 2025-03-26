@@ -32,7 +32,7 @@
 - name: Setup webserver
   hosts: all
   become: true
-  roles: 
+  roles:
     - webserver
   tags:
     - webserver

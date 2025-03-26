@@ -1,3 +1,5 @@
+---
+
 domain: example.org
 id: 2
 reverse_proxy: true

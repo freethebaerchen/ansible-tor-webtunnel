@@ -1,7 +1,7 @@
-email: user@example.com
+---
 
+email: user@example.com
 tor:
   nickname: somenickname
-
 dir:
   webroot: /var/www/html

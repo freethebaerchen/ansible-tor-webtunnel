@@ -1,3 +1,5 @@
+---
+
 hcloud:
   firewalls:
     - name: firewall-default
@@ -60,8 +62,8 @@ hcloud:
     public_ipv6_enabled: true
     public_ipv4_enabled: true
     firewalls:
-       - firewall-default
-       - firewall-web
+      - firewall-default
+      - firewall-web
     volumes: []
   servers:
     - name: bridge-nbg-0

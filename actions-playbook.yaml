@@ -13,4 +13,4 @@
     - never
     - test-webtunnel
   roles:
-    - role: test-webtunnel
+    - role: test_webtunnel

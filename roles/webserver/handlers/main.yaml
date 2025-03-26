@@ -1,21 +1,21 @@
 ---
 
 - name: Validate caddy
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: caddy validate --config {{ webserver_config[use_webserver].config_dir }}/Caddyfile
   register: caddy_validate
   notify:
     - Restart caddy
 
 - name: Validate nginx
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: nginx -t
   register: nginx_validate
   notify:
     - Restart nginx
 
 - name: Validate apache
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: apachectl configtest
   register: apache_validate
   notify:
@@ -27,7 +27,7 @@
     state: "{{ item }}"
     enabled: true
   async: 120
-  poll: 5 
+  poll: 5
   ignore_errors: true
   when: caddy_validate is success
   loop:
@@ -40,7 +40,7 @@
     state: "{{ item }}"
     enabled: true
   async: 120
-  poll: 5 
+  poll: 5
   ignore_errors: true
   when: nginx_validate is success
   loop:
@@ -53,7 +53,7 @@
     state: "{{ item }}"
     enabled: true
   async: 120
-  poll: 5 
+  poll: 5
   ignore_errors: true
   when: apache_validate is success
   loop:

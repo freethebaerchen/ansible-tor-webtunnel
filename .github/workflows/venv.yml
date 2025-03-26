@@ -1,3 +1,5 @@
+---
+
 name: Update venv
 
 on:
@@ -6,7 +8,8 @@ on:
   push:
     paths:
       - 'requirements.txt'
-      - .github/workflows/venv.yaml
+      - 'requirements.yaml'
+      - '.github/workflows/venv.yaml'
 
 jobs:
   install-project-requirements:
@@ -26,6 +29,7 @@ jobs:
 
       - name: Install ansible-galaxy requirements
         run: |
+          source venv/bin/activate
           ansible-galaxy install -r requirements.yaml
 
       - name: Login to S3
@@ -34,7 +38,7 @@ jobs:
           s3_server: '${{ secrets.S3_ENDPOINT }}'
           s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
           s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-      
+
       - name: Upload venv to S3
         shell: bash
         run: |

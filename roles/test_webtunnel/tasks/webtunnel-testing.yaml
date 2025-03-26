@@ -1,0 +1,48 @@
+---
+
+- name: Add block for empty item check
+  when: not item == ""
+  block:
+    - name: Generate torrc file
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/torrc.j2"
+        dest: /etc/tor/torrc
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
+
+    - name: Restart tor service
+      ansible.builtin.service:
+        name: tor
+        state: restarted
+      ignore_errors: true
+
+    - name: Wait for SOCKS5-Port to be available
+      ansible.builtin.wait_for:
+        port: 1080
+        timeout: 30
+      register: socks_port_check
+
+      # - name: Test tor connection
+      #   ansible.builtin.command: curl -sS --socks5 127.0.0.1:1080 https://check.torproject.org/api/ip
+      #   register: tor_result
+
+    - name: Test tor connection
+      curl_proxy:
+        url: "https://check.torproject.org/api/ip"
+        proxy_type: "socks5"
+        proxy: "127.0.0.1:1080"
+      register: tor_result
+
+    - name: Set IsTor fact
+      ansible.builtin.set_fact:
+        is_tor: "{{ tor_result.stdout | from_json | json_query('IsTor') }}"
+
+    - name: Display IsTor value
+      ansible.builtin.debug:
+        msg: "{{ is_tor }} for node {{ item | regex_replace('.*#', '') }}"
+      failed_when: is_tor == false
+
+    - name: Merge isTor messages
+      ansible.builtin.set_fact:
+        tor_debug_messages: "{{ (tor_debug_messages | default([])) + ['Tor check result: ' + (isTor | string) + ' for node ' + (item | regex_replace('.*#', ''))] }}"

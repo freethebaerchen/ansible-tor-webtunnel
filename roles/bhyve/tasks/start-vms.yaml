@@ -5,5 +5,5 @@
     - start-server
   block:
     - name: Start VMs
-      ansible.builtin.shell: vm start {{ os }}-{{ item }}
+      ansible.builtin.command: vm start {{ os }}-{{ item }}
       loop: "{{ webserver_software }}"

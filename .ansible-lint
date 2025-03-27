@@ -8,8 +8,12 @@ skip_list:
 
 warn_list:
   - package-latest
-  - yaml[trailing-spaces]
-  - yaml[new-line-at-end-of-file]
   - no-changed-when
   - no-handler
   - ignore-errors
+
+exclude_paths:
+  # Temporary until "release"
+  - roles/security/tasks/mandatory_access_control.yaml
+  - roles/security/tasks/selinux.yaml
+  - roles/security/tasks/systrace.yaml

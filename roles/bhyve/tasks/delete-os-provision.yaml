@@ -20,7 +20,7 @@
       until: vm_status.stdout == "Stopped"
       loop: "{{ webserver_software }}"
       changed_when: false # No changes will be applied. Set just for ansible-lint.
-      failed_when: 
+      failed_when:
         - vm_status.rc != 0
         - "'' not in vm_status.stdout"
 

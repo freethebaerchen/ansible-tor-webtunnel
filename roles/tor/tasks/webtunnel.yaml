@@ -78,7 +78,7 @@
         path: /etc/apparmor.d/system_tor
         insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
         block: '  /usr/local/bin/webtunnel ix,'
-      notify: Reload apparomor
+      notify: Reload apparmor
 
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers

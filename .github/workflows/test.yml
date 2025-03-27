@@ -7,9 +7,17 @@ on:
     branches-ignore:
       - main
     paths-ignore:
+      - '.github/workflows/venv.yml'
+      - '.github/workflows/hostvars.yml'
       - 'requirements.txt'
       - 'requirements.yaml'
-      - '.github/workflows/venv.yaml'
+      - 'todo.md'
+      - 'readme.md'
+      - '.env'
+      - '.yamllint'
+      - '.ansible-lint'
+      - '.pre-commit-config.yaml'
+      - '.gitignore'
 
 env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
@@ -17,39 +25,6 @@ env:
   ANSIBLE_FORCE_COLOR: 1
 
 jobs:
-  generate-host-vars:
-    runs-on: self-hosted
-    env:
-      TEST_SERVER_TLD: ${{ secrets.TEST_SERVER_TLD }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
-      - name: Generate host_vars/os-webserver.yaml
-        run: |
-          source venv/bin/activate
-          python3 scripts/generate_host_vars.py
-
-      - name: Upload test_host_vars to S3
-        shell: bash
-        run: |
-          mc cp -r test_host_vars/ default/actions-artifacts/test_host_vars/ >/dev/null && \
-          echo "Uploaded test_host_vars successfully."
-
   select-webserver:
     runs-on: self-hosted
     outputs:
@@ -66,7 +41,6 @@ jobs:
 
   setup-ubuntu:
     needs:
-      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -193,7 +167,6 @@ jobs:
 
   setup-alpine:
     needs:
-      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -321,7 +294,6 @@ jobs:
 
   setup-archlinux:
     needs:
-      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -449,7 +421,6 @@ jobs:
 
   setup-freebsd:
     needs:
-      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -577,7 +548,6 @@ jobs:
 
   setup-openbsd:
     needs:
-      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -705,7 +675,6 @@ jobs:
 
   setup-rhel:
     needs:
-      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:
@@ -833,7 +802,6 @@ jobs:
 
   setup-suse:
     needs:
-      - generate-host-vars
       - select-webserver
     runs-on: self-hosted
     env:

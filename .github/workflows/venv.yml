@@ -6,10 +6,12 @@ on:
   schedule:
     - cron: '0 0 */3 * *'
   push:
+    branches-ignore:
+      - main
     paths:
       - 'requirements.txt'
       - 'requirements.yaml'
-      - '.github/workflows/venv.yaml'
+      - '.github/workflows/venv.yml'
 
 jobs:
   install-project-requirements:

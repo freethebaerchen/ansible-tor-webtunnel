@@ -257,6 +257,7 @@
   block:
     - name: Update package cache
       ansible.builtin.command:
+        cmd: pacman -Sy --no-confirm
       changed_when: false # No changes will be applied. Set just for ansible-lint.
 
     - name: Install OS-specific packages

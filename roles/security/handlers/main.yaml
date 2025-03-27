@@ -11,8 +11,10 @@
 - name: Start pf (OpenBSD)
   ansible.builtin.command: pfctl -e
   register: pfctl_status
-  failed_when: "'pfctl: pf already enabled' not in pfctl_status.stdout"
-  changed_when: "'pfctl: pf already enabled' not in pfctl_status.stdout"
+  failed_when:
+    - pfctl_status.rc != 0
+    - "'pfctl: pf already enabled' not in pfctl_status.stderr"
+  changed_when: "'pfctl: pf already enabled' not in pfctl_status.stderr"
   when: ansible_os_family == "OpenBSD"
   notify: Apply pf rules
 

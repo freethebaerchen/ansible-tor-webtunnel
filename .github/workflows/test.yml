@@ -60,6 +60,7 @@ jobs:
       - name: Download host_vars from S3
         shell: bash
         run: |
+          mc alias set default ${{ secrets.S3_ENDPOINT }} ${{ secrets.S3_ACCESS_KEY }} ${{ secrets.S3_SECRET_KEY }} && \
           mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded test_host_vars successfully."
 

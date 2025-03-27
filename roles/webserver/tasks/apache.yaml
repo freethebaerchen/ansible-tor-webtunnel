@@ -65,7 +65,7 @@
     dest: "{{ webserver_config[use_webserver].config_dir }}/webtunnel-http.conf"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
-    mode: "064"
+    mode: "0644"
   notify:
     - Validate apache
 

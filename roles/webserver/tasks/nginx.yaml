@@ -23,6 +23,8 @@
     line: "    include {{ webserver_config[use_webserver].config_dir }}/*.conf;"
     insertbefore: "}"
   when: "'http.d' in webserver_config[use_webserver].config_dir"
+  notify:
+    - Validate nginx
 
 - name: Remove nginx default configuration
   ansible.builtin.file:
@@ -31,6 +33,8 @@
   loop:
     - default
     - default.conf
+  notify:
+    - Validate nginx
 
 - name: Set types_hash_max_size;
   ansible.builtin.blockinfile:

@@ -93,6 +93,7 @@
         - tor-trust
         - tor-ddos-15000
         - hetzner-sysmon
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
     - name: Create ip4tables rules template for Linux
       ansible.builtin.template:
@@ -158,6 +159,7 @@
         - tor-trust6
         - tor-ddos6-15000
         - hetzner-sysmon6
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
     - name: Create ip6tables rules template for Linux
       ansible.builtin.template:

@@ -18,6 +18,9 @@
       delay: 3
       until: vm_status.stdout == "Stopped"
       changed_when: false # No changes will be applied. Set just for ansible-lint.
+      failed_when: 
+        - vm_status.rc =! 0
+        - "'' not in vm_status.stdout"
 
     - name: Delete selected vms
       ansible.builtin.command: vm destroy {{ vm[os].name }}-webtunnel-client

@@ -43,4 +43,3 @@
   ansible.builtin.reboot:
     msg: "Reboot initiated by Ansible for loading kernel modules"
     reboot_timeout: 600
-  when: additional_packages.changed

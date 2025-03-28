@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define variables
-LOG_FILE="/var/log/opensuse-upgrade.log"
-LOCK_FILE="/var/run/opensuse-upgrade.lock"
+LOG_FILE="/var/log/unattended-upgrade.log"
+LOCK_FILE="/var/run/unattended-upgrade.lock"
 
 # Exit if another instance is running
 if [ -e "$LOCK_FILE" ]; then

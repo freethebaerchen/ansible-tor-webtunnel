@@ -1,19 +1,5 @@
 ---
 
 skip_list:
-  - 'meta-no-info'
   - var-naming[no-role-prefix]
   - name[template]
-  - latest[git]
-
-warn_list:
-  - package-latest
-  - no-changed-when
-  - no-handler
-  - ignore-errors
-
-exclude_paths:
-  # Temporary until "release"
-  - roles/security/tasks/mandatory_access_control.yaml
-  - roles/security/tasks/selinux.yaml
-  - roles/security/tasks/systrace.yaml

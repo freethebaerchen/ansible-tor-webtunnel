@@ -3,6 +3,7 @@
 - name: Get WebSocket Bridge source code
   ansible.builtin.git:
     repo: https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/webtunnel
+    version: main
     dest: /tmp/webtunnel
 
 - name: Build WebSocket Bridge

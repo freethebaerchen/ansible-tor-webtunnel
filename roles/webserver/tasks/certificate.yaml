@@ -1,16 +1,24 @@
 ---
 
-- name: Block for certificate request
-  block:
-    - name: Test certificate request
-      ansible.builtin.shell: |
-        certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }} --dry-run
-      register: certbot_test_output
-      failed_when: "'Some challenges have failed.' in certbot_test_output.stderr"
-      changed_when: "'The dry run was successful.' in certbot_test_output.stdout"
+- name: Check certificates existence
+  ansible.builtin.command:
+    cmd: certbot certificates --config-dir {{ certbot.config_dir }}
+  register: certificate_existence
+  changed_when: "'No certificates found.' in certificate_existence.stdout"
+  notify: Validate {{ use_webserver }}
 
-    - name: Request certificate
-      ansible.builtin.shell: |
-        certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
-      register: certbot_output
-      changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Test certificate request
+  ansible.builtin.shell: |
+    certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }} --dry-run
+  register: certbot_test_output
+  failed_when: "'Some challenges have failed.' in certbot_test_output.stderr"
+  changed_when: "'The dry run was successful.' in certbot_test_output.stdout"
+
+- name: Request certificate
+  ansible.builtin.shell: |
+    certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+  register: certbot_output
+  changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"

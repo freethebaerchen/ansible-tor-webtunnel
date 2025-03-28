@@ -6,7 +6,7 @@
   register: caddy_validate
   notify:
     - Restart caddy
-  changed_when: false
+  changed_when: true # True, so restart handler is triggered
 
 - name: Validate nginx
   ansible.builtin.command:
@@ -14,7 +14,7 @@
   register: nginx_validate
   notify:
     - Restart nginx
-  changed_when: false
+  changed_when: true # True, so restart handler is triggered
 
 - name: Validate apache
   ansible.builtin.command:
@@ -22,7 +22,7 @@
   register: apache_validate
   notify:
     - Restart apache
-  changed_when: false
+  changed_when: true # True, so restart handler is triggered
 
 - name: Restart caddy
   ansible.builtin.service:

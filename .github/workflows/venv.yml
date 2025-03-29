@@ -34,14 +34,7 @@ jobs:
           source venv/bin/activate
           ansible-galaxy install -r requirements.yaml
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Upload venv to S3
+      - name: Upload venv
         shell: bash
         run: |
           rsync -avz --no-o --no-g --delete venv 10.1.0.100: >/dev/null && \

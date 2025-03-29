@@ -50,19 +50,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -90,19 +82,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -130,19 +114,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -170,19 +146,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -210,19 +178,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -250,19 +210,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -290,19 +242,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
@@ -330,26 +274,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc alias set default ${{ secrets.S3_ENDPOINT }} ${{ secrets.S3_ACCESS_KEY }} ${{ secrets.S3_SECRET_KEY }} && \
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
-      - name: Download venv from S3
-        shell: bash
+      - name: Download host_vars
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -377,26 +311,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
-      - name: Download venv from S3
-        shell: bash
+      - name: Download host_vars
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -424,26 +348,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
-      - name: Download venv from S3
-        shell: bash
+      - name: Download host_vars
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -471,26 +385,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
-      - name: Download venv from S3
-        shell: bash
+      - name: Download host_vars
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -518,26 +422,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
-      - name: Download venv from S3
-        shell: bash
+      - name: Download host_vars
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -565,26 +459,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
-      - name: Download venv from S3
-        shell: bash
+      - name: Download host_vars
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -612,25 +496,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
-      - name: Download venv from S3
-        shell: bash
+      - name: Download host_vars
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          echo "Downloaded venv successfully."
 
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -658,19 +533,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -723,19 +590,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -788,19 +647,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -853,19 +704,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -918,19 +761,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -983,19 +818,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
@@ -1048,19 +875,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |

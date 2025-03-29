@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
+          echo "Downloaded venv successfully."
 
       - name: Generate host_vars/os-webserver.yaml
         run: |

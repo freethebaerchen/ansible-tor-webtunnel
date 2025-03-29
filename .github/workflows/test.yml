@@ -282,7 +282,7 @@ jobs:
 
       - name: Download host_vars
         run: |
-          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -320,7 +320,7 @@ jobs:
 
       - name: Download host_vars
         run: |
-          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -358,7 +358,7 @@ jobs:
 
       - name: Download host_vars
         run: |
-          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -396,7 +396,7 @@ jobs:
 
       - name: Download host_vars
         run: |
-          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -434,7 +434,7 @@ jobs:
 
       - name: Download host_vars
         run: |
-          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -472,7 +472,7 @@ jobs:
 
       - name: Download host_vars
         run: |
-          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Wait until the ${{ env.OS }} servers are reachable
@@ -510,7 +510,7 @@ jobs:
 
       - name: Download host_vars
         run: |
-          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars ./host_vars >/dev/null && \
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
 

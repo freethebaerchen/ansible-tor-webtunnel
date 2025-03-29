@@ -15,18 +15,12 @@
       ansible.builtin.service:
         name: tor
         state: restarted
-      register: tor_restart
-      failed_when: "'Timeout exceeded' not in tor_restart.msg"
 
     - name: Wait for SOCKS5-Port to be available
       ansible.builtin.wait_for:
         port: 1080
         timeout: 30
       register: socks_port_check
-
-      # - name: Test tor connection
-      #   ansible.builtin.command: curl -sS --socks5 127.0.0.1:1080 https://check.torproject.org/api/ip
-      #   register: tor_result
 
     - name: Test tor connection
       curl_proxy:
@@ -37,7 +31,7 @@
 
     - name: Set IsTor fact
       ansible.builtin.set_fact:
-        is_tor: "{{ tor_result.stdout | from_json | json_query('IsTor') }}"
+        is_tor: "{{ tor_result.response | from_json | json_query('IsTor') }}"
 
     - name: Display IsTor value
       ansible.builtin.debug:
@@ -46,4 +40,4 @@
 
     - name: Merge isTor messages
       ansible.builtin.set_fact:
-        tor_debug_messages: "{{ (tor_debug_messages | default([])) + ['Tor check result: ' + (isTor | string) + ' for node ' + (item | regex_replace('.*#', ''))] }}"
+        tor_debug_messages: "{{ (tor_debug_messages | default([])) + ['Tor check result: ' + (is_tor | string) + ' for node ' + (item | regex_replace('.*#', ''))] }}"

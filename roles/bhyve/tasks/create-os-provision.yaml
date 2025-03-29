@@ -30,9 +30,3 @@
         group: wheel
         mode: "0644"
       loop: "{{ webserver_software }}"
-
-    - name: Set MAC-address for static mapping
-      ansible.builtin.lineinfile:
-        path: "{{ bhyve.root_dir }}/{{ os }}-{{ item }}/{{ os }}-{{ item }}.conf"
-        line: "network0_mac=\"{{ vm[os].mac_address[item] }}\""
-      loop: "{{ webserver_software }}"

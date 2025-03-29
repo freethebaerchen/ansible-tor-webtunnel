@@ -298,7 +298,7 @@ jobs:
       - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-alpine:
@@ -336,7 +336,7 @@ jobs:
       - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-archlinux:
@@ -374,7 +374,7 @@ jobs:
       - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-freebsd:
@@ -412,7 +412,7 @@ jobs:
       - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-openbsd:
@@ -450,7 +450,7 @@ jobs:
       - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-rhel:
@@ -488,7 +488,7 @@ jobs:
       - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-suse:
@@ -527,7 +527,7 @@ jobs:
       - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   test-ubuntu:

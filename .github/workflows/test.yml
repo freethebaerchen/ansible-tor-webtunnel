@@ -39,9 +39,289 @@ jobs:
           echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
           echo "Using webserver: $WEBSERVER_SOFTWARE"
 
-  setup-ubuntu:
+  create-ubuntu:
     needs:
       - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: ubuntu
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-alpine:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: alpine
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-archlinux:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: archlinux
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-freebsd:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: freebsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-openbsd:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: openbsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-rhel:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: rhel
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-suse:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: suse
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  setup-ubuntu:
+    needs:
+      - create-ubuntu
     runs-on: self-hosted
     env:
       OS: ubuntu
@@ -71,20 +351,287 @@ jobs:
           echo "Downloaded venv successfully. Changing permissions now."
           chmod +x venv/bin/*
 
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+      - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Start all ${{ env.OS }} servers
+      - name: Upload connection-strings for ${{ env.OS }} to S3
+        shell: bash
+        run: |
+          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+
+  setup-alpine:
+    needs:
+      - create-alpine
+    runs-on: self-hosted
+    env:
+      OS: alpine
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully."
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }} to S3
+        shell: bash
+        run: |
+          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+
+  setup-archlinux:
+    needs:
+      - create-archlinux
+    runs-on: self-hosted
+    env:
+      OS: archlinux
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully."
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }} to S3
+        shell: bash
+        run: |
+          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+
+  setup-freebsd:
+    needs:
+      - create-freebsd
+    runs-on: self-hosted
+    env:
+      OS: freebsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully."
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }} to S3
+        shell: bash
+        run: |
+          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+
+  setup-openbsd:
+    needs:
+      - create-openbsd
+    runs-on: self-hosted
+    env:
+      OS: openbsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully."
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }} to S3
+        shell: bash
+        run: |
+          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+
+  setup-rhel:
+    needs:
+      - create-rhel
+    runs-on: self-hosted
+    env:
+      OS: rhel
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully."
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }} to S3
+        shell: bash
+        run: |
+          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+
+  setup-suse:
+    needs:
+      - create-suse
+    runs-on: self-hosted
+    env:
+      OS: suse
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to S3
+        uses: mc-actions/configure@v1
+        with:
+          s3_server: '${{ secrets.S3_ENDPOINT }}'
+          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
+          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
+
+      - name: Download host_vars from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded test_host_vars successfully."
+
+      - name: Download venv from S3
+        shell: bash
+        run: |
+          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          echo "Downloaded venv successfully. Changing permissions now."
+          chmod +x venv/bin/*
+
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -166,68 +713,6 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-alpine:
-    needs:
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: alpine
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
-
-      - name: Download venv from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          source venv/bin/activate
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }} to S3
-        shell: bash
-        run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
-
   test-alpine:
     needs:
       - setup-alpine
@@ -292,68 +777,6 @@ jobs:
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
-
-  setup-archlinux:
-    needs:
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: archlinux
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
-
-      - name: Download venv from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          source venv/bin/activate
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }} to S3
-        shell: bash
-        run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-archlinux:
     needs:
@@ -420,68 +843,6 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-freebsd:
-    needs:
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: freebsd
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
-
-      - name: Download venv from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          source venv/bin/activate
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }} to S3
-        shell: bash
-        run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
-
   test-freebsd:
     needs:
       - setup-freebsd
@@ -546,68 +907,6 @@ jobs:
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
-
-  setup-openbsd:
-    needs:
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: openbsd
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
-
-      - name: Download venv from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          source venv/bin/activate
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }} to S3
-        shell: bash
-        run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-openbsd:
     needs:
@@ -674,68 +973,6 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-rhel:
-    needs:
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: rhel
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
-
-      - name: Download venv from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          source venv/bin/activate
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }} to S3
-        shell: bash
-        run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
-
   test-rhel:
     needs:
       - setup-rhel
@@ -800,68 +1037,6 @@ jobs:
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
-
-  setup-suse:
-    needs:
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: suse
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download host_vars from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/test_host_vars/ host_vars/ >/dev/null && \
-          echo "Downloaded test_host_vars successfully."
-
-      - name: Download venv from S3
-        shell: bash
-        run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
-          echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          source venv/bin/activate
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }} to S3
-        shell: bash
-        run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
 
   test-suse:
     needs:

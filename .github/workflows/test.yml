@@ -295,10 +295,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Upload connection-strings for ${{ env.OS }} to S3
+      - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-alpine:
     needs:
@@ -332,10 +333,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Upload connection-strings for ${{ env.OS }} to S3
+      - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-archlinux:
     needs:
@@ -369,10 +371,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Upload connection-strings for ${{ env.OS }} to S3
+      - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-freebsd:
     needs:
@@ -406,10 +409,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Upload connection-strings for ${{ env.OS }} to S3
+      - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-openbsd:
     needs:
@@ -443,10 +447,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Upload connection-strings for ${{ env.OS }} to S3
+      - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-rhel:
     needs:
@@ -480,10 +485,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Upload connection-strings for ${{ env.OS }} to S3
+      - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   setup-suse:
     needs:
@@ -518,10 +524,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Upload connection-strings for ${{ env.OS }} to S3
+      - name: Upload connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp connection-strings.txt default/actions-artifacts/connection-strings-${{ env.OS }}
+          rsync -avz --no-o --no-g --delete connection-strings-${{ env.OS }}.txt 10.1.0.100: >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   test-ubuntu:
     needs:
@@ -544,10 +551,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download connection-strings-${{ env.OS }} from S3
+      - name: Download connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp default/actions-artifacts/connection-strings-${{ env.OS }} connection-strings.txt
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
@@ -601,10 +609,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download connection-strings-${{ env.OS }} from S3
+      - name: Download connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp default/actions-artifacts/connection-strings-${{ env.OS }} connection-strings.txt
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
@@ -658,10 +667,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download connection-strings-${{ env.OS }} from S3
+      - name: Download connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp default/actions-artifacts/connection-strings-${{ env.OS }} connection-strings.txt
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
@@ -715,10 +725,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download connection-strings-${{ env.OS }} from S3
+      - name: Download connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp default/actions-artifacts/connection-strings-${{ env.OS }} connection-strings.txt
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
@@ -772,10 +783,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download connection-strings-${{ env.OS }} from S3
+      - name: Download connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp default/actions-artifacts/connection-strings-${{ env.OS }} connection-strings.txt
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
@@ -829,10 +841,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download connection-strings-${{ env.OS }} from S3
+      - name: Download connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp default/actions-artifacts/connection-strings-${{ env.OS }} connection-strings.txt
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
@@ -886,10 +899,11 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download connection-strings-${{ env.OS }} from S3
+      - name: Download connection-strings for ${{ env.OS }}
         shell: bash
         run: |
-          mc cp default/actions-artifacts/connection-strings-${{ env.OS }} connection-strings.txt
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |

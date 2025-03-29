@@ -44,5 +44,5 @@ jobs:
       - name: Upload venv to S3
         shell: bash
         run: |
-          mc cp -r venv/ default/actions-artifacts/venv/ >/dev/null && \
+          rsync -avz --no-o --no-g --delete venv 10.1.0.100: >/dev/null && \
           echo "Uploaded venv successfully."

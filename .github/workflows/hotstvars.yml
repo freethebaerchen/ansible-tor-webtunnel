@@ -26,19 +26,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to S3
-        uses: mc-actions/configure@v1
-        with:
-          s3_server: '${{ secrets.S3_ENDPOINT }}'
-          s3_access_key: '${{ secrets.S3_ACCESS_KEY }}'
-          s3_secret_key: '${{ secrets.S3_SECRET_KEY }}'
-
-      - name: Download venv from S3
+      - name: Download venv
         shell: bash
         run: |
-          mc cp -r default/actions-artifacts/venv/ venv/ >/dev/null && \
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv venv >/dev/null && \
           echo "Downloaded venv successfully. Changing permissions now."
-          chmod +x venv/bin/*
 
       - name: Generate host_vars/os-webserver.yaml
         run: |
@@ -48,5 +40,5 @@ jobs:
       - name: Upload test_host_vars to S3
         shell: bash
         run: |
-          mc cp -r test_host_vars/ default/actions-artifacts/test_host_vars/ >/dev/null && \
+          rsync -avz --no-o --no-g --delete test_host_vars 10.1.0.100: >/dev/null && \
           echo "Uploaded test_host_vars successfully."

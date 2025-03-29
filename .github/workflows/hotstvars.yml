@@ -29,7 +29,7 @@ jobs:
       - name: Download venv
         shell: bash
         run: |
-          rsync -avz --no-o --no-g --delete 10.1.0.100:venv venv >/dev/null && \
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
           echo "Downloaded venv successfully. Changing permissions now."
 
       - name: Generate host_vars/os-webserver.yaml

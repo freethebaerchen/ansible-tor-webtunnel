@@ -3,5 +3,6 @@
 email: user@example.com
 tor:
   nickname: somenickname
+  distribution_method: HTTPS
 dir:
   webroot: /var/www/html

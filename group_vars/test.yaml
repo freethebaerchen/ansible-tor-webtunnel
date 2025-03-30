@@ -21,3 +21,4 @@ use_webserver: caddy
 
 tor:
   test: true
+  distribution_method: None

@@ -84,7 +84,17 @@ def check_uname(inventory_file, limit):
             sys.stdout.flush()
             sys.exit(1)
 
-        if "linux" in output.lower():
+        if "alpine" in output.lower():
+            os_type = "Alpine Linux"
+        elif "arch" in output.lower():
+            os_type = "Arch Linux"
+        elif "suse" in output.lower() or "opensuse" in output.lower():
+            os_type = "SUSE Linux"
+        elif "almalinux" in output.lower():
+            os_type = "AlmaLinux"
+        elif "ubuntu" in output.lower():
+            os_type = "Ubuntu"
+        elif "linux" in output.lower():
             os_type = "Linux"
         elif "openbsd" in output.lower():
             os_type = "OpenBSD"
@@ -92,11 +102,6 @@ def check_uname(inventory_file, limit):
             os_type = "FreeBSD"
         else:
             os_type = "Unknown"
-
-        if os_type != "Unknown":
-            sys.stdout.write(f"✅ {host} ({ip}): {os_type} detected.\n")
-        else:
-            sys.stdout.write(f"⚠️ {host} ({ip}): OS not recognized. Output: {output}\n")
 
         sys.stdout.flush()
 

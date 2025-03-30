@@ -7,6 +7,7 @@
       ansible.builtin.apt:
         upgrade: dist
         update_cache: true
+      when: inventory_hostname not in groups.test
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -54,8 +55,8 @@
 
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
+      changed_when: true
+      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -107,8 +108,8 @@
 
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
+      changed_when: true
+      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -159,6 +160,13 @@
       notify: Restart dnf-automatic
       when: unattended_upgrades
 
+    - name: Run system upgrade on RHEL-based systems
+      ansible.builtin.dnf:
+        name: "*"
+        state: present
+        update_cache: true
+      when: inventory_hostname not in groups.test
+
     - name: Disbale and stop firewalld
       ansible.builtin.service:
         name: firewalld
@@ -193,8 +201,8 @@
 
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: '"Updating packages..." in upgrade_result.stdout_lines'
+      changed_when: true
+      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -240,8 +248,8 @@
 
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: not '"Nothing to do." in upgrade_result.stdout_lines'
+      changed_when: true
+      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -278,8 +286,8 @@
 
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: not '"there is nothing to do" in upgrade_result.stdout_lines'
+      changed_when: true
+      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:

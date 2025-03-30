@@ -22,6 +22,7 @@
 
 
 ## Other
+- [x] (Feature) Support Apache and Nginx
 - [x] (Refactor) Change from root to tor user
 - [x] (Refactor) Change SSH-Key setup to template
 - [x] (Refactor) Change to certbot webroot validation
@@ -32,11 +33,11 @@
 - [ ] (Feature) Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
 - [ ] (Feature) Auto-Update Report via Mail
 - [x] (Feature) Security [Internal Firewall](https://community.torproject.org/relay/setup/post-install/)
-- [ ] (Feature) Security SElinux/AppArmor (WIP, disabled for the moment)
+- [ ] (Feature) Security SElinux/AppArmor
 - [ ] (Refactor) Cleanup (defaults/group_vars/host_vars/...)
 - [ ] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
 - [x] (Fix) Certificate renewal Cronjob
 - [x] (Actions) Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
 - [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)
 - [ ] (Feature) Docker Setup (Webtunnel, Nginx)
-- [ ] (Feature) Make distribution Method configurable
+- [x] (Feature) Make distribution Method configurable

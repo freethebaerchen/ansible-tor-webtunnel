@@ -13,6 +13,4 @@ ContactInfo {{ email | replace('@', '[at]') | replace('.', '[dot]') }}
 Nickname {{ tor.nickname }}{{ id }}
 SocksPort 0
 DataDirectory {{ tor.directory }}
-{% if tor.test %}
-BridgeDistribution None
-{% endif %}
+BridgeDistribution {{ tor.distribution_method }}

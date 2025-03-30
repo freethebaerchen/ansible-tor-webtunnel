@@ -126,3 +126,7 @@ Please don't stress. Some status will soon show up after at most 3 hours.
 ## Additional information
 ### Hetzner specific
 If you add more servers, you need to copy and paste one of the servers in the [group_vars](group_vars/all-example.yaml).
+
+###
+You can configure the distribution method of your bridge via the group_vars/host_vars.
+In the [example group_vars](group_vars/all.yaml.example) you can find the Tor documentation for the allowed values.

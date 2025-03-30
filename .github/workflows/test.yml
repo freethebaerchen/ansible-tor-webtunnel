@@ -546,6 +546,11 @@ jobs:
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           source venv/bin/activate
@@ -602,6 +607,11 @@ jobs:
         shell: bash
         run: |
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
@@ -662,6 +672,11 @@ jobs:
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           source venv/bin/activate
@@ -718,6 +733,11 @@ jobs:
         shell: bash
         run: |
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
@@ -778,6 +798,11 @@ jobs:
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           source venv/bin/activate
@@ -836,6 +861,11 @@ jobs:
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
           source venv/bin/activate
@@ -892,6 +922,11 @@ jobs:
         shell: bash
         run: |
           rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client

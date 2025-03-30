@@ -25,4 +25,4 @@
   changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"
   when:
     - certificate_existence.changed
-    - certbot_test_request.changed
+    - certbot_test_output.changed

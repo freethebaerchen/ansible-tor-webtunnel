@@ -51,12 +51,13 @@ def run_curl_command(url):
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
 
-    for line in process.stdout:
-        sys.stdout.write(line)
+    stdout, stderr = process.communicate()
+
+    if stderr:
+        sys.stdout.write(f"⚠️ Curl error for {url}: {stderr}\n")
         sys.stdout.flush()
 
-    stdout, stderr = process.communicate()
-    return stdout.strip()
+    return stdout.strip() if stdout.strip() else "000"
 
 def check_http_redirect(host, ip, domain):
     """Check if HTTP response is 301 and HTTPS response is 200."""

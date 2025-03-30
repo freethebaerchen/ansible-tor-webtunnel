@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - '.github/workflows/venv.yml'
       - '.github/workflows/hostvars.yml'
+      - '.github/ISSUE_TEMPLATE/*'
       - 'requirements.txt'
       - 'requirements.yaml'
       - 'todo.md'

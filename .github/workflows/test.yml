@@ -562,17 +562,17 @@ jobs:
           source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test connections
+      - name: Test webtunnel connections
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test SSH connection
+      - name: Test SSH connections
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Test HTTP/HTTPS connection
+      - name: Test HTTP/HTTPS connections
         run: |
           source venv/bin/activate
           python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
@@ -620,17 +620,17 @@ jobs:
           source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test connections
+      - name: Test webtunnel connections
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test SSH connection
+      - name: Test SSH connections
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Test HTTP/HTTPS connection
+      - name: Test HTTP/HTTPS connections
         run: |
           source venv/bin/activate
           python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
@@ -678,17 +678,17 @@ jobs:
           source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test connections
+      - name: Test webtunnel connections
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test SSH connection
+      - name: Test SSH connections
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Test HTTP/HTTPS connection
+      - name: Test HTTP/HTTPS connections
         run: |
           source venv/bin/activate
           python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
@@ -736,17 +736,17 @@ jobs:
           source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test connections
+      - name: Test webtunnel connections
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test SSH connection
+      - name: Test SSH connections
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Test HTTP/HTTPS connection
+      - name: Test HTTP/HTTPS connections
         run: |
           source venv/bin/activate
           python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
@@ -794,17 +794,17 @@ jobs:
           source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test connections
+      - name: Test webtunnel connections
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test SSH connection
+      - name: Test SSH connections
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Test HTTP/HTTPS connection
+      - name: Test HTTP/HTTPS connections
         run: |
           source venv/bin/activate
           python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
@@ -852,17 +852,17 @@ jobs:
           source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test connections
+      - name: Test webtunnel connections
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test SSH connection
+      - name: Test SSH connections
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Test HTTP/HTTPS connection
+      - name: Test HTTP/HTTPS connections
         run: |
           source venv/bin/activate
           python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
@@ -910,17 +910,17 @@ jobs:
           source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test connections
+      - name: Test webtunnel connections
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
 
-      - name: Test SSH connection
+      - name: Test SSH connections
         run: |
           source venv/bin/activate
           python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
 
-      - name: Test HTTP/HTTPS connection
+      - name: Test HTTP/HTTPS connections
         run: |
           source venv/bin/activate
           python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini

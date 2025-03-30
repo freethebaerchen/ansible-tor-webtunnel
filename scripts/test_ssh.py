@@ -46,28 +46,24 @@ def run_ssh_command(host, ip, command):
     """Run an SSH command on a remote host and return the output."""
     try:
         process = subprocess.Popen(
-            ["ssh", ip, command],
+            ["ssh", "-o", "StrictHostKeyChecking=no", ip, command],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
         )
 
-        for line in process.stdout:
-            sys.stdout.write(line)
-            sys.stdout.flush()
-
         stdout, stderr = process.communicate()
 
         if process.returncode != 0:
-            sys.stdout.write(f"❌ {host} ({ip}): ERROR running SSH command. Details:\n{stderr}\n")
+            sys.stdout.write(f"❌ {host} ({ip}): ERROR running SSH command. Details:\n{stderr.strip()}\n")
             sys.stdout.flush()
-            sys.exit(1)
+            return None
 
         return stdout.strip()
     except subprocess.CalledProcessError as e:
         sys.stdout.write(f"❌ {host} ({ip}): SSH command failed.\n{e.output}\n")
         sys.stdout.flush()
-        sys.exit(1)
+        return None
 
 def check_uname(inventory_file, limit):
     """Run 'uname -a' on each host in the limit group and filter for Linux/OpenBSD/FreeBSD."""
@@ -102,6 +98,11 @@ def check_uname(inventory_file, limit):
             os_type = "FreeBSD"
         else:
             os_type = "Unknown"
+
+        if os_type != "Unknown":
+            sys.stdout.write(f"✅ {host} ({ip}): {os_type} detected.\n")
+        else:
+            sys.stdout.write(f"⚠️ {host} ({ip}): OS not recognized. Output: {output}\n")
 
         sys.stdout.flush()
 

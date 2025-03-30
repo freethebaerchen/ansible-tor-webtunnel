@@ -16,9 +16,11 @@
   register: certbot_test_output
   failed_when: "'Some challenges have failed.' in certbot_test_output.stderr"
   changed_when: "'The dry run was successful.' in certbot_test_output.stdout"
+  when: certificate_existence.changed
 
 - name: Request certificate
   ansible.builtin.shell: |
     certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
   register: certbot_output
   changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"
+  when: certbot_test_request.changed

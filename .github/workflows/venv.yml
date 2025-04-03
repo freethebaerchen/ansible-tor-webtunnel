@@ -12,6 +12,7 @@ on:
       - 'requirements.txt'
       - 'requirements.yaml'
       - '.github/workflows/venv.yml'
+  workflow_dispatch:
 
 jobs:
   install-project-requirements:

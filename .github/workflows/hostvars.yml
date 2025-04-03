@@ -11,6 +11,7 @@ on:
     paths:
       - '.github/workflows/hostvars.yml'
       - 'scripts/generate_host_vars.py'
+  workflow_dispatch:
 
 env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}

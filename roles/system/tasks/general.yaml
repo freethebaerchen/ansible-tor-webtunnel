@@ -41,9 +41,28 @@
     - name: Install OS-specific packages (FreeBSD)
       ansible.builtin.package:
         name:
-          - go
+          - git
           - htop
         state: present
+
+    - name: Setup ports tree
+      ansible.builtin.git:
+        repo: https://git.FreeBSD.org/ports.git
+        version: main
+        dest: /usr/ports
+
+    - name: Install go from ports
+      community.general.make:
+        chdir: /usr/ports/lang/go
+        targets:
+          - install
+          - clean
+        params:
+          DBATCH: ""
+      register: ports_go
+      failed_when:
+        - ports_go.rc != 0
+        - "'is already installed' not in ports_go.stdout"
 
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:

@@ -63,7 +63,7 @@
           - install
           - clean
         params:
-          DBATCH: ""
+          -DBATCH:
       register: ports_go
       failed_when:
         - ports_go.rc != 0

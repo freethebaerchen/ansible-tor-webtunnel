@@ -4,6 +4,7 @@ ServerRoot "{{ webserver_config[use_webserver].server_root }}"
 
 Listen 80
 Listen 443
+Mutex posixsem
 
 {% if webserver_config[use_webserver].modules_config is defined and webserver_config[use_webserver].modules_config|length > 0 %}
 {% for module in webserver_config[use_webserver].modules_config %}

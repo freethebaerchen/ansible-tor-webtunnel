@@ -9,6 +9,11 @@
         update_cache: true
       when: inventory_hostname not in groups.test
 
+    - name: Run dist-upgrade
+      ansible.builtin.apt:
+        update_cache: true
+      when: inventory_hostname in groups.test
+
     - name: Install OS-specific packages
       ansible.builtin.package:
         name:

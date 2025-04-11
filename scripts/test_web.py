@@ -71,6 +71,7 @@ def check_http_redirect(host, ip, domain):
         sys.stdout.write(f"✅ {host} ({ip}): HTTP 301 and HTTPS 200 detected.\n")
     else:
         sys.stdout.write(f"❌ {host} ({ip}): Unexpected HTTP codes (HTTP: {http_code}, HTTPS: {https_code}).\n")
+        sys.exit(1)
 
     sys.stdout.flush()
 
@@ -93,8 +94,10 @@ def check_page_title(host, ip, domain):
             sys.stdout.write(f"✅ {host} ({ip}): Title matches 'Bear Follows Cursor'.\n")
         else:
             sys.stdout.write(f"❌ {host} ({ip}): Title mismatch. Found '{title}'.\n")
+            sys.exit(1)
     else:
         sys.stdout.write(f"❌ {host} ({ip}): No title found in response.\n")
+        sys.exit(1)
 
     sys.stdout.flush()
 

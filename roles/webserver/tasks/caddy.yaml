@@ -55,17 +55,18 @@
         state: value_present
       notify: Restart portacl
 
-    - name: Change ownership of caddy directories
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        owner: "{{ webserver.user }}"
-        group: "{{ webserver.group }}"
-        recurse: true
-      loop:
-        - /var/db/caddy
-        - /var/log/caddy
-        - /var/run/caddy
+    - name: Install caddy from ports
+      community.general.make:
+        chdir: /usr/ports/www/caddy
+        targets:
+          - install
+          - clean
+        params:
+          -DBATCH:
+      register: ports_caddy
+      failed_when:
+        - ports_caddy.rc != 0
+        - "'is already installed' not in ports_caddy.stdout"
 
 - name: Block for OS-spcific tasks (RedHat)
   when: ansible_os_family == "RedHat"
@@ -80,6 +81,7 @@
       ansible.builtin.package:
         name:
           - caddy
+      when: ansible_os_family != "FreeBSD"
 
     - name: Include webroot
       ansible.builtin.include_tasks: webroot.yaml

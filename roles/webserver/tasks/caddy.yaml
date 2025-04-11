@@ -128,20 +128,6 @@
         msg: "Your original Caddyfile ({{ webserver_config[use_webserver].config_dir }}/Caddyfile) was  moved to {{ webserver_config[use_webserver].config_dir }}/original-Caddyfile. It is not used, as of right now."
       when: original_caddyfile.changed
 
-    - name: Remove import of subdirectory
-      ansible.builtin.lineinfile:
-        path: "{{ webserver_config[use_webserver].extra_dirs }}/original-Caddyfile"
-        state: absent
-        regexp: '^import {{ webserver_config[use_webserver].extra_dirs }}'
-
-    - name: Remove global options from original Caddyfile
-      ansible.builtin.replace:
-        path: "{{ webserver_config[use_webserver].extra_dirs }}/original-Caddyfile"
-        regexp: '^(?P<indent>\s*)(?P<option>[^#{}\s].*?)$'
-        replace: '\g<indent>#\g<option>'
-        after: '{'
-        before: '}'
-
     - name: Render new Caddyfile
       ansible.builtin.template:
         src: "{{ role_path }}/templates/Caddyfile.j2"

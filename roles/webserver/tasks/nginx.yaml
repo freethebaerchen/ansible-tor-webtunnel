@@ -9,6 +9,14 @@
 - name: Include webroot
   ansible.builtin.include_tasks: webroot.yaml
 
+- name: Set permissions for (error) logfile
+  ansible.builtin.file:
+    path: "/var/log/{{ webserver_config[use_webserver].service_name }}/error.log"
+    state: "file"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+
 - name: Ensure nginx configdir exists
   ansible.builtin.file:
     path: "{{ webserver_config[use_webserver].config_dir }}"

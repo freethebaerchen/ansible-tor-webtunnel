@@ -2,16 +2,16 @@
 
 - name: Create log directory
   ansible.builtin.file:
-    path: /var/log/{{ use_webserver }}
+    path: /var/log/{{ webserver_config[use_webserver].service_name }}
     state: "directory"
-    owner: "{{ webserver.user }}"
-    group: "{{ webserver.group }}"
-    mode: "0644"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0700"
 
 - name: Create caddy (error) logfile
   ansible.builtin.file:
-    path: "/var/log/{{ use_webserver }}/error.log"
+    path: "/var/log/{{ webserver_config[use_webserver].service_name }}/error.log"
     state: "touch"
-    owner: "{{ webserver.user }}"
-    group: "{{ webserver.group }}"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
     mode: "0644"

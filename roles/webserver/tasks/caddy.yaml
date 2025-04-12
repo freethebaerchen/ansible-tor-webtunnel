@@ -89,6 +89,7 @@
     - name: Create caddy (error) logfile
       ansible.builtin.file:
         path: "{{ webserver_config[use_webserver].error_log }}"
+        state: touch
         owner: "{{ webserver.user }}"
         group: "{{ webserver.group }}"
         mode: "0644"

@@ -69,6 +69,8 @@ def check_http_redirect(host, ip, domain):
 
     if http_code == "301" and https_code == "200":
         sys.stdout.write(f"✅ {host} ({ip}): HTTP 301 and HTTPS 200 detected.\n")
+    elif http_code == "308" and https_code == "200":
+        sys.stdout.write(f"✅ {host} ({ip}): HTTP 308 and HTTPS 200 detected.\n")
     else:
         sys.stdout.write(f"❌ {host} ({ip}): Unexpected HTTP codes (HTTP: {http_code}, HTTPS: {https_code}).\n")
         sys.exit(1)

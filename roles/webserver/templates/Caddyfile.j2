@@ -1,6 +1,6 @@
 {
     log {
-        output file {{ webserver_config[use_webserver].error_log }}
+        output file /var/log/caddy/error.log
         level ERROR
     }
 }

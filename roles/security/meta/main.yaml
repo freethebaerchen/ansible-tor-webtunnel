@@ -1,6 +1,4 @@
 ---
 
 dependencies:
-  - role: system
-  - role: tor
   - role: webserver

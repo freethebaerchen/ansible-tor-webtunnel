@@ -13,7 +13,7 @@ webserver_config:
     service_name: caddy
     config_dir: /usr/local/etc/caddy
     extra_dirs: /usr/local/etc/caddy/configs
-    error_log: /var/log/caddy-error.log
+    error_log: /var/log/caddy/error.log
   nginx:
     packages:
       - nginx

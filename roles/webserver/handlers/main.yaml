@@ -7,6 +7,7 @@
   notify:
     - Restart caddy
   changed_when: true # True, so restart handler is triggered
+  failed_when: "'Error' not in caddy_validate.stdout"
 
 - name: Validate nginx
   ansible.builtin.command:

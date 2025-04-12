@@ -86,9 +86,6 @@
     - name: Include webroot
       ansible.builtin.include_tasks: webroot.yaml
 
-    - name: Include log setup
-      ansible.builtin.include_tasks: log.yaml
-
     - name: Create caddy subdirectory
       ansible.builtin.file:
         path: "{{ webserver_config[use_webserver].extra_dirs }}"

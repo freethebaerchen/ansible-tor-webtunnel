@@ -9,6 +9,9 @@
 - name: Include webroot
   ansible.builtin.include_tasks: webroot.yaml
 
+- name: Include log setup
+  ansible.builtin.include_tasks: log.yaml
+
 - name: Ensure additional directories are present
   ansible.builtin.file:
     path: "{{ webserver_config[use_webserver].server_root }}/{{ item }}"
@@ -68,14 +71,6 @@
     mode: "0644"
   notify:
     - Validate apache
-
-- name: Ensure apache log directory exists
-  ansible.builtin.file:
-    path: /var/log/apache
-    state: directory
-    owner: "{{ webserver.user }}"
-    group: "{{ webserver.group }}"
-    mode: "0644"
 
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml

@@ -23,14 +23,12 @@ webserver_config:
     service_name: caddy
     config_dir: /etc/caddy
     extra_dirs: /etc/caddy/configs
-    error_log: /var/log/caddy-error.log
   nginx:
     packages:
       - nginx
       - certbot
     service_name: nginx
     config_dir: /etc/nginx/sites-enabled
-    error_log: /var/log/nginx-error.log
   apache:
     packages:
       - apache2
@@ -40,7 +38,6 @@ webserver_config:
     config_dir: /etc/apache2/sites-enabled
     config_file: /etc/apache2/apache2.conf
     extra_dirs: []
-    error_log: /var/log/httpd-error.log
     modules:
       - rewrite
       - ssl

@@ -1,0 +1,17 @@
+---
+
+- name: Create log directory
+  ansible.builtin.file:
+    path: /var/log/{{ use_webserver }}
+    state: "directory"
+    owner: "{{ webserver.user }}"
+    group: "{{ webserver.group }}"
+    mode: "0644"
+
+- name: Create caddy (error) logfile
+  ansible.builtin.file:
+    path: "/var/log/{{ use_webserver }}/error.log"
+    state: "touch"
+    owner: "{{ webserver.user }}"
+    group: "{{ webserver.group }}"
+    mode: "0644"

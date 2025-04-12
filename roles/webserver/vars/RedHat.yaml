@@ -31,14 +31,12 @@ webserver_config:
     service_name: caddy
     config_dir: /etc/caddy
     extra_dirs: /etc/caddy/configs
-    error_log: /var/log/caddy-error.log
   nginx:
     packages:
       - nginx
       - certbot
     service_name: nginx
     config_dir: /etc/nginx/conf.d
-    error_log: /var/log/nginx-error.log
   apache:
     packages:
       - httpd
@@ -53,7 +51,6 @@ webserver_config:
       - conf
     modules_config:
       - Include conf.modules.d/*.conf
-    error_log: /var/log/httpd-error.log
 certbot:
   config_dir: /etc/letsencrypt
   webroot: /var/www/certbot

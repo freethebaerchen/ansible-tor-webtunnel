@@ -9,6 +9,9 @@
 - name: Include webroot
   ansible.builtin.include_tasks: webroot.yaml
 
+- name: Include log setup
+  ansible.builtin.include_tasks: log.yaml
+
 - name: Ensure nginx configdir exists
   ansible.builtin.file:
     path: "{{ webserver_config[use_webserver].config_dir }}"
@@ -72,14 +75,6 @@
 
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml
-
-- name: Ensure nginx log directory exists
-  ansible.builtin.file:
-    path: /var/log/nginx
-    state: directory
-    owner: "{{ webserver.user }}"
-    group: "{{ webserver.group }}"
-    mode: "0644"
 
 - name: Read random-string.txt
   ansible.builtin.slurp:

@@ -86,13 +86,8 @@
     - name: Include webroot
       ansible.builtin.include_tasks: webroot.yaml
 
-    - name: Create caddy (error) logfile
-      ansible.builtin.file:
-        path: "{{ webserver_config[use_webserver].error_log }}"
-        state: touch
-        owner: "{{ webserver.user }}"
-        group: "{{ webserver.group }}"
-        mode: "0644"
+    - name: Include log setup
+      ansible.builtin.include_tasks: log.yaml
 
     - name: Create caddy subdirectory
       ansible.builtin.file:

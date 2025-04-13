@@ -9,9 +9,6 @@
 - name: Include webroot
   ansible.builtin.include_tasks: webroot.yaml
 
-- name: Include log
-  ansible.builtin.include_tasks: log.yaml
-
 - name: Ensure additional directories are present
   ansible.builtin.file:
     path: "{{ webserver_config[use_webserver].server_root }}/{{ item }}"

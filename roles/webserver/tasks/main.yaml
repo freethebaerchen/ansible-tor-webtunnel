@@ -11,6 +11,9 @@
       paths:
         - '{{ role_path }}/vars'
 
+- name: Include log
+  ansible.builtin.include_tasks: log.yaml
+
 - name: Include caddy
   ansible.builtin.include_tasks: caddy.yaml
   when: use_webserver == "caddy"

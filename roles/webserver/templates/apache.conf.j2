@@ -34,6 +34,6 @@ DocumentRoot "{{ webserver.webroot }}"
 </IfModule>
 
 CustomLog "/dev/null" combined
-ErrorLog {{ webserver_config[use_webserver].error_log }}
+ErrorLog {{ webserver.error_log }}
 
 IncludeOptional {{ webserver_config[use_webserver].config_dir }}/*.conf

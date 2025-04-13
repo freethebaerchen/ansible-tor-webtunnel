@@ -2,3 +2,10 @@
 
 website:
   no_index: true
+webserver_config:
+  apache:
+    error_log: /var/log/{{ webserver_config[use_webserver].service_name }}/error.log
+  caddy:
+    error_log: /var/log/{{ webserver_config[use_webserver].service_name }}/error.log
+  nginx:
+    error_log: /var/log/{{ webserver_config[use_webserver].service_name }}/error.log

@@ -31,14 +31,14 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
 
         access_log /var/log/nginx/access.log;
-        error_log /var/log/{{ webserver_config[use_webserver].service_name }}/error.log;
+        error_log {{ webserver_config[use_webserver].error_log }};
 {% else %}
         root {{ webserver.webroot }};
         index index.html index.htm;
         try_files $uri $uri/ index,html;
 
         access_log /var/log/nginx/access.log;
-        error_log /var/log/{{ webserver_config[use_webserver].service_name }}/error.log;
+        error_log {{ webserver_config[use_webserver].error_log }};
 
 {% endif %}
     }
@@ -59,7 +59,7 @@ server {
 
         proxy_redirect     off;
         access_log  /dev/null;
-        error_log /var/log/{{ webserver_config[use_webserver].service_name }}/error.log;
+        error_log {{ webserver_config[use_webserver].error_log }};
     }
 
 }

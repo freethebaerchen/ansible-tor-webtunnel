@@ -56,7 +56,7 @@
         version: main
         dest: /usr/ports
 
-    - name: Install go from ports
+    - name: Build go from ports
       community.general.make:
         chdir: /usr/ports/lang/go
         targets:
@@ -65,9 +65,7 @@
         params:
           -DBATCH:
       register: ports_go
-      failed_when:
-        - ports_go.rc != 0
-        - "'is already installed' not in ports_go.stdout"
+      failed_when: "'is already installed' not in ports_go.stdout or 'Installing go' not in ports_go.stdout"
 
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:

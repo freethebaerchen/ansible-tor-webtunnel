@@ -65,7 +65,9 @@
         params:
           -DBATCH:
       register: ports_go
-      failed_when: "'is already installed' not in ports_go.stdout or 'Installing go' not in ports_go.stdout"
+      failed_when:
+        - "'is already installed' not in ports_go.stdout"
+        - "'Installing go' not in ports_go.stdout"
 
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:

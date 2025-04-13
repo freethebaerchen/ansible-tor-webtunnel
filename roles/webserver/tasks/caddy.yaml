@@ -75,17 +75,6 @@
       ansible.builtin.command: dnf copr enable @caddy/caddy -y
       changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
-    - name: Ensure SELinux file context for Caddy log directory
-      community.general.sefcontext:
-        target: "/var/log/caddy(/.*)?"
-        setype: httpd_log_t
-        state: present
-
-    - name: Apply SELinux context to /var/log/caddy
-      ansible.builtin.command: restorecon -Rv /var/log/caddy
-      register: caddy_selinux
-      changed_when: "'' not in caddy_selinux.stdout"
-
 - name: Block for all OS-Families
   block:
     - name: Install caddy
@@ -96,6 +85,9 @@
 
     - name: Include webroot
       ansible.builtin.include_tasks: webroot.yaml
+
+    - name: Include log
+      ansible.builtin.include_tasks: log.yaml
 
     - name: Create caddy subdirectory
       ansible.builtin.file:

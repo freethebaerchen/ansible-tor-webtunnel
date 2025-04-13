@@ -41,3 +41,4 @@
 - [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)
 - [ ] (Feature) Docker Setup (Webtunnel, Nginx)
 - [x] (Feature) Make distribution Method configurable
+- [ ] (Feature) Logrotate

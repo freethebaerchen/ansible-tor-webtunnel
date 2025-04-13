@@ -17,7 +17,9 @@
     mode: "0644"
 
 - name: Block for OS-specific (RedHat)
-  when: ansible_os_family == "RedHat"
+  when:
+    - ansible_os_family == "RedHat"
+    - use_webserver == "caddy"
   block:
     - name: Ensure SELinux file context for Caddy log directory
       community.general.sefcontext:

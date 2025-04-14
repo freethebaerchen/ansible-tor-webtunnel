@@ -102,6 +102,12 @@
 - name: Block for OS-Specific tasks (Alpine)
   when: ansible_os_family == "Alpine"
   block:
+    - name: Restart dhcpcd (test setup)
+      ansible.builtin.service:
+        name: dhcpcd
+        state: restarted
+      when: invetory_hostname in groups.test
+
     - name: Enable community repository
       ansible.builtin.lineinfile:
         path: /etc/apk/repositories

@@ -83,6 +83,12 @@
           - caddy
       when: ansible_os_family != "FreeBSD"
 
+    - name: Set process user to root (OpenBSD)
+      ansible.builtin.command:
+        cmd: rcctl caddy set user root
+      register: caddy_rcctl
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
+
     - name: Include webroot
       ansible.builtin.include_tasks: webroot.yaml
 

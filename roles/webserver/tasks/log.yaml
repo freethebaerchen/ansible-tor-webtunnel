@@ -6,7 +6,7 @@
     state: directory
     owner: "{{ webserver.user }}"
     group: "{{ webserver.group }}"
-    mode: "0644"
+    mode: "0755"
 
 - name: Set permissions to (error) logfile
   ansible.builtin.file:

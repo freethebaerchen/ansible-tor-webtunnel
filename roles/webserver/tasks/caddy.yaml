@@ -75,93 +75,92 @@
       ansible.builtin.command: dnf copr enable @caddy/caddy -y
       changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
-- name: Block for all OS-Families
-  block:
-    - name: Install caddy
-      ansible.builtin.package:
-        name:
-          - caddy
-      when: ansible_os_family != "FreeBSD"
+- name: Install caddy
+  ansible.builtin.package:
+    name:
+      - caddy
+  when: ansible_os_family != "FreeBSD"
 
-    - name: Set process user to root (OpenBSD)
-      ansible.builtin.command:
-        cmd: rcctl caddy set user root
-      register: caddy_rcctl
-      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
+- name: Set process user to root (OpenBSD)
+  ansible.builtin.command:
+    cmd: rcctl caddy set user root
+  register: caddy_rcctl
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.
+  when: ansible_os_family == "OpenBSD"
 
-    - name: Include webroot
-      ansible.builtin.include_tasks: webroot.yaml
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
 
-    - name: Include log
-      ansible.builtin.include_tasks: log.yaml
+- name: Include log
+  ansible.builtin.include_tasks: log.yaml
 
-    - name: Create caddy subdirectory
-      ansible.builtin.file:
-        path: "{{ webserver_config[use_webserver].extra_dirs }}"
-        state: directory
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-        mode: "0755"
+- name: Create caddy subdirectory
+  ansible.builtin.file:
+    path: "{{ webserver_config[use_webserver].extra_dirs }}"
+    state: directory
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0755"
 
-    - name: Check if Caddyfile differs from template
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/Caddyfile.j2"
-        dest: "/tmp/Caddyfile"
-        mode: "0644"
+- name: Check if Caddyfile differs from template
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/Caddyfile.j2"
+    dest: "/tmp/Caddyfile"
+    mode: "0644"
 
-    - name: Get checksum of rendered Caddyfile
-      ansible.builtin.stat:
-        path: "/tmp/Caddyfile"
-        checksum_algorithm: sha256
-      register: rendered_caddyfile
+- name: Get checksum of rendered Caddyfile
+  ansible.builtin.stat:
+    path: "/tmp/Caddyfile"
+    checksum_algorithm: sha256
+  register: rendered_caddyfile
 
-    - name: Get checksum of original Caddyfile
-      ansible.builtin.stat:
-        path: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
-        checksum_algorithm: sha256
-      register: orig_caddyfile
+- name: Get checksum of original Caddyfile
+  ansible.builtin.stat:
+    path: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+    checksum_algorithm: sha256
+  register: orig_caddyfile
 
-    - name: Backup existing Caddyfile if different from template
-      ansible.builtin.copy:
-        src: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
-        dest: "{{ webserver_config[use_webserver].config_dir }}/original-Caddyfile"
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-        mode: "0644"
-        remote_src: true
-      register: original_caddyfile
-      when: rendered_caddyfile.stat.checksum != orig_caddyfile.stat.checksum
+- name: Backup existing Caddyfile if different from template
+  ansible.builtin.copy:
+    src: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/original-Caddyfile"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+    remote_src: true
+  register: original_caddyfile
+  when: rendered_caddyfile.stat.checksum != orig_caddyfile.stat.checksum
 
-    - name: Print info
-      ansible.builtin.debug:
-        msg: "Your original Caddyfile ({{ webserver_config[use_webserver].config_dir }}/Caddyfile) was  moved to {{ webserver_config[use_webserver].config_dir }}/original-Caddyfile. It is not used, as of right now."
-      when: original_caddyfile.changed
+- name: Print info
+  ansible.builtin.debug:
+    msg: "Your original Caddyfile ({{ webserver_config[use_webserver].config_dir }}/Caddyfile) was  moved to {{ webserver_config[use_webserver].config_dir }}/original-Caddyfile. It is not used, as of right now."
+  when: original_caddyfile.changed
 
-    - name: Render new Caddyfile
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/Caddyfile.j2"
-        dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
-        mode: "0644"
-      notify:
-        - Validate caddy
+- name: Render new Caddyfile
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/Caddyfile.j2"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+    mode: "0644"
+  notify:
+    - Validate caddy
 
-    - name: Read random-string.txt
-      ansible.builtin.slurp:
-        src: "{{ tor.directory }}/random-string.txt"
-      register: random_string_file
+- name: Read random-string.txt
+  ansible.builtin.slurp:
+    src: "{{ tor.directory }}/random-string.txt"
+  register: random_string_file
 
-    - name: Decode file content
-      ansible.builtin.set_fact:
-        random_string: "{{ random_string_file.content | b64decode }}"
+- name: Decode file content
+  ansible.builtin.set_fact:
+    random_string: "{{ random_string_file.content | b64decode }}"
 
-    - name: Render webtunnel-Caddyfile
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/webtunnel-Caddyfile.j2"
-        dest: "{{ webserver_config[use_webserver].extra_dirs }}/webtunnel-Caddyfile"
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-        mode: "0644"
-      notify:
-        - Validate caddy
-      vars:
-        webtunnel_path: "{{ random_string }}"
+- name: Render webtunnel-Caddyfile
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/webtunnel-Caddyfile.j2"
+    dest: "{{ webserver_config[use_webserver].extra_dirs }}/webtunnel-Caddyfile"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+  notify:
+    - Validate caddy
+  vars:
+    webtunnel_path: "{{ random_string }}"

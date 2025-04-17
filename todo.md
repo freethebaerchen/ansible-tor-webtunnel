@@ -42,3 +42,4 @@
 - [ ] (Feature) Docker Setup (Webtunnel, Nginx)
 - [x] (Feature) Make distribution Method configurable
 - [ ] (Feature) Logrotate
+- [ ] (Feature) Non-LetsEncrypt SSL/TLS-Certificate

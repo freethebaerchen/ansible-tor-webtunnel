@@ -4,10 +4,15 @@
     Protocols http/1.1 h2
 
     SSLEngine on
-
-    SSLCertificateFile {{ certbot.config_dir }}/live/{{ domain }}/fullchain.pem
+{% if use_custom_ssl %}
+    SSLCertificateChainFile {{ system.etc }}/ssl/{{ domain }}.ca-crt
+    SSLCertificateFile {{ system.etc }}/ssl/{{ domain }}.crt
+    SSLCertificateKeyFile {{ system.etc }}/ssl/{{ domain }}.key
+{% elif not use_custom_ssl %}
+    SSLCertificateChainFile {{ certbot.config_dir }}/live/{{ domain }}/chain.pem
+    SSLCertificateFile {{ certbot.config_dir }}/live/{{ domain }}/cert.pem
     SSLCertificateKeyFile {{ certbot.config_dir }}/live/{{ domain }}/privkey.pem
-
+{% endif %}
     DocumentRoot /var/www/html
 
     <Directory /var/www/html>

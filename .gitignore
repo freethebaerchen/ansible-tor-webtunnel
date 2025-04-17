@@ -12,6 +12,8 @@ roles/hetzner/files/*
 inventory.ini
 host_vars/*
 !host_vars/your-bridge-*-0.yaml
+host_files/*
+!host_files/your-bridge-*-0
 roles/tor/files/*
 !roles/tor/files/.gitkeep
 roles/system/files/*

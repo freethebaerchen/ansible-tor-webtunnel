@@ -99,7 +99,15 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 4. Modify the variables, so they match your configuration
     4.1 The ID needs to be set, for the identifier of the or bridge. The name in the end will be <tor.nickname><id>, so with the default values it will be somenickname1, somenickname2, ...\
     4.2 Exchange the example domains with your actual domains\
-    4.3 Configure if caddy should be reverse-proxy to another site.
+    4.3 Configure if caddy should be reverse-proxy to another site
+5. Save custom SSL/TLS-Certificate (optional)
+    1.1 Obtain a SSL/TLS certificate (if you don't want to use Let'sEncrypt)\
+    1.2 Save the Files (Chain, Certificate, private Key)\
+        1.2.1 with the correct fileendings [like in the examples](host_files/your-bridge-fsn-0)\
+        1.2.2 with the correct pattern domain.tld.fileending\
+    1.3 (IMPORTANT!) Use ansible-vault or another method to encrypt the private key\
+        1.3.1 The command to use is `ansible-vault encrypt path/to/file`
+
 
 ## executing ansible
 INFO: Step 3 is only for a Hetzner Cloud setup
@@ -129,4 +137,4 @@ If you add more servers, you need to copy and paste one of the servers in the [g
 
 ###
 You can configure the distribution method of your bridge via the group_vars/host_vars.
-In the [example group_vars](group_vars/all.yaml.example) you can find the Tor documentation for the allowed values.
+In the [example group_vars](group_vars/all.yaml.example) you can find the [Tor documentation](https://gitlab.torproject.org/tpo/anti-censorship/rdsys/-/blob/main/doc/distributors.md) for the allowed values.

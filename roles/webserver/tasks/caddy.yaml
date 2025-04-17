@@ -137,6 +137,9 @@
   notify:
     - Validate caddy
 
+- name: Include certificate request
+  ansible.builtin.include_tasks: certificate.yaml
+
 - name: Read random-string.txt
   ansible.builtin.slurp:
     src: "{{ tor.directory }}/random-string.txt"

@@ -37,7 +37,7 @@
         src: "{{ playbook_dir }}/host_files/{{ inventory_hostname }}/{{ domain }}.{{ item }}"
         dest: "{{ system.etc }}/ssl/{{ domain }}.{{ item }}"
         owner: "{{ root.user }}"
-        group: "{{ user.group }}"
+        group: "{{ root.group }}"
         mode: "0640"
       loop:
         - ca-crt
@@ -50,9 +50,12 @@
   register: certificate_existence
   changed_when: "'No certificates found.' in certificate_existence.stdout"
   notify: Validate {{ use_webserver }}
+  when: not use_webserver == "caddy"
 
 - name: Block for Let'sEncrypt certificates
-  when: not use_custom_ssl
+  when:
+    - not use_custom_ssl
+    - not use_webserver == "caddy"
   block:
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers

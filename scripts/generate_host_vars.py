@@ -8,7 +8,8 @@ if tld is None:
     raise ValueError("TEST_SERVER_TLD environment variable is required")
 
 template_str = """---
-domain: {{ os }}.{{ webserver }}.{{ tld }}
+
+domain: {{ os }}.{{ webserver }}.{% raw %}{{ lookup('env', 'TEST_SERVER_TLD') }}{% endraw %}
 id: "{{ os }}{{ webserver }}"
 reverse_proxy: false
 deploy_webroot: true

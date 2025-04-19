@@ -5,7 +5,6 @@
 
     SSLEngine on
 {% if use_custom_ssl %}
-    SSLCertificateChainFile {{ system.etc }}/ssl/{{ domain }}.ca-crt
     SSLCertificateFile {{ system.etc }}/ssl/{{ domain }}.crt
     SSLCertificateKeyFile {{ system.etc }}/ssl/{{ domain }}.key
 {% elif not use_custom_ssl %}

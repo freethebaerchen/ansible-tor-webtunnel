@@ -7,6 +7,6 @@
 {% endif %}
         reverse_proxy /{{ webtunnel_path | trim }} 127.0.0.1:15000
 {% if use_custom_ssl %}
-        tls {{ system.etc }}/ssl/{{ domain }}.key {{ system.etc }}/ssl/{{ domain }}.key {{ system.etc }}/ssl/{{ domain }}.ca-crt
+        tls {{ system.etc }}/ssl/{{ domain }}.crt {{ system.etc }}/ssl/{{ domain }}.key
 {% endif %}
 }

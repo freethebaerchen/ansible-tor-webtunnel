@@ -4,12 +4,10 @@ server {
     server_name {{ domain }};
 
 {% if use_custom_ssl %}
-    ssl_trusted_certificate {{ system.etc }}/ssl/{{ domain }}.ca-crt
     ssl_certificate {{ system.etc }}/ssl/{{ domain }}.crt
     ssl_certificate_key {{ system.etc }}/ssl/{{ domain }}.key
 {% elif not use_custom_ssl %}
-    ssl_trusted_certificate {{ certbot.config_dir }}/live/{{ domain }}/chain.pem
-    ssl_certificate {{ certbot.config_dir }}/live/{{ domain }}/cert.pem
+    ssl_certificate {{ certbot.config_dir }}/live/{{ domain }}/fullchain.pem
     ssl_certificate_key {{ certbot.config_dir }}/live/{{ domain }}/privkey.pem
 {% endif %}
 

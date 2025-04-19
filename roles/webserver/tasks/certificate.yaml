@@ -1,12 +1,5 @@
 ---
 
-- name: Check for Chain file existence
-  ansible.builtin.stat:
-    path: "{{ playbook_dir }}/host_files/{{ inventory_hostname }}/{{ domain }}.ca-crt"
-  register: custom_ssl_chain
-  delegate_to: localhost
-  become: false
-
 - name: Check for Certificate file existence
   ansible.builtin.stat:
     path: "{{ playbook_dir }}/host_files/{{ inventory_hostname }}/{{ domain }}.crt"
@@ -40,7 +33,6 @@
         group: "{{ root.group }}"
         mode: "0640"
       loop:
-        - ca-crt
         - crt
         - key
 

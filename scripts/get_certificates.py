@@ -24,7 +24,7 @@ if tld is None:
 source_template_str = "{{ webserver }}-certificate/{{ webserver }}.{{ tld }}.{{ file_ext }}"
 destination_template_str = "{{ os }}.{{ webserver }}.{{ tld }}.{{ file_ext }}"
 target_base_dir = "host_files"
-file_extensions = ["ca-crt", "crt", "key"]
+file_extensions = ["crt", "key"]
 
 os.makedirs(target_base_dir, exist_ok=True)
 

@@ -5,8 +5,6 @@
     cmd: caddy validate --config {{ webserver_config[use_webserver].config_dir }}/Caddyfile
   register: caddy_validate
   notify:
-    - Enable caddy
-    - Set root for caddy
     - Restart caddy
   changed_when: true # True, so restart handler is triggered
   failed_when: "'Error' in caddy_validate.stdout"
@@ -26,18 +24,6 @@
   notify:
     - Restart apache
   changed_when: true # True, so restart handler is triggered
-
-- name: Set root for caddy
-  ansible.builtin.command:
-    cmd: rcctl set caddy user root
-  register: caddy_rcctl
-  changed_when: true # Idempotently changes every time. Set just for ansible-lint.
-  when: ansible_os_family == "OpenBSD"
-
-- name: Enable caddy
-  ansible.builtin.service:
-    name: "{{ webserver_config[use_webserver].service_name }}"
-    enabled: true
 
 - name: Restart caddy
   ansible.builtin.service:

@@ -30,7 +30,7 @@
         dest: "{{ system.etc }}/ssl/{{ domain }}.{{ item }}"
         owner: "{{ root.user }}"
         group: "{{ webserver.group }}"
-        mode: "064"
+        mode: "0640"
       loop:
         - crt
         - key

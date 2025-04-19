@@ -29,8 +29,8 @@
         src: "{{ playbook_dir }}/host_files/{{ inventory_hostname }}/{{ domain }}.{{ item }}"
         dest: "{{ system.etc }}/ssl/{{ domain }}.{{ item }}"
         owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-        mode: "0640"
+        group: "{{ webserver.group }}"
+        mode: "064"
       loop:
         - crt
         - key

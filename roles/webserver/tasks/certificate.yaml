@@ -18,7 +18,6 @@
   ansible.builtin.set_fact:
     use_custom_ssl: true
   when:
-    - custom_ssl_chain.stat.exists
     - custom_ssl_certificate.stat.exists
     - custom_ssl_privkey.stat.exists
 

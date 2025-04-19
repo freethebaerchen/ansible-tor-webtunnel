@@ -36,7 +36,7 @@ jobs:
     outputs:
       webserver: ${{ steps.select-webserver.outputs.webserver }}
     steps:
-      - name: Determine webserver based on GITHUB_RUN_NUMBER (${{ GITHUB_RUN_NUMBER }})
+      - name: Determine webserver based on GITHUB_RUN_NUMBER
         id: select-webserver
         run: |
           WEBSERVERS=("caddy" "nginx" "apache")

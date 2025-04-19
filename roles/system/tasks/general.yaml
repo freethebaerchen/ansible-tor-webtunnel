@@ -7,12 +7,6 @@
       ansible.builtin.apt:
         upgrade: dist
         update_cache: true
-      when: inventory_hostname not in groups.test
-
-    - name: Run dist-upgrade
-      ansible.builtin.apt:
-        update_cache: true
-      when: inventory_hostname in groups.test
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -80,7 +74,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -133,7 +126,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -189,7 +181,6 @@
         name: "*"
         state: present
         update_cache: true
-      when: inventory_hostname not in groups.test
 
     - name: Disbale and stop firewalld
       ansible.builtin.service:
@@ -226,7 +217,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -273,7 +263,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -311,7 +300,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:

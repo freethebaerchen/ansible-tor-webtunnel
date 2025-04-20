@@ -28,6 +28,7 @@ env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
   PY_COLORS: 1
   ANSIBLE_FORCE_COLOR: 1
+  TEST_SERVER_TLD: ${{ secrets.TEST_SERVER_TLD }}
 
 jobs:
   select-webserver:
@@ -35,7 +36,7 @@ jobs:
     outputs:
       webserver: ${{ steps.select-webserver.outputs.webserver }}
     steps:
-      - name: Determine webserver randomly
+      - name: Determine webserver based on GITHUB_RUN_NUMBER
         id: select-webserver
         run: |
           WEBSERVERS=("caddy" "nginx" "apache")
@@ -290,6 +291,11 @@ jobs:
           rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
           source venv/bin/activate
@@ -327,6 +333,11 @@ jobs:
         run: |
           rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -366,6 +377,11 @@ jobs:
           rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
           source venv/bin/activate
@@ -403,6 +419,11 @@ jobs:
         run: |
           rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -442,6 +463,11 @@ jobs:
           rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
           source venv/bin/activate
@@ -479,6 +505,11 @@ jobs:
         run: |
           rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
@@ -518,6 +549,10 @@ jobs:
           rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
           echo "Downloaded venv successfully."
 
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
 
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |

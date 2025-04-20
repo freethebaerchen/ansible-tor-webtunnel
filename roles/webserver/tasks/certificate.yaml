@@ -1,28 +1,69 @@
 ---
 
+- name: Check for Certificate file existence
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/host_files/{{ inventory_hostname }}/{{ domain }}.crt"
+  register: custom_ssl_certificate
+  delegate_to: localhost
+  become: false
+
+- name: Check for private Key file existence
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/host_files/{{ inventory_hostname }}/{{ domain }}.key"
+  register: custom_ssl_privkey
+  delegate_to: localhost
+  become: false
+
+- name: Set fact for custom SSL certificate
+  ansible.builtin.set_fact:
+    use_custom_ssl: true
+  when:
+    - custom_ssl_certificate.stat.exists
+    - custom_ssl_privkey.stat.exists
+
+- name: Block for custom certificates
+  when: use_custom_ssl
+  block:
+    - name: Copy certificate files
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/host_files/{{ inventory_hostname }}/{{ domain }}.{{ item }}"
+        dest: "{{ system.etc }}/ssl/{{ domain }}.{{ item }}"
+        owner: "{{ root.user }}"
+        group: "{{ webserver.group }}"
+        mode: "0640"
+      loop:
+        - crt
+        - key
+
 - name: Check certificates existence
   ansible.builtin.command:
     cmd: certbot certificates --config-dir {{ certbot.config_dir }}
   register: certificate_existence
   changed_when: "'No certificates found.' in certificate_existence.stdout"
   notify: Validate {{ use_webserver }}
+  when: not use_webserver == "caddy"
 
-- name: Flush handlers
-  ansible.builtin.meta: flush_handlers
-
-- name: Test certificate request
-  ansible.builtin.shell: |
-    certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }} --dry-run
-  register: certbot_test_output
-  failed_when: "'Some challenges have failed.' in certbot_test_output.stderr"
-  changed_when: "'The dry run was successful.' in certbot_test_output.stdout"
-  when: certificate_existence.changed
-
-- name: Request certificate
-  ansible.builtin.shell: |
-    certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
-  register: certbot_output
-  changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"
+- name: Block for Let'sEncrypt certificates
   when:
-    - certificate_existence.changed
-    - certbot_test_output.changed
+    - not use_custom_ssl
+    - not use_webserver == "caddy"
+  block:
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Test certificate request
+      ansible.builtin.shell: |
+        certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }} --dry-run
+      register: certbot_test_output
+      failed_when: "'Some challenges have failed.' in certbot_test_output.stderr"
+      changed_when: "'The dry run was successful.' in certbot_test_output.stdout"
+      when: certificate_existence.changed
+
+    - name: Request certificate
+      ansible.builtin.shell: |
+        certbot certonly --webroot -w {{ webserver.webroot }} --cert-name {{ domain }} -d {{ domain }} --non-interactive --email {{ email }} --agree-tos --config-dir {{ certbot.config_dir }}
+      register: certbot_output
+      changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"
+      when:
+        - certificate_existence.changed
+        - certbot_test_output.changed

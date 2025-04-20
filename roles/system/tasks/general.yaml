@@ -7,12 +7,6 @@
       ansible.builtin.apt:
         upgrade: dist
         update_cache: true
-      when: inventory_hostname not in groups.test
-
-    - name: Run dist-upgrade
-      ansible.builtin.apt:
-        update_cache: true
-      when: inventory_hostname in groups.test
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -80,7 +74,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -133,7 +126,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -187,11 +179,10 @@
     - name: Run system upgrade on RHEL-based systems
       ansible.builtin.dnf:
         name: "*"
-        state: present
+        state: latest
         update_cache: true
-      when: inventory_hostname not in groups.test
 
-    - name: Disbale and stop firewalld
+    - name: Disable and stop firewalld
       ansible.builtin.service:
         name: firewalld
         state: stopped
@@ -226,7 +217,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -273,7 +263,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -311,7 +300,6 @@
     - name: Run "dist"-upgrade
       ansible.builtin.command: /usr/local/bin/unattended-upgrades
       changed_when: true
-      when: inventory_hostname not in groups.test
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -321,6 +309,12 @@
         job: "/usr/local/bin/unattended-upgrades"
         state: present
       when: unattended_upgrades
+
+    - name: Symlink pyhton bin to /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/bin/python3
+        dest: /usr/local/bin/python3
+        state: link
 
 - name: Block for all hosts (except OpenBSD)
   when: ansible_os_family != "OpenBSD"

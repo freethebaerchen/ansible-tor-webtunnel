@@ -4,9 +4,16 @@ import json
 import argparse
 import sys
 import re
+import os
+from jinja2 import Environment
+
+def render_jinja_template(template_str):
+    env = Environment()
+    env.globals['lookup'] = lambda scope, key: os.environ[key] if scope == 'env' and key in os.environ else None
+    template = env.from_string(template_str)
+    return template.render()
 
 def get_inventory_data(inventory_file):
-    """Retrieve the full inventory data as JSON."""
     command = f"ansible-inventory -i {inventory_file} --list"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
@@ -25,7 +32,6 @@ def get_inventory_data(inventory_file):
         sys.exit(1)
 
 def get_hosts_with_vars(inventory_data, limit):
-    """Get a list of (host, ip, domain) tuples for the given `limit`."""
     if limit in inventory_data:
         hosts = inventory_data[limit]['hosts']
     elif limit in inventory_data.get('_meta', {}).get('hostvars', {}):
@@ -39,15 +45,15 @@ def get_hosts_with_vars(inventory_data, limit):
     for host in hosts:
         hostvars = inventory_data.get('_meta', {}).get('hostvars', {}).get(host, {})
         ip = hostvars.get('ansible_host', host)
-        domain = hostvars.get('domain', None)
+        raw_domain = hostvars.get('domain', None)
+        domain = render_jinja_template(raw_domain) if raw_domain else None
         host_var_list.append((host, ip, domain))
 
     return host_var_list
 
 def run_curl_command(url):
-    """Run curl command and return output as a string."""
     process = subprocess.Popen(
-        ["curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", url],
+        ["curl", "-4", "-o", "/dev/null", "-s", "-w", "%{http_code}", url],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
 
@@ -60,7 +66,6 @@ def run_curl_command(url):
     return stdout.strip() if stdout.strip() else "000"
 
 def check_http_redirect(host, ip, domain):
-    """Check if HTTP response is 301 and HTTPS response is 200."""
     sys.stdout.write(f"🔄 Checking HTTP redirect for {host} ({ip})\n")
     sys.stdout.flush()
 
@@ -78,7 +83,6 @@ def check_http_redirect(host, ip, domain):
     sys.stdout.flush()
 
 def check_page_title(host, ip, domain):
-    """Check if the page title is 'Bear Follows Cursor'."""
     sys.stdout.write(f"🔄 Checking page title for {host} ({ip})\n")
     sys.stdout.flush()
 

@@ -137,6 +137,9 @@
   notify:
     - Validate caddy
 
+- name: Include certificate request
+  ansible.builtin.include_tasks: certificate.yaml
+
 - name: Read random-string.txt
   ansible.builtin.slurp:
     src: "{{ tor.directory }}/random-string.txt"
@@ -145,6 +148,19 @@
 - name: Decode file content
   ansible.builtin.set_fact:
     random_string: "{{ random_string_file.content | b64decode }}"
+
+- name: Enable caddy service
+  ansible.builtin.service:
+    name: "{{ webserver_config[use_webserver].service_name }}"
+    enabled: true
+  when: ansible_os_family == "OpenBSD"
+
+- name: Set root for caddy
+  ansible.builtin.command:
+    cmd: rcctl set caddy user root
+  register: caddy_rcctl
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.
+  when: ansible_os_family == "OpenBSD"
 
 - name: Render webtunnel-Caddyfile
   ansible.builtin.template:

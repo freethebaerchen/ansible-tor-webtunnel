@@ -66,3 +66,7 @@
     name: portacl
     state: restarted
     enabled: true
+
+- name: Print caddy info
+  ansible.builtin.debug:
+    msg: "Your original Caddyfile ({{ webserver_config[use_webserver].config_dir }}/Caddyfile) was  moved to {{ webserver_config[use_webserver].config_dir }}/original-Caddyfile. It is not used, as of right now."

@@ -181,6 +181,8 @@
         name: "*"
         state: latest
         update_cache: true
+        # noqa package-latest
+        # "state: latest" needed to avoid dependency errors
 
     - name: Disable and stop firewalld
       ansible.builtin.service:

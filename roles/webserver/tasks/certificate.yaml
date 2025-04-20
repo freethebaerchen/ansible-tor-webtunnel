@@ -58,6 +58,8 @@
       failed_when: "'Some challenges have failed.' in certbot_test_output.stderr"
       changed_when: "'The dry run was successful.' in certbot_test_output.stdout"
       when: certificate_existence.changed
+      # noqa no-handler
+      # needs to run in this place. Easier setup than notifying and flushing handlers.
 
     - name: Request certificate
       ansible.builtin.shell: |

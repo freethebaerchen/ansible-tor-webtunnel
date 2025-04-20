@@ -4,7 +4,4 @@ skip_list:
   - var-naming[no-role-prefix]
   - name[template]
 
-warn_list:
-  - no-handler
-  - no-jinja-when
-  - package-latest
+warn_list: []

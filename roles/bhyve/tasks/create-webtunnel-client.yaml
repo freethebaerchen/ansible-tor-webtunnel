@@ -4,8 +4,17 @@
   tags:
     - create-webtunnel-client
   block:
-    - name: Create {{ vm[os].name }}-webtunnel-client
-      ansible.builtin.shell: vm image provision 118ef75d-e4c6-11ef-90dc-94de80212bf5 {{ os }}-webtunnel-client
+    - name: Get images
+      ansible.builtin.command: vm image list
+      register: webtunnel_images
+      changed_when: false # No changes will be applied. Set just for ansible-lint.
+
+    - name: Set image uuid fact
+      ansible.builtin.set_fact:
+        webtunnel_image_uuid: "{{ webtunnel_images.stdout_lines | select('search', 'webtunnel-client') | map('regex_replace', '^([^ ]+) .*$', '\\1') | list | first }}"
+
+    - name: Create templated webtunnel-client
+      ansible.builtin.command: vm image provision {{ webtunnel_image_uuid }} {{ os }}-webtunnel-client
       register: provision_result
       failed_when:
         - "'ERROR: new guest already exists' not in provision_result.stderr"
@@ -16,6 +25,10 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/webtunnel-client.conf.j2"
         dest: "{{ bhyve.root_dir }}/{{ os }}-webtunnel-client/{{ os }}-webtunnel-client.conf"
+        owner: root
+        group: wheel
+        mode: "0644"
 
     - name: Start {{ vm[os].name }}-webtunnel-client
       ansible.builtin.command: vm start {{ vm[os].name }}-webtunnel-client
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.

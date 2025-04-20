@@ -1,8 +1,0 @@
-domain: rhel.caddy.jokester.cloud
-id: "rhelcaddy"
-reverse_proxy: false
-deploy_webroot: true
-use_webserver: caddy
-tor:
-  nickname:
-  test: true

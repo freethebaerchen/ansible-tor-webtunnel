@@ -2,3 +2,6 @@
 
 website:
   no_index: true
+webserver:
+  error_log: "/var/log/{{ webserver_config[use_webserver].service_name }}/error.log"
+use_custom_ssl: false

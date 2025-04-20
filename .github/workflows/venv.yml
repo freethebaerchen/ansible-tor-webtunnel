@@ -1,0 +1,42 @@
+---
+
+name: Update venv
+
+on:
+  schedule:
+    - cron: '0 0 */3 * *'
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - 'requirements.txt'
+      - 'requirements.yaml'
+      - '.github/workflows/venv.yml'
+  workflow_dispatch:
+
+jobs:
+  install-project-requirements:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create virtual environment
+        run: python3 -m venv venv
+
+      - name: Install dependencies
+        run: |
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install ansible-galaxy requirements
+        run: |
+          source venv/bin/activate
+          ansible-galaxy install -r requirements.yaml
+
+      - name: Upload venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete venv 10.1.0.100: >/dev/null && \
+          echo "Uploaded venv successfully."

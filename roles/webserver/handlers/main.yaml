@@ -1,25 +1,29 @@
 ---
 
 - name: Validate caddy
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: caddy validate --config {{ webserver_config[use_webserver].config_dir }}/Caddyfile
   register: caddy_validate
   notify:
     - Restart caddy
+  changed_when: true # True, so restart handler is triggered
+  failed_when: "'Error' in caddy_validate.stdout"
 
 - name: Validate nginx
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: nginx -t
   register: nginx_validate
   notify:
     - Restart nginx
+  changed_when: true # True, so restart handler is triggered
 
 - name: Validate apache
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: apachectl configtest
   register: apache_validate
   notify:
     - Restart apache
+  changed_when: true # True, so restart handler is triggered
 
 - name: Restart caddy
   ansible.builtin.service:
@@ -27,8 +31,7 @@
     state: "{{ item }}"
     enabled: true
   async: 120
-  poll: 5 
-  ignore_errors: true
+  poll: 5
   when: caddy_validate is success
   loop:
     - started
@@ -40,8 +43,7 @@
     state: "{{ item }}"
     enabled: true
   async: 120
-  poll: 5 
-  ignore_errors: true
+  poll: 5
   when: nginx_validate is success
   loop:
     - started
@@ -53,8 +55,7 @@
     state: "{{ item }}"
     enabled: true
   async: 120
-  poll: 5 
-  ignore_errors: true
+  poll: 5
   when: apache_validate is success
   loop:
     - started
@@ -65,3 +66,7 @@
     name: portacl
     state: restarted
     enabled: true
+
+- name: Print caddy info
+  ansible.builtin.debug:
+    msg: "Your original Caddyfile ({{ webserver_config[use_webserver].config_dir }}/Caddyfile) was  moved to {{ webserver_config[use_webserver].config_dir }}/original-Caddyfile. It is not used, as of right now."

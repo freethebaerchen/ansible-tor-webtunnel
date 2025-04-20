@@ -6,7 +6,7 @@
     - name: Run dist-upgrade
       ansible.builtin.apt:
         upgrade: dist
-        update_cache: yes
+        update_cache: true
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -23,6 +23,9 @@
       ansible.builtin.copy:
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
         dest: "{{ system.etc }}/apt/apt.conf.d/50unattended-upgrades"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
       when: unattended_upgrades
 
     - name: Symlink pyhton bin to /usr/local/bin
@@ -37,9 +40,28 @@
     - name: Install OS-specific packages (FreeBSD)
       ansible.builtin.package:
         name:
-          - go
+          - git
           - htop
         state: present
+
+    - name: Setup ports tree
+      ansible.builtin.git:
+        repo: https://git.FreeBSD.org/ports.git
+        version: main
+        dest: /usr/ports
+
+    - name: Build go from ports
+      community.general.make:
+        chdir: /usr/ports/lang/go
+        targets:
+          - install
+          - clean
+        params:
+          -DBATCH:
+      register: ports_go
+      failed_when:
+        - "'is already installed' not in ports_go.stdout"
+        - "'Installing go' not in ports_go.stdout"
 
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:
@@ -50,9 +72,8 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
+      changed_when: true
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -79,7 +100,7 @@
         path: /etc/apk/repositories
         regexp: '^#(.*\/community)'
         line: '\1'
-        backrefs: yes
+        backrefs: true
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -103,9 +124,8 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: '"Applying patches..." in upgrade_result.stdout_lines'
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
+      changed_when: true
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -126,13 +146,13 @@
 
     - name: Install epel-release
       ansible.builtin.package:
-        name: 
+        name:
           - epel-release
         state: present
 
     - name: Install OS-specific packages
       ansible.builtin.package:
-        name: 
+        name:
           - dnf-command(copr)
           - golang
           - dnf-automatic
@@ -155,6 +175,20 @@
         group: "{{ root.group }}"
       notify: Restart dnf-automatic
       when: unattended_upgrades
+
+    - name: Run system upgrade on RHEL-based systems
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+        # noqa package-latest
+        # "state: latest" needed to avoid dependency errors
+
+    - name: Disable and stop firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: stopped
+        enabled: false
 
 - name: Block for OS-Specific tasks (OpenBSD)
   when: ansible_os_family == "OpenBSD"
@@ -183,9 +217,8 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: '"Updating packages..." in upgrade_result.stdout_lines'
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
+      changed_when: true
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -208,7 +241,7 @@
   block:
     - name: Install OS-specific packages
       ansible.builtin.package:
-        name: 
+        name:
           - go
           - htop
           - python312
@@ -230,9 +263,8 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: not '"Nothing to do." in upgrade_result.stdout_lines'
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
+      changed_when: true
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -247,8 +279,9 @@
   when: ansible_os_family == "Archlinux"
   block:
     - name: Update package cache
-      ansible.builtin.command: pacman -Syu --noconfirm
-      become: yes
+      ansible.builtin.command:
+        cmd: pacman -Sy --noconfirm
+      changed_when: false # No changes will be applied. Set just for ansible-lint.
 
     - name: Install OS-specific packages
       ansible.builtin.package:
@@ -267,9 +300,8 @@
         group: "{{ root.group }}"
 
     - name: Run "dist"-upgrade
-      ansible.builtin.shell: /usr/local/bin/unattended-upgrades
-      register: upgrade_result
-      changed_when: not '"there is nothing to do" in upgrade_result.stdout_lines'
+      ansible.builtin.command: /usr/local/bin/unattended-upgrades
+      changed_when: true
 
     - name: Create crontab entry for upgrades
       ansible.builtin.cron:
@@ -279,6 +311,12 @@
         job: "/usr/local/bin/unattended-upgrades"
         state: present
       when: unattended_upgrades
+
+    - name: Symlink pyhton bin to /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/bin/python3
+        dest: /usr/local/bin/python3
+        state: link
 
 - name: Block for all hosts (except OpenBSD)
   when: ansible_os_family != "OpenBSD"
@@ -300,6 +338,9 @@
       ansible.builtin.template:
         src: "{{ role_path }}/templates/hosts.j2"
         dest: /etc/hosts
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
 
     - name: Set the hostname
       ansible.builtin.hostname:
@@ -312,4 +353,4 @@
         line: "{{ inventory_hostname }}"
         state: present
       notify: Restart system
-      when: ansible_os_family != "OpenBSD" and ansible_os_family != "FreeBSD" 
+      when: ansible_os_family != "FreeBSD"

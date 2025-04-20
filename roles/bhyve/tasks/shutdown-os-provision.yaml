@@ -1,8 +1,11 @@
+---
+
 - name: Block for shutting down VMs
   tags:
     - shutdown-server
   block:
     - name: Forcefully shutdown {{ vm[os].name }}-{{ webserver_software }}
-      shell: vm poweroff -f {{ vm[os].name }}-{{ item }}
+      ansible.builtin.command: vm poweroff -f {{ vm[os].name }}-{{ item }}
       loop: "{{ webserver_software }}"
-      failed_when: no
+      failed_when: false
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.

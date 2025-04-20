@@ -36,19 +36,16 @@ webserver_config:
     service_name: apache2
     server_root: /etc/apache2
     config_dir: /etc/apache2/sites-enabled
-    config_file: /etc/apache2/apache.conf
+    config_file: /etc/apache2/apache2.conf
     extra_dirs: []
     modules:
       - rewrite
       - ssl
-      - proxy
       - proxy_http
       - headers
-      - authz_core
-      - log_config
-      - unixd
-      - dir
-      - mime
+    modules_config:
+      - IncludeOptional mods-enabled/*.load
+      - IncludeOptional mods-enabled/*.conf
 certbot:
   config_dir: /etc/letsencrypt
   webroot: /var/www/certbot

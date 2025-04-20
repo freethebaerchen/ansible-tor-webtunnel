@@ -1,8 +1,0 @@
-domain: suse.nginx.jokester.cloud
-id: "susenginx"
-reverse_proxy: false
-deploy_webroot: true
-use_webserver: nginx
-tor:
-  nickname:
-  test: true

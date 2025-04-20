@@ -1,8 +1,0 @@
-domain: alpine.nginx.jokester.cloud
-id: "alpinenginx"
-reverse_proxy: false
-deploy_webroot: true
-use_webserver: nginx
-tor:
-  nickname:
-  test: true

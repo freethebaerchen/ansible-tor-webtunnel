@@ -35,4 +35,4 @@ website:
 
 tor:
   nickname: somenickname
-  test: false
+  distribution_method: Telegram # Possible values for this are documented here: https://gitlab.torproject.org/tpo/anti-censorship/rdsys/-/blob/main/doc/distributors.md

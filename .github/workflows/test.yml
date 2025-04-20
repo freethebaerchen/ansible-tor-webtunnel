@@ -1,70 +1,52 @@
+---
+
 name: Test Ansible Playbook
 
 on:
   push:
     branches-ignore:
       - main
+    paths-ignore:
+      - '.github/workflows/venv.yml'
+      - '.github/workflows/hostvars.yml'
+      - '.github/ISSUE_TEMPLATE/*'
+      - '.github/CODEOWNERS'
+      - 'requirements.txt'
+      - 'requirements.yaml'
+      - 'todo.md'
+      - 'readme.md'
+      - '.env'
+      - '.yamllint'
+      - '.ansible-lint'
+      - '.pre-commit-config.yaml'
+      - '.gitignore'
+  pull_request:
+    branches:
+      - main
 
 env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}
+  PY_COLORS: 1
+  ANSIBLE_FORCE_COLOR: 1
+  TEST_SERVER_TLD: ${{ secrets.TEST_SERVER_TLD }}
 
 jobs:
-  setup-ansible-on-runner:
-    strategy:
-      matrix:
-        runner: [runner-1, runner-2, runner-3, runner-4]
-    runs-on: 
-      group: ansible-runners
-    steps:
-      - name: Install apt packages
-        run: |
-          sudo setup-ansible
-
   select-webserver:
     runs-on: self-hosted
     outputs:
       webserver: ${{ steps.select-webserver.outputs.webserver }}
     steps:
-      - name: Determine webserver randomly
+      - name: Determine webserver based on GITHUB_RUN_NUMBER
         id: select-webserver
         run: |
           WEBSERVERS=("caddy" "nginx" "apache")
-          RANDOM_INDEX=$((RANDOM % 3))
+          RANDOM_INDEX=$((GITHUB_RUN_NUMBER % 3))
           WEBSERVER_SOFTWARE=${WEBSERVERS[$RANDOM_INDEX]}
           echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
           echo "Using webserver: $WEBSERVER_SOFTWARE"
 
-  install-project-requirements:
+  create-ubuntu:
     needs:
-      - setup-ansible-on-runner
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Create virtual environment
-        run: python3 -m venv venv
-
-      - name: Install dependencies
-        run: |
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Install ansible-galaxy requirements
-        run: |
-          ansible-galaxy install -r requirements.yaml
-
-      - name: Upload venv artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
-          overwrite: true
-
-  setup-ubuntu:
-    needs:
-      - install-project-requirements
       - select-webserver
     runs-on: self-hosted
     env:
@@ -75,46 +57,521 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
       - name: Start all ${{ env.OS }} servers
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
+  create-alpine:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: alpine
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-archlinux:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: archlinux
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-freebsd:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: freebsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-openbsd:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: openbsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-rhel:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: rhel
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  create-suse:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: suse
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start all ${{ env.OS }} servers
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+
+  setup-ubuntu:
+    needs:
+      - create-ubuntu
+    runs-on: self-hosted
+    env:
+      OS: ubuntu
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
       - name: Wait until the ${{ env.OS }} servers are reachable
         run: |
+          source venv/bin/activate
           python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Run Ansible Playbook Test for ${{ env.OS }}
         run: |
           source venv/bin/activate
-          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Upload connection-strings for ${{ env.OS }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
-          path: connection-strings.txt
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
+
+  setup-alpine:
+    needs:
+      - create-alpine
+    runs-on: self-hosted
+    env:
+      OS: alpine
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
+
+  setup-archlinux:
+    needs:
+      - create-archlinux
+    runs-on: self-hosted
+    env:
+      OS: archlinux
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
+
+  setup-freebsd:
+    needs:
+      - create-freebsd
+    runs-on: self-hosted
+    env:
+      OS: freebsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
+
+  setup-openbsd:
+    needs:
+      - create-openbsd
+    runs-on: self-hosted
+    env:
+      OS: openbsd
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
+
+  setup-rhel:
+    needs:
+      - create-rhel
+    runs-on: self-hosted
+    env:
+      OS: rhel
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
+
+  setup-suse:
+    needs:
+      - create-suse
+    runs-on: self-hosted
+    env:
+      OS: suse
+      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download certificates for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          python3 scripts/get_certificates.py --limit ${{ env.OS }}
+
+      - name: Wait until the ${{ env.OS }} servers are reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Run Ansible Playbook Test for ${{ env.OS }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook playbook.yaml --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Upload connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
+          echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
 
   test-ubuntu:
-    needs: 
+    needs:
       - setup-ubuntu
     runs-on: self-hosted
     env:
@@ -124,98 +581,60 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
+      - name: Download connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
-          python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
-
-      - name: Test connections
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test webtunnel connections
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test SSH connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
-        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
+        if: always()
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-alpine:
-    needs:
-      - install-project-requirements
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: alpine
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
-          path: connection-strings.txt
-
   test-alpine:
-    needs: 
+    needs:
       - setup-alpine
     runs-on: self-hosted
     env:
@@ -225,98 +644,60 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
+      - name: Download connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
-          python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
-
-      - name: Test connections
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test webtunnel connections
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test SSH connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
-        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
+        if: always()
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-archlinux:
-    needs:
-      - install-project-requirements
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: archlinux
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
-          path: connection-strings.txt
-
   test-archlinux:
-    needs: 
+    needs:
       - setup-archlinux
     runs-on: self-hosted
     env:
@@ -326,98 +707,60 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
+      - name: Download connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
-          python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
-
-      - name: Test connections
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test webtunnel connections
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test SSH connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
-        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
+        if: always()
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-freebsd:
-    needs:
-      - install-project-requirements
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: freebsd
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
-          path: connection-strings.txt
-
   test-freebsd:
-    needs: 
+    needs:
       - setup-freebsd
     runs-on: self-hosted
     env:
@@ -427,98 +770,60 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
+      - name: Download connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
-          python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
-
-      - name: Test connections
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test webtunnel connections
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test SSH connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
-        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
+        if: always()
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-openbsd:
-    needs:
-      - install-project-requirements
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: openbsd
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
-          path: connection-strings.txt
-
   test-openbsd:
-    needs: 
+    needs:
       - setup-openbsd
     runs-on: self-hosted
     env:
@@ -528,98 +833,60 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
+      - name: Download connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
-          python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
-
-      - name: Test connections
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test webtunnel connections
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test SSH connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
-        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
+        if: always()
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-rhel:
-    needs:
-      - install-project-requirements
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: rhel
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
-          path: connection-strings.txt
-
   test-rhel:
-    needs: 
+    needs:
       - setup-rhel
     runs-on: self-hosted
     env:
@@ -629,98 +896,60 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
+      - name: Download connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
-          python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
-
-      - name: Test connections
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test webtunnel connections
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test SSH connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
-        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
+        if: always()
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-  setup-suse:
-    needs:
-      - install-project-requirements
-      - select-webserver
-    runs-on: self-hosted
-    env:
-      OS: suse
-      WEBSERVER_SOFTWARE: ${{ needs.select-webserver.outputs.webserver }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
-
-      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
-
-      - name: Start all ${{ env.OS }} servers
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
-          source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
-
-
-      - name: Wait until the ${{ env.OS }} servers are reachable
-        run: |
-          python3 scripts/check_hosts.py --limit ${{ env.OS }} -i actions-inventory.ini
-
-      - name: Run Ansible Playbook Test for ${{ env.OS }}
-        run: |
-          source venv/bin/activate
-          ansible-playbook playbook.yaml --limit=${{ env.OS }} -i actions-inventory.ini
-
-      - name: Upload connection-strings for ${{ env.OS }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
-          path: connection-strings.txt
-
   test-suse:
-    needs: 
+    needs:
       - setup-suse
     runs-on: self-hosted
     env:
@@ -730,40 +959,54 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download venv
-        uses: actions/download-artifact@v4
-        with:
-          name: venv-ansible-webtunnel
-          path: venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Download host_vars
+        run: |
+          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+          echo "Downloaded venv successfully."
 
       - name: Create ${{ env.OS }} webtunnel-client
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: connection-strings-${{ env.OS }}
+      - name: Download connection-strings for ${{ env.OS }}
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
 
       - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
         run: |
-          python3 scripts/check_hosts.py --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini
-
-      - name: Test connections
-        run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit=${{ env.OS }}-webtunnel-client -i actions-inventory.ini 
+          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test webtunnel connections
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+
+      - name: Test SSH connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+
+      - name: Test HTTP/HTTPS connections
+        run: |
+          source venv/bin/activate
+          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
 
       - name: Shutdown ${{ env.OS }} servers
-        if: always()
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
 
       - name: Delete ${{ env.OS }} webtunnel-client
+        if: always()
         run: |
-          echo -e "\nANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" >> .env
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"

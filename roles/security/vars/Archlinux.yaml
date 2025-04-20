@@ -1,0 +1,15 @@
+---
+
+root:
+  user: root
+  group: wheel
+system:
+  etc: /etc
+security:
+  packages:
+    - linux-lts
+    - linux-lts-headers
+  kernel:
+    modules:
+      - ip_set
+      - xt_set

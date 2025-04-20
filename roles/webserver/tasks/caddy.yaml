@@ -22,7 +22,7 @@
         name: caddy_user
         value: "{{ webserver.user }}"
         state: value_present
-      
+
     - name: Set caddy-group
       community.general.sysrc:
         name: caddy_group
@@ -55,91 +55,116 @@
         state: value_present
       notify: Restart portacl
 
-    - name: Change ownership of caddy directories
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        owner: "{{ webserver.user }}"
-        group: "{{ webserver.group }}"
-        recurse: true
-      loop:
-        - /var/db/caddy
-        - /var/log/caddy
-        - /var/run/caddy
+    - name: Build caddy from ports
+      community.general.make:
+        chdir: /usr/ports/www/caddy
+        targets:
+          - install
+          - clean
+        params:
+          -DBATCH:
+      register: ports_caddy
+      failed_when:
+        - "'is already installed' not in ports_caddy.stdout"
+        - "'Installing caddy' not in ports_caddy.stdout"
 
 - name: Block for OS-spcific tasks (RedHat)
   when: ansible_os_family == "RedHat"
   block:
     - name: Enable the Caddy COPR repository
-      ansible.builtin.shell:
-        cmd: dnf copr enable @caddy/caddy -y
+      ansible.builtin.command: dnf copr enable @caddy/caddy -y
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
-- name: Block for all OS-Families
-  block:
-    - name: Install caddy
-      ansible.builtin.package:
-        name: 
-          - caddy
+- name: Install caddy
+  ansible.builtin.package:
+    name:
+      - caddy
+  when: ansible_os_family != "FreeBSD"
 
-    - name: Include webroot
-      ansible.builtin.include_tasks: webroot.yaml
+- name: Include webroot
+  ansible.builtin.include_tasks: webroot.yaml
 
-    - name: Create caddy subdirectory
-      ansible.builtin.file:
-        path: "{{ webserver_config[use_webserver].extra_dirs }}"
-        state: directory
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
+- name: Include log
+  ansible.builtin.include_tasks: log.yaml
 
-    - name: Check if Caddyfile differs from template
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/Caddyfile.j2"
-        dest: "/tmp/Caddyfile"
-        mode: 0644
+- name: Create caddy subdirectory
+  ansible.builtin.file:
+    path: "{{ webserver_config[use_webserver].extra_dirs }}"
+    state: directory
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0755"
 
-    - name: Get checksum of rendered Caddyfile
-      ansible.builtin.stat:
-        path: "/tmp/Caddyfile"
-        checksum_algorithm: sha256
-      register: rendered_caddyfile
+- name: Check if Caddyfile differs from template
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/Caddyfile.j2"
+    dest: "/tmp/Caddyfile"
+    mode: "0644"
 
-    - name: Get checksum of original Caddyfile
-      ansible.builtin.stat:
-        path: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
-        checksum_algorithm: sha256
-      register: orig_caddyfile
+- name: Get checksum of rendered Caddyfile
+  ansible.builtin.stat:
+    path: "/tmp/Caddyfile"
+    checksum_algorithm: sha256
+  register: rendered_caddyfile
 
-    - name: Backup existing Caddyfile if different from template
-      ansible.builtin.copy:
-        src: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
-        dest: "{{ webserver_config[use_webserver].extra_dirs }}/original-Caddyfile"
-        remote_src: true
-      when: rendered_caddyfile.stat.checksum != orig_caddyfile.stat.checksum
+- name: Get checksum of original Caddyfile
+  ansible.builtin.stat:
+    path: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+    checksum_algorithm: sha256
+  register: orig_caddyfile
 
-    - name: Render new Caddyfile
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/Caddyfile.j2"
-        dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
-        mode: 0644
-      notify:
-        - Validate caddy
+- name: Backup existing Caddyfile if different from template
+  ansible.builtin.copy:
+    src: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/original-Caddyfile"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+    remote_src: true
+  when: rendered_caddyfile.stat.checksum != orig_caddyfile.stat.checksum
+  notify: Print caddy info
 
-    - name: Read random-string.txt
-      ansible.builtin.slurp:
-        src: "{{ tor.directory }}/random-string.txt"
-      register: random_string_file
+- name: Render new Caddyfile
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/Caddyfile.j2"
+    dest: "{{ webserver_config[use_webserver].config_dir }}/Caddyfile"
+    mode: "0644"
+  notify:
+    - Validate caddy
 
-    - name: Decode file content
-      ansible.builtin.set_fact:
-        random_string: "{{ random_string_file.content | b64decode }}"
+- name: Include certificate request
+  ansible.builtin.include_tasks: certificate.yaml
 
-    - name: Render webtunnel-Caddyfile
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/webtunnel-Caddyfile.j2"
-        dest: "{{ webserver_config[use_webserver].extra_dirs }}/webtunnel-Caddyfile"
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-      notify:
-        - Validate caddy
-      vars:
-        webtunnel_path: "{{ random_string }}"
+- name: Read random-string.txt
+  ansible.builtin.slurp:
+    src: "{{ tor.directory }}/random-string.txt"
+  register: random_string_file
+
+- name: Decode file content
+  ansible.builtin.set_fact:
+    random_string: "{{ random_string_file.content | b64decode }}"
+
+- name: Enable caddy service
+  ansible.builtin.service:
+    name: "{{ webserver_config[use_webserver].service_name }}"
+    enabled: true
+  when: ansible_os_family == "OpenBSD"
+
+- name: Set root for caddy
+  ansible.builtin.command:
+    cmd: rcctl set caddy user root
+  register: caddy_rcctl
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.
+  when: ansible_os_family == "OpenBSD"
+
+- name: Render webtunnel-Caddyfile
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/webtunnel-Caddyfile.j2"
+    dest: "{{ webserver_config[use_webserver].extra_dirs }}/webtunnel-Caddyfile"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+  notify:
+    - Validate caddy
+  vars:
+    webtunnel_path: "{{ random_string }}"

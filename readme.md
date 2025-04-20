@@ -41,8 +41,19 @@ This Project supports, as of right now the following distributions:\
     - RHEL-based (Oracle Linux 9.5, CentOS Stream 9, Almalinux 9.5)\
     - OpenSUSE-based (OpenSUSE Leap 15.6)\
     - OpenBSD-based (OpenBSD 7.6)\
-    - Archlinux-based (Archlinux 2024.08.01)\
+    - Archlinux-based (Archlinux 2024.08.01, Archlinux 2025.04.01)\
     - FreeBSD-based (FreeBSD 14.1, FreeBSD 14.2)
+
+The OS-Version in Brackets were tested.\
+
+Regularily tested are the following:\
+    - Ubuntu 24.04\
+    - Alpine 3.21.3\
+    - AlmaLinux 9.5\
+    - OpenSUSE Leap 15.6\
+    - OpenBSD 7.6\
+    - Archlinux 2025.04.01\
+    - FreeBSD 14.2
 
 ## Prerequisites
 
@@ -53,10 +64,10 @@ If you need help generating one, run the following command:
 Please consider encrypting the key with a password, when you are asked for one.\
 For the other options, you can leave the defaults.
 
-### Docker
-You need a device, that is able to run Docker.
+### Python
+You need Python >= 3.12 installed
 
-### Hetzner (optinal)
+### Hetzner (optional)
 1. Create a Account at [Hetzner](https://accounts.hetzner.com/signUp)
 2. Create a HCloud project
 3. Create a [API-Token](https://docs.hetzner.cloud/#getting-started) with read/write privileges
@@ -88,15 +99,24 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 4. Modify the variables, so they match your configuration
     4.1 The ID needs to be set, for the identifier of the or bridge. The name in the end will be <tor.nickname><id>, so with the default values it will be somenickname1, somenickname2, ...\
     4.2 Exchange the example domains with your actual domains\
-    4.3 Configure if caddy should be reverse-proxy to another site.
+    4.3 Configure if caddy should be reverse-proxy to another site
+5. Save custom SSL/TLS-Certificate (optional)
+    1.1 Obtain a SSL/TLS certificate (if you don't want to use Let'sEncrypt)\
+    1.2 Save the Files (Chain, Certificate, private Key)\
+        1.2.1 with the correct fileendings [like in the examples](host_files/your-bridge-fsn-0)\
+        1.2.2 with the correct pattern domain.tld.fileending\
+    1.3 (IMPORTANT!) Use ansible-vault or another method to encrypt the private key\
+        1.3.1 The command to use is `ansible-vault encrypt path/to/file`
+
 
 ## executing ansible
 INFO: Step 3 is only for a Hetzner Cloud setup
-1. ```./ansible-playbook.sh playbook.yaml```
-2. After that, the HCloud infrastructure is created\
+1. `source .envrc`
+2. `ansible-playbook playbook.yaml `
+3. After that, the HCloud infrastructure is created\
     2.1 Set an A-Record with the IPv4-Address of the server\
     2.2 Set an AAAA-Record with the IPv6-Address of the server (optinal)
-3. Run the script a second time.
+4. Run the script a second time.
 
 Now the Tor WebTunnel Bridge is created.\
 You can SSH to your server and run ```sudo journalctl -xeu tor@default```.\
@@ -114,3 +134,7 @@ Please don't stress. Some status will soon show up after at most 3 hours.
 ## Additional information
 ### Hetzner specific
 If you add more servers, you need to copy and paste one of the servers in the [group_vars](group_vars/all-example.yaml).
+
+###
+You can configure the distribution method of your bridge via the group_vars/host_vars.
+In the [example group_vars](group_vars/all.yaml.example) you can find the [Tor documentation](https://gitlab.torproject.org/tpo/anti-censorship/rdsys/-/blob/main/doc/distributors.md) for the allowed values.

@@ -1,4 +1,11 @@
-python-dateutil
-requests
-hcloud
-charset-normalizer
+python-dateutil>=2.9.0
+requests>=2.3.2
+hcloud>=2.4.0
+charset-normalizer>=3.4.1
+ansible>=11.0.0
+ansible-core>=2.18.0
+ansible-lint>=25.1.3
+pyfiglet>=1.0.2
+dotenv>=0.9.9
+pre-commit>=4.2.0
+jmespath>=1.0.1

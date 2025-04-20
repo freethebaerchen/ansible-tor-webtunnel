@@ -2,7 +2,7 @@
 
 - name: Setup Infrastructure in HCloud
   hosts: localhost
-  become: no
+  become: false
   roles:
     - hetzner
   tags:
@@ -12,7 +12,7 @@
 
 - name: Setup general system
   hosts: all
-  become: yes
+  become: true
   roles:
     - system
   tags:
@@ -21,7 +21,7 @@
 
 - name: Setup the WebSocket Bridge
   hosts: all
-  become: yes
+  become: true
   roles:
     - tor
   tags:
@@ -31,8 +31,16 @@
 
 - name: Setup webserver
   hosts: all
-  become: yes
-  roles: 
+  become: true
+  roles:
     - webserver
   tags:
     - webserver
+
+- name: Setup firewall
+  hosts: all
+  become: true
+  roles:
+    - security
+  tags:
+    - security

@@ -1,5 +1,9 @@
+venv
 tmp
-.env.local
+*.local
+.ansible
+roles/*/library/__pycache__
+
 group_vars/*
 !group_vars/*.yaml.example
 !group_vars/test.yaml
@@ -8,9 +12,8 @@ roles/hetzner/files/*
 inventory.ini
 host_vars/*
 !host_vars/your-bridge-*-0.yaml
-!host_vars/*-caddy.yaml
-!host_vars/*-nginx.yaml
-!host_vars/*-apache.yaml
+host_files/*
+!host_files/your-bridge-*-0
 roles/tor/files/*
 !roles/tor/files/.gitkeep
 roles/system/files/*

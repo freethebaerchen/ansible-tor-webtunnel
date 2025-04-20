@@ -3,10 +3,11 @@
 - name: Get WebSocket Bridge source code
   ansible.builtin.git:
     repo: https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/webtunnel
+    version: main
     dest: /tmp/webtunnel
 
 - name: Build WebSocket Bridge
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: "go build -o /usr/local/bin/webtunnel"
     chdir: /tmp/webtunnel/main/server
     creates: /usr/local/bin/webtunnel
@@ -30,9 +31,12 @@
   ansible.builtin.template:
     src: "{{ role_path }}/templates/torrc.j2"
     dest: "{{ system.etc }}/tor/torrc"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
   vars:
     webtunnel_path: "{{ random_string }}"
-  register: torrc
+  notify: Restart tor
 
 - name: Set {{ tor.directory }} owner- and groupship
   ansible.builtin.file:
@@ -40,9 +44,9 @@
     owner: "{{ tor.user }}"
     group: "{{ tor.group }}"
     state: directory
-    recurse: yes
+    recurse: true
 
-- name: Block for OS-Familiy Debian
+- name: Block for OS-family Debian
   when: ansible_os_family == "Debian"
   block:
     - name: Add Tor GPG key
@@ -75,13 +79,12 @@
         path: /etc/apparmor.d/system_tor
         insertafter: '^  # Site-specific additions and overrides. See local/README for details.'
         block: '  /usr/local/bin/webtunnel ix,'
-      register: apparomor
+      notify: Reload apparmor
 
-    - name: Reload apparmor
-      ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/system_tor
-      when: apparomor.changed
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
 
-- name: Block for OS-Familiy OpenBSD
+- name: Block for OS-family OpenBSD
   when: ansible_os_family == "OpenBSD"
   block:
     - name: Ensure tor login class configuration in /etc/login.conf
@@ -91,26 +94,18 @@
           tor:\
               :openfiles-max=13500:\
               :tc=daemon:
-    
-    - name: Iincrease kern.maxfiles
-      ansible.builtin.lineinfile:
-        path: "{{ system.etc }}/sysctl.conf"
-        line: "kern.maxfiles=16000"
-        create: yes
+      notify: Start tor
 
     - name: Apply kern.maxfiles
       ansible.posix.sysctl:
         name: kern.maxfiles
         value: 16000
         state: present
-        reload: yes
+        reload: true
+      notify: Start tor
 
-    - name: Start tor
-      ansible.builtin.service:
-        name: tor
-        state: started
-        enabled: yes
-      when: torrc.changed
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
 
 - name: Block for OS-Family Archlinux
   when: ansible_os_family == "Archlinux"
@@ -131,14 +126,8 @@
           @tor    soft    nofile    65536
           @tor    hard    nofile    65536
 
-- name: Restart tor
-  ansible.builtin.service:
-    name: tor
-    state: restarted
-    enabled: yes
-  async: 120
-  poll: 5 
-  ignore_errors: true
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Wait until fingerprint file exists
   ansible.builtin.wait_for:
@@ -156,7 +145,8 @@
   ansible.builtin.lineinfile:
     path: "{{ role_path }}/../../connection-strings.txt"
     line: "{{ item }} #{{ inventory_hostname }}"
-    create: yes
+    create: true
+    mode: "0644"
   with_items: "{{ connection_string.stdout_lines }}"
   delegate_to: localhost
   become: false

@@ -12,15 +12,18 @@
   block:
     - name: Generate new motd file
       ansible.builtin.shell:
-        cmd: figlet {{ tor.nickname }}{{ id }} > "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
+        cmd: pyfiglet {{ tor.nickname }}{{ id }} > "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
       register: figlet
       delegate_to: localhost
       become: false
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
 
-    - name: Add domain to new motd file
+    - name: Add domain to motd file
       ansible.builtin.lineinfile:
         path: "{{ role_path }}/files/{{ inventory_hostname }}-motd.txt"
         line: "{{ domain }}"
+        create: true
+        mode: "0644"
       delegate_to: localhost
       become: false
 

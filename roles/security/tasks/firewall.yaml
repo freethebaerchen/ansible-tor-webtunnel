@@ -1,0 +1,178 @@
+---
+
+- name: Block for BSDs
+  when: ansible_os_family == "FreeBSD" or ansible_os_family == "OpenBSD"
+  block:
+    - name: Ensure PF is loaded (FreeBSD/OpenBSD)
+      ansible.posix.sysctl:
+        name: net.pf.enable
+        value: "1"
+        state: present
+        reload: true
+
+    - name: Enable PF on FreeBSD
+      community.general.sysrc:
+        name: pf_enable
+        value: "YES"
+        state: present
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Configure PF rules file
+      community.general.sysrc:
+        name: pf_rules
+        value: "{{ system.etc }}/pf.conf"
+        state: present
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Enable PF on OpenBSD
+      ansible.builtin.lineinfile:
+        path: "{{ system.etc }}/rc.conf.local"
+        line: pf=YES
+      when: ansible_os_family == "OpenBSD"
+
+    - name: Configure PF rules file
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/pf.conf.j2"
+        dest: "{{ system.etc }}/pf.conf"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: 0640
+      notify:
+        - Start pf (FreeBSD)
+        - Start pf (OpenBSD)
+
+- name: Block for all (Linux) hosts (IPv4)
+  when:
+    - ansible_os_family != "FreeBSD"
+    - ansible_os_family != "OpenBSD"
+    - ansible_default_ipv4 is defined
+    - ansible_default_ipv4
+    - ansible_default_ipv4.address is defined
+    - ansible_default_ipv4.address != ""
+  block:
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - iptables
+          - ipset
+
+    - name: Install additional packages
+      ansible.builtin.package:
+        name:
+          - "{{ item }}"
+      loop: "{{ security.packages }}"
+      when:
+        - security.packages is defined
+        - security.packages != ""
+      notify: Restart system
+
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Load kernel modules
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ security.kernel.modules }}"
+      when:
+        - security.kernel is defined
+        - security.kernel.modules is defined
+
+    - name: Ensure iptables directory exists
+      ansible.builtin.file:
+        path: "{{ system.etc }}/iptables"
+        state: directory
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644 "
+
+    - name: Ensure IPv4 ipsets exist
+      ansible.builtin.shell:
+        cmd: ipset list {{ item }} || ipset create {{ item }} hash:ip family inet
+      loop:
+        - tor-trust
+        - tor-ddos-15000
+        - hetzner-sysmon
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
+
+    - name: Create ip4tables rules template for Linux
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/ip4tables_rules.j2"
+        dest: "{{ system.etc }}/iptables/ip4tables_rules"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: '0640'
+      notify: Apply ip4tables rules
+
+    - name: Cerate cronjob to restore ip4tables rules
+      ansible.builtin.cron:
+        name: Restore ip4tables rules
+        job: /sbin/iptables-restore < /etc/iptables/rules.v4
+        user: root
+        special_time: reboot
+
+- name: Block for all (Linux) hosts (IPv6)
+  when:
+    - ansible_os_family != "FreeBSD"
+    - ansible_os_family != "OpenBSD"
+    - ansible_default_ipv6 is defined
+    - ansible_default_ipv6
+    - ansible_default_ipv6.address is defined
+    - ansible_default_ipv6.address != ""
+  block:
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - iptables
+          - ipset
+
+    - name: Install additional packages
+      ansible.builtin.package:
+        name:
+          - "{{ item }}"
+      loop: "{{ security.packages }}"
+      when:
+        - security.packages is defined
+        - security.packages != ""
+
+    - name: Load kernel modules
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ security.kernel.modules }}"
+      when:
+        - security.kernel is defined
+        - security.kernel.modules is defined
+
+    - name: Ensure iptables directory exists
+      ansible.builtin.file:
+        path: "{{ system.etc }}/iptables"
+        state: directory
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: "0644"
+
+    - name: Ensure IPv6 ipsets exist
+      ansible.builtin.shell:
+        cmd: ipset list {{ item }} || ipset create {{ item }} hash:ip family inet6
+      loop:
+        - tor-trust6
+        - tor-ddos6-15000
+        - hetzner-sysmon6
+      changed_when: true # Idempotently changes every time. Set just for ansible-lint.
+
+    - name: Create ip6tables rules template for Linux
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/ip6tables_rules.j2"
+        dest: "{{ system.etc }}/iptables/ip6tables_rules"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+        mode: '0640'
+      notify: Apply ip6tables rules
+
+    - name: Cerate cronjob to restore ip4tables rules
+      ansible.builtin.cron:
+        name: Restore ip6tables rules
+        job: /sbin/ip6tables-restore < /etc/iptables/rules.v6
+        user: root
+        special_time: reboot

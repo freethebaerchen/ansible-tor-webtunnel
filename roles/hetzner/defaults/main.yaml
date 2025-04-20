@@ -1,15 +1,10 @@
+---
+
 hcloud:
-
-  sshkey:
-    - name: "fallback-key"
-      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5"
-      state: present
-
   firewalls:
     - name: firewall-default
       state: present
       rules:
-
         - description: ssh
           direction: in
           protocol: tcp
@@ -43,7 +38,6 @@ hcloud:
           destination_ips:
             - 0.0.0.0/0
             - ::/0
-
     - name: firewall-web
       state: present
       rules:
@@ -61,7 +55,6 @@ hcloud:
           source_ips:
             - 0.0.0.0/0
             - ::/0
-
   server:
     state: present
     image: ubuntu-24.04
@@ -69,6 +62,23 @@ hcloud:
     public_ipv6_enabled: true
     public_ipv4_enabled: true
     firewalls:
-       - firewall-default
-       - firewall-web
+      - firewall-default
+      - firewall-web
     volumes: []
+  servers:
+    - name: bridge-nbg-0
+      location: nbg1
+      image: ubuntu-24.04
+      type: cax11
+    - name: bridge-fsn-0
+      location: fsn1
+      image: ubuntu-24.04
+      type: cax11
+    - name: bridge-hel-0
+      location: hel1
+      image: ubuntu-24.04
+      type: cax11
+    - name: bridge-hel-1
+      location: hel1
+      image: ubuntu-24.04
+      type: cax11

@@ -1,8 +1,8 @@
 ---
+
 root:
   user: root
   group: wheel
-
 system:
   etc: /etc
   shell: /usr/local/bin/bash

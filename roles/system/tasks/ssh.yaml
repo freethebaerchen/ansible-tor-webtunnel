@@ -17,7 +17,7 @@
     name: "{{ item.name }}"
     groups:
       - "{{ root.group }}"
-    append: yes
+    append: true
     shell: "{{ system.shell }}"
   loop: "{{ admins }}"
   loop_control:
@@ -45,6 +45,7 @@
   ansible.builtin.template:
     src: ./authorized_keys.j2
     dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    owner: "{{ item.name }}"
     mode: 0600
   with_items: "{{ admins }}"
 
@@ -62,6 +63,7 @@
   ansible.builtin.template:
     src: ./authorized_keys.j2
     dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    owner: "{{ item.name }}"
     mode: 0600
   with_items: "{{ users }}"
 

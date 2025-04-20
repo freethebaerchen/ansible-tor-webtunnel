@@ -2,4 +2,20 @@
 
 - name: Reload daemon
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true
+
+- name: Start tor
+  ansible.builtin.service:
+    name: tor
+    state: started
+    enabled: true
+
+- name: Restart tor
+  ansible.builtin.service:
+    name: tor
+    state: restarted
+    enabled: true
+
+- name: Reload apparmor
+  ansible.builtin.command: apparmor_parser -r /etc/apparmor.d/system_tor
+  changed_when: true # Idempotently changes every time. Set just for ansible-lint.

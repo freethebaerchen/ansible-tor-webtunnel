@@ -1,0 +1,16 @@
+---
+
+root:
+  user: root
+  group: wheel
+system:
+  etc: /etc
+security:
+  packages:
+    - linux-lts
+    - linux-lts-dev
+    - linux-headers
+  kernel:
+    modules:
+      - ip_set
+      - ip_set_hash_ip

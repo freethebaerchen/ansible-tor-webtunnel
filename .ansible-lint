@@ -7,3 +7,4 @@ skip_list:
 warn_list:
   - no-handler
   - no-jinja-when
+  - package-latest

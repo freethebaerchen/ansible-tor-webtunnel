@@ -47,7 +47,7 @@ def get_hosts_with_vars(inventory_data, limit):
 def run_curl_command(url):
     """Run curl command and return output as a string."""
     process = subprocess.Popen(
-        ["curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", url],
+        ["curl", "-4", "-o", "/dev/null", "-s", "-w", "%{http_code}", url],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
 

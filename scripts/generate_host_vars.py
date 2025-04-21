@@ -11,8 +11,9 @@ template_str = """---
 
 domain: {{ os }}.{{ webserver }}.{% raw %}{{ lookup('env', 'TEST_SERVER_TLD') }}{% endraw %}
 id: "{{ os }}{{ webserver }}"
-reverse_proxy: false
-deploy_webroot: true
+reverse_proxy: true
+reverse_proxy_url: static.{% raw %}{{ lookup('env', 'TEST_SERVER_TLD') }}{% endraw %}
+deploy_webroot: false
 use_webserver: {{ webserver }}
 tor:
   nickname:

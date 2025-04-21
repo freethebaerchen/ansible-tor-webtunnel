@@ -52,6 +52,7 @@ webserver_config:
       - LoadModule unixd_module modules/mod_unixd.so
       - LoadModule dir_module modules/mod_dir.so
       - LoadModule mime_module modules/mod_mime.so
+      - LoadModule env_module modules/mod_env.so
 certbot:
   config_dir: /etc/letsencrypt
   webroot: /var/www/certbot

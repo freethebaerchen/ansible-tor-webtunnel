@@ -37,14 +37,8 @@
 - [x] (Fix) server shutdown after successful test
 - [x] (Feature) Security [Internal Firewall](https://community.torproject.org/relay/setup/post-install/)
 - [x] (Fix) Certificate renewal Cronjob
-- [x] (Actions) Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
 - [x] (Feature) Make distribution Method configurable
-- [ ] Reverse Proxy
-- [ ] Grafana Monitoring
-- [ ] Auto-Update Report via Mail
-- [ ] Security (SElinux/AppArmor, ...)
-- [ ] Python interpreter instead of Symlinking
-- [ ] (Feature) Reverse Proxy
+- [x] (Feature) Reverse Proxy
 - [ ] (Feature) Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
 - [ ] (Feature) Auto-Update Report via Mail
 - [ ] (Feature) Security SElinux/AppArmor
@@ -53,4 +47,4 @@
 - [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)
 - [ ] (Feature) Docker Setup (Webtunnel, Nginx)
 - [ ] (Feature) Logrotate
-- [ ] (Feature) Non-LetsEncrypt SSL/TLS-Certificate
+- [x] (Feature) Non-LetsEncrypt SSL/TLS-Certificate

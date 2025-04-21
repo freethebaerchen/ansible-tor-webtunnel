@@ -190,6 +190,10 @@
         state: stopped
         enabled: false
 
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+
 - name: Block for OS-Specific tasks (OpenBSD)
   when: ansible_os_family == "OpenBSD"
   block:

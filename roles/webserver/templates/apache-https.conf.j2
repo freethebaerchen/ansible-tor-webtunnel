@@ -12,6 +12,24 @@
     SSLCertificateFile {{ certbot.config_dir }}/live/{{ domain }}/cert.pem
     SSLCertificateKeyFile {{ certbot.config_dir }}/live/{{ domain }}/privkey.pem
 {% endif %}
+{% if reverse_proxy and reverse_proxy_url is defined %}
+    ProxyVia On
+    SetEnv proxy-initial-not-pooled 1
+    SetEnv force-proxy-request-1.1 1
+
+    SSLProxyEngine on
+
+    ProxyPass / https://{{ reverse_proxy_url }}/
+    ProxyPassReverse / https://{{ reverse_proxy_url }}/
+
+    RequestHeader set Host "{{ reverse_proxy_url }}"
+    RequestHeader set X-Real-IP %{REMOTE_ADDR}s
+    RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
+    RequestHeader set X-Forwarded-Proto https
+
+    CustomLog {{ webserver.access_log }} combined
+    ErrorLog {{ webserver.error_log }}
+{% else %}
     DocumentRoot /var/www/html
 
     <Directory /var/www/html>
@@ -19,7 +37,7 @@
         AllowOverride All
         Require all granted
     </Directory>
-
+{% endif %}
     SSLProtocol TLSv1.2 TLSv1.3
     SSLSessionCacheTimeout 900
 

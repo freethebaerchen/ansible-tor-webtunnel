@@ -22,12 +22,14 @@ Group {{ webserver.group }}
     Require all granted
 </Directory>
 
+{% if not reverse_proxy %}
 DocumentRoot "{{ webserver.webroot }}"
 <Directory "{{ webserver.webroot }}">
     Options Indexes FollowSymLinks
     AllowOverride None
     Require all granted
 </Directory>
+{% endif %}
 
 <IfModule dir_module>
     DirectoryIndex index.html

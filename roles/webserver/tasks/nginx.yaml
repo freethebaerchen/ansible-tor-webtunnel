@@ -64,12 +64,19 @@
   block:
     - name: Change SELinux for nginx
       community.general.sefcontext:
-        target: "/var/www/html(/.*)?"
+        target: "{{ webserver.webroot }}(/.*)?"
         setype: httpd_sys_rw_content_t
         state: present
+      when: not reverse_proxy
 
-    - name: Apply SELinux file context changes
-      ansible.builtin.command: restorecon -Rv /etc/letsencrypt /var/www/html
+    - name: Apply SELinux file context changes (webroot)
+      ansible.builtin.command: restorecon -Rv {{ webserver.webroot }}
+      register: apply_selinux
+      changed_when: "'' not in apply_selinux.stdout"
+      when: not reverse_proxy
+
+    - name: Apply SELinux file context changes (letsencrypt)
+      ansible.builtin.command: restorecon -Rv {{ certbot.config_dir }}
       register: apply_selinux
       changed_when: "'' not in apply_selinux.stdout"
 

@@ -12,8 +12,6 @@
     SSLCertificateFile {{ certbot.config_dir }}/live/{{ domain }}/cert.pem
     SSLCertificateKeyFile {{ certbot.config_dir }}/live/{{ domain }}/privkey.pem
 {% endif %}
-    DocumentRoot /var/www/html
-
 {% if reverse_proxy and reverse_proxy_url is defined %}
     ProxyVia On
     SetEnv proxy-initial-not-pooled 1
@@ -32,6 +30,8 @@
     CustomLog {{ webserver.access_log }} combined
     ErrorLog {{ webserver.error_log }}
 {% else %}
+    DocumentRoot /var/www/html
+
     <Directory /var/www/html>
         Options Indexes FollowSymLinks
         AllowOverride All

@@ -42,7 +42,7 @@ server {
         root {{ webserver.webroot }};
         index index.html index.htm;
         try_files $uri $uri/ index,html;
-{% enfif %}
+{% endif %}
 
         access_log /var/log/nginx/access.log;
         error_log {{ webserver.error_log }};

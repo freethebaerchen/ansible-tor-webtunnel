@@ -1,12 +1,12 @@
 {{ domain }} {
-{% if not reverse_proxy %}
-        root * {{ webserver.webroot }}
-        file_server browse
         reverse_proxy /{{ webtunnel_path | trim }} 127.0.0.1:15000
 {% if reverse_proxy and reverse_proxy_url is defined %}
 	reverse_proxy * https://{{ reverse_proxy_url }} {
 	    header_up Host {{ reverse_proxy_url }}
 	}
+{% else %}
+        root * {{ webserver.webroot }}
+        file_server browse
 {% endif %}
 {% if use_custom_ssl %}
         tls {{ system.etc }}/ssl/{{ domain }}.crt {{ system.etc }}/ssl/{{ domain }}.key

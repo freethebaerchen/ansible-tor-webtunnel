@@ -44,7 +44,7 @@ server {
         try_files $uri $uri/ index,html;
 {% endif %}
 
-        access_log /var/log/nginx/access.log;
+        access_log {{ webserver.access_log }};
         error_log {{ webserver.error_log }};
 
     }

@@ -29,8 +29,8 @@
     RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
     RequestHeader set X-Forwarded-Proto https
 
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    CustomLog {{ webserver.access_log }} combined
+    ErrorLog {{ webserver.error_log }}
 {% else %}
     <Directory /var/www/html>
         Options Indexes FollowSymLinks

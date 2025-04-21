@@ -1,12 +1,20 @@
 ---
 
-- name: Ensure log directory for caddy exists
+- name: Ensure log directory exists
   ansible.builtin.file:
     path: "{{ webserver.error_log | dirname }}"
     state: directory
     owner: "{{ webserver.user }}"
     group: "{{ webserver.group }}"
     mode: "0755"
+
+- name: Set permissions to (access) logfile
+  ansible.builtin.file:
+    path: "{{ webserver.access_log }}"
+    state: touch
+    owner: "{{ webserver.user }}"
+    group: "{{ webserver.group }}"
+    mode: "0644"
 
 - name: Set permissions to (error) logfile
   ansible.builtin.file:

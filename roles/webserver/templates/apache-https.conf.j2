@@ -21,10 +21,6 @@
 
     SSLProxyEngine on
 
-    SSLProxyVerify require
-    SSLProxyVerifyDepth 2
-    SSLProxyCACertificateFile /etc/ssl/certs/ca-certificates.crt
-
     ProxyPass / https://{{ reverse_proxy_url }}/
     ProxyPassReverse / https://{{ reverse_proxy_url }}/
 

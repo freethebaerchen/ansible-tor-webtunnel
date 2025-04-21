@@ -14,12 +14,34 @@
 {% endif %}
     DocumentRoot /var/www/html
 
+{% if reverse_proxy and reverse_proxy_url is defined %}
+    ProxyVia On
+    SetEnv proxy-initial-not-pooled 1
+    SetEnv force-proxy-request-1.1 1
+
+    SSLProxyEngine on
+
+    SSLProxyVerify require
+    SSLProxyVerifyDepth 2
+    SSLProxyCACertificateFile /etc/ssl/certs/ca-certificates.crt
+
+    ProxyPass / https://{{ reverse_proxy_url }}/
+    ProxyPassReverse / https://{{ reverse_proxy_url }}/
+
+    RequestHeader set Host "{{ reverse_proxy_url }}"
+    RequestHeader set X-Real-IP %{REMOTE_ADDR}s
+    RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
+    RequestHeader set X-Forwarded-Proto https
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+{% else %}
     <Directory /var/www/html>
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
-
+{% endif %}
     SSLProtocol TLSv1.2 TLSv1.3
     SSLSessionCacheTimeout 900
 

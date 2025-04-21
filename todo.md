@@ -39,12 +39,7 @@
 - [x] (Fix) Certificate renewal Cronjob
 - [x] (Actions) Configure [S3-Artifacts](https://github.com/marketplace/actions/s3-artifact-upload)
 - [x] (Feature) Make distribution Method configurable
-- [ ] Reverse Proxy
-- [ ] Grafana Monitoring
-- [ ] Auto-Update Report via Mail
-- [ ] Security (SElinux/AppArmor, ...)
-- [ ] Python interpreter instead of Symlinking
-- [ ] (Feature) Reverse Proxy
+- [x] (Feature) Reverse Proxy
 - [ ] (Feature) Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
 - [ ] (Feature) Auto-Update Report via Mail
 - [ ] (Feature) Security SElinux/AppArmor

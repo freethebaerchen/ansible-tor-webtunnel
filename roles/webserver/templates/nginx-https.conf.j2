@@ -20,30 +20,33 @@ server {
     ssl_prefer_server_ciphers off;
 
     ssl_session_cache shared:MozSSL:50m;
-    #ssl_ecdh_curve secp521r1,prime256v1,secp384r1;
     ssl_session_tickets off;
 
     add_header Strict-Transport-Security "max-age=63072000" always;
     
     location / {
 {% if reverse_proxy and reverse_proxy_url is defined %}
-        proxy_pass https://{{ reverse_proxy_url }};
-        proxy_set_header Host $host;
+        proxy_pass https://{{ reverse_proxy_url }}/;
+        proxy_http_version 1.1;
+
+        proxy_ssl_name {{ reverse_proxy_url }};
+        proxy_ssl_server_name on;
+
+        proxy_set_header Host {{ reverse_proxy_url }};
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        access_log /var/log/nginx/access.log;
-        error_log {{ webserver.error_log }};
+        proxy_set_header Connection "";
 {% else %}
         root {{ webserver.webroot }};
         index index.html index.htm;
         try_files $uri $uri/ index,html;
+{% enfif %}
 
         access_log /var/log/nginx/access.log;
         error_log {{ webserver.error_log }};
 
-{% endif %}
     }
 
     location = /{{ webtunnel_path | trim }} {

@@ -22,3 +22,6 @@
 - name: Include caddy
   ansible.builtin.include_tasks: apache.yaml
   when: use_webserver == "apache"
+
+- name: Include logrotate
+  ansible.builtin.include_tasks: logrotate.yaml

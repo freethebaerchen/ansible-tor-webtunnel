@@ -1,0 +1,31 @@
+---
+
+- name: Install Logrotate
+  ansible.builtin.package:
+    name: logrotate
+    state: present
+
+- name: Create logrotate configuration
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/logrotate.conf.j2"
+    dest: "{{ system.etc }}/logrotate.d/{{ use_webserver }}.conf"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+
+- name: Test logrotate
+  ansible.builtin.command:
+    cmd: logrotate -d {{ system.etc }}/logrotate.conf
+  changed_when: false
+  register: logrotate
+  failed_when:
+    - logrotate.rc != 0
+    - "'warning: logrotate in debug mode does nothing except printing debug messages!' not in logrotate.stderr"
+
+- name: Add crontab entry for logrotate
+  ansible.builtin.cron:
+    name: Logrotate
+    job: logrotate {{ system.etc }}/logrotate.conf
+    hour: 0
+    minute: 0
+    user: root

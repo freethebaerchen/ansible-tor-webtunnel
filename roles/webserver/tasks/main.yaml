@@ -25,3 +25,4 @@
 
 - name: Include logrotate
   ansible.builtin.include_tasks: logrotate.yaml
+  when: ansible_os_fmaiy != "OpenBSD"

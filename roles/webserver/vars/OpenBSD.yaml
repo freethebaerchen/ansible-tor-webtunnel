@@ -16,6 +16,8 @@ webserver:
       www
     {%- endif -%}
   webroot: /var/www/html
+  error_log: "/var/www/logs/error.log"
+  access_log: "/var/www/logs/access.log"
 system:
   etc: /etc
 webserver_config:

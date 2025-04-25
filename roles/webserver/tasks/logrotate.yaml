@@ -7,8 +7,8 @@
 
 - name: Create logrotate configuration
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/logrotate.conf.j2"
-    dest: "{{ system.etc }}/logrotate.d/{{ use_webserver }}.conf"
+    src: "{{ role_path }}/templates/logrotate.j2"
+    dest: "{{ system.etc }}/logrotate.d/{{ use_webserver }}"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
     mode: "0644"

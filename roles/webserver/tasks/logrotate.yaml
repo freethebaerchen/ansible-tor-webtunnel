@@ -20,7 +20,7 @@
   register: logrotate
   failed_when:
     - logrotate.rc != 0
-    - "'warning: logrotate in debug mode does nothing except printing debug messages!' not in logrotate.stderr"
+    - "'logrotate in debug mode does nothing except printing debug messages!' not in logrotate.stderr"
 
 - name: Add crontab entry for logrotate
   ansible.builtin.cron:

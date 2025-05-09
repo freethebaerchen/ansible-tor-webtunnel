@@ -205,10 +205,10 @@
           - wget
           - coreutils
           - git
-          - sudo-1.9.15.5p0
+          - sudo-1.9.16.1p0
           - nano
           - bash
-          - unzip-6.0p17
+          - unzip-6.0p18
           - htop
         state: present
 

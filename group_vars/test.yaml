@@ -1,12 +1,5 @@
 ---
 
-ansible_python_interpreter: >-
-  {% if ansible_os_family == 'OpenBSD' or ansible_os_family == 'FreeBSD' %}
-    /usr/local/bin/python3
-  {% else %}
-    /usr/bin/python3
-  {% endif %}
-
 admins:
   - name: me
     public-keys:

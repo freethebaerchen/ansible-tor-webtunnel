@@ -21,6 +21,7 @@
   failed_when:
     - logrotate.rc != 0
     - "'already exists, skipping rotation' not in logrotate.stderr"
+    - "'error: stat of /var/log/lastlog failed: No such file or directory' not in logrotate.stderr"
 
 - name: Add crontab entry for logrotate
   ansible.builtin.cron:

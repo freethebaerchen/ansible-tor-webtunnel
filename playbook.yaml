@@ -15,8 +15,7 @@
   gather_facts: false
   tasks:
     - name: Detect OS
-      ansible.builtin.command:
-        cmd: uname -s
+      ansible.builtin.raw: uname -s
       register: uname_result
       changed_when: false
 

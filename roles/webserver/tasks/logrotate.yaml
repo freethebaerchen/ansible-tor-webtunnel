@@ -18,6 +18,9 @@
     cmd: logrotate {{ system.etc }}/logrotate.conf
   changed_when: false
   register: logrotate
+  failed_when:
+    - logrotate.rc != 0
+    - "'already exists, skipping rotation' not in logrotate.stderr"
 
 - name: Add crontab entry for logrotate
   ansible.builtin.cron:

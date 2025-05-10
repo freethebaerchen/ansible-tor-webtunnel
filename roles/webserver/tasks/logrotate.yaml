@@ -13,6 +13,15 @@
     group: "{{ root.group }}"
     mode: "0644"
 
+- name: Symlink logrotate.conf
+  ansible.builtin.file:
+    src: /usr/etc/logrotate.conf
+    dest: "{{ system.etc }}/logrotate.conf"
+    state: link
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  when: ansible_os_family == "Suse"
+
 - name: Test logrotate
   ansible.builtin.command:
     cmd: logrotate {{ system.etc }}/logrotate.conf

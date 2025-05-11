@@ -10,21 +10,6 @@
     - hetzner
     - hcloud
 
-# - name: Set Python interpreter
-#   hosts: all
-#   gather_facts: false
-#   tasks:
-#     - name: Detect OS
-#       ansible.builtin.raw: uname -s
-#       register: uname_result
-#       changed_when: false
-#
-#     - name: Set Python interpreter based on OS
-#       ansible.builtin.set_fact:
-#         ansible_python_interpreter: "{{ '/usr/local/bin/python3' if 'BSD' in uname_result.stdout else '/usr/bin/python3' }}"
-#   tags:
-#     - always
-
 - name: Setup general system
   hosts: all
   become: true
@@ -43,6 +28,14 @@
     - tor
     - bridge
     - webtunnel
+
+- name: Setup docker
+  hosts: all
+  become: true
+  roles:
+    - docker
+  tags:
+    - docker
 
 - name: Setup webserver
   hosts: all

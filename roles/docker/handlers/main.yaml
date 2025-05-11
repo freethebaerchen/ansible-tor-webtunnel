@@ -1,0 +1,18 @@
+---
+
+- name: Start docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Restart containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ docker.directory }}/docker-compose.yml"
+    state: restarted
+  notify: Request SSL-Certificate
+
+- name: Request SSL-Certificate
+  ansible.builtin.command:
+    cmd: docker compose exec -f {{ docker.directory }}/docker-compose.yml certbot certonly --webroot -w /var/www/certbot -d {{ domain }} --cert-name {{ domain }} --email {{ email }} --non-interactive --agree-tos
+  changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"

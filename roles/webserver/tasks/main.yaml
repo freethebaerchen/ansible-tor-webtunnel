@@ -25,4 +25,6 @@
 
 - name: Include logrotate
   ansible.builtin.include_tasks: logrotate.yaml
-  when: ansible_os_family != "OpenBSD"
+  when:
+    - ansible_os_family != "OpenBSD"
+    - use_webserver != "docker"

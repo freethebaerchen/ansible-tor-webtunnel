@@ -1,0 +1,78 @@
+---
+
+- name: Generate random string with 24 characters
+  ansible.builtin.set_fact:
+    random_string: "{{ lookup('community.general.random_string', length=24, special=False) }}"
+
+- name: Check if random string exists
+  ansible.builtin.stat:
+    path: "{{ docker.directory }}/random-string.txt"
+  register: random_string_file
+
+- name: Create files with the random strings
+  ansible.builtin.lineinfile:
+    path: "{{ docker.directory }}/random-string.txt"
+    line: "{{ random_string }}"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: 0500
+    create: true
+  when: not random_string_file.stat.exists
+
+- name: Read random-string.txt
+  ansible.builtin.slurp:
+    src: "{{ docker.directory }}/random-string.txt"
+  register: random_string_file
+
+- name: Decode file content
+  ansible.builtin.set_fact:
+    random_string: "{{ random_string_file.content | b64decode }}"
+
+- name: Configure .env
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/.env.j2"
+    dest: "{{ docker.directory }}/.env"
+    owner: "{{ root.user }}"
+    group: "docker"
+    mode: "0644"
+  vars:
+    webtunnel_path: "{{ random_string }}"
+
+- name: Configure http config
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/nginx-http.conf.j2"
+    dest: "{{ docker.directory }}/files/http.conf"
+    owner: "{{ root.user }}"
+    group: "docker"
+    mode: "0644"
+  notify: Restart containers
+
+- name: Configure https config
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/nginx-https.conf.j2"
+    dest: "{{ docker.directory }}/files/https.conf"
+    owner: "{{ root.user }}"
+    group: "docker"
+    mode: "0644"
+  notify: Restart containers
+
+- name: Configure docker-compose.yml
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/docker-compose.yml.j2"
+    dest: "{{ docker.directory }}/docker-compose.yml"
+    owner: "{{ root.user }}"
+    group: "docker"
+    mode: "0644"
+  notify: Restart containers
+
+- name: Configure docker-compose.yml
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/docker-compose.yml.j2"
+    dest: "{{ docker.directory }}/docker-compose.yml"
+    owner: "{{ root.user }}"
+    group: "docker"
+    mode: "0644"
+  notify: Restart containers
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

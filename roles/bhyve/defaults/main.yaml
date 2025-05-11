@@ -25,6 +25,7 @@ vm:
       caddy: 58:9c:fc:20:00:00
       nginx: 58:9c:fc:21:00:00
       apache: 58:9c:fc:22:00:00
+      docker: 58:9c:fc:23:00:00
 
   archlinux:
     name: archlinux

@@ -11,7 +11,7 @@
 
 - name: Get the connection strings for testing in Tor Browser
   ansible.builtin.command:
-    cmd: docker compose exec -f {{ docker.directory }}/docker-compose.yml webtunnel-bridge get-bridge-line.sh
+    cmd: docker compose -f {{ docker.directory }}/docker-compose.yml exec webtunnel-bridge get-bridge-line.sh
   changed_when: false # No changes will be applied. Set just for ansible-lint.
   register: connection_string
 

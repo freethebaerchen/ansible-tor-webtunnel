@@ -19,7 +19,7 @@
     append: true
     groups:
       - docker
-  loop: admins
+  loop: "{{ admins }}"
 
 - name: Add normal users to docker group
   ansible.builtin.user:
@@ -27,4 +27,4 @@
     append: true
     groups:
       - docker
-  loop: users
+  loop: "{{ users }}"

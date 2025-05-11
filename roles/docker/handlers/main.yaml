@@ -7,12 +7,21 @@
     enabled: true
 
 - name: Restart containers
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: docker compose -f {{ docker.directory }}/docker-compose.yml down --remove-orphans && docker compose -f {{ docker.directory }}/docker-compose.yml up -d
   changed_when: true # True, so restart handler is triggered
+  notify: Test SSL-Certificate request
+
+- name: Test SSL-Certificate request
+  ansible.builtin.command:
+    cmd: docker compose exec -f {{ docker.directory }}/docker-compose.yml certbot certonly --webroot -w /var/www/certbot -d {{ domain }} --cert-name {{ domain }} --email {{ email }} --non-interactive --agree-tos --dry-run
+  register: certbot_test_output
+  failed_when: "'Some challenges have failed.' in certbot_test_output.stderr"
+  changed_when: "'The dry run was successful.' in certbot_test_output.stdout"
   notify: Request SSL-Certificate
 
 - name: Request SSL-Certificate
   ansible.builtin.command:
     cmd: docker compose exec -f {{ docker.directory }}/docker-compose.yml certbot certonly --webroot -w /var/www/certbot -d {{ domain }} --cert-name {{ domain }} --email {{ email }} --non-interactive --agree-tos
+  register: certbot_output
   changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"

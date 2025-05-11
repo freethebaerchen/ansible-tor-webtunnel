@@ -45,6 +45,6 @@
 - [ ] (Refactor) Cleanup (defaults/group_vars/host_vars/...)
 - [ ] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
 - [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)
-- [ ] (Feature) Docker Setup (Webtunnel, Nginx)
+- [x] (Feature) Docker Setup (Webtunnel, Nginx)
 - [x] (Feature) Logrotate
 - [x] (Feature) Non-LetsEncrypt SSL/TLS-Certificate

@@ -1,0 +1,41 @@
+---
+
+- name: Install Logrotate
+  ansible.builtin.package:
+    name: logrotate
+    state: present
+
+- name: Create logrotate configuration
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/logrotate.j2"
+    dest: "{{ system.etc }}/logrotate.d/{{ webserver_config[use_webserver].service_name }}"
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+
+- name: Symlink logrotate.conf
+  ansible.builtin.file:
+    src: /usr/etc/logrotate.conf
+    dest: "{{ system.etc }}/logrotate.conf"
+    state: link
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  when: ansible_os_family == "Suse"
+
+- name: Test logrotate
+  ansible.builtin.command:
+    cmd: logrotate {{ system.etc }}/logrotate.conf
+  changed_when: false
+  register: logrotate
+  failed_when:
+    - logrotate.rc != 0
+    - "'already exists, skipping rotation' not in logrotate.stderr"
+    - "'error: stat of /var/log/lastlog failed: No such file or directory' not in logrotate.stderr"
+
+- name: Add crontab entry for logrotate
+  ansible.builtin.cron:
+    name: Logrotate
+    job: logrotate {{ system.etc }}/logrotate.conf
+    hour: 0
+    minute: 0
+    user: root

@@ -205,10 +205,10 @@
           - wget
           - coreutils
           - git
-          - sudo-1.9.15.5p0
+          - sudo-1.9.16.1p0
           - nano
           - bash
-          - unzip-6.0p17
+          - unzip-6.0p18
           - htop
         state: present
 
@@ -248,13 +248,12 @@
         name:
           - go
           - htop
-          - python312
           - cronie
         state: present
 
     - name: Symlink pyhton bin to /usr/local/bin
       ansible.builtin.file:
-        src: /usr/bin/python3.12
+        src: /usr/bin/python3
         dest: /usr/local/bin/python3
         state: link
 
@@ -278,6 +277,16 @@
         job: "/usr/local/bin/unattended-upgrades"
         state: present
       when: unattended_upgrades
+
+    - name: Disable and stop firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: stopped
+        enabled: false
+
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
 
 - name: Block for OS-Specific tasks (Archlinux)
   when: ansible_os_family == "Archlinux"

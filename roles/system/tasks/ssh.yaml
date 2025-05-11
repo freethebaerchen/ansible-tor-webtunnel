@@ -5,12 +5,20 @@
     dest: /etc/ssh/sshd_config
     regexp: "^PermitRootLogin"
     line: "PermitRootLogin no"
+    create: true
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
 
 - name: "Configure sshd - disable password authentication"
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PasswordAuthentication"
     line: "PasswordAuthentication no"
+    create: true
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
 
 - name: "Add admin users"
   ansible.builtin.user:

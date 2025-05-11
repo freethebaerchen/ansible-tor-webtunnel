@@ -39,8 +39,8 @@ This Project supports, as of right now the following distributions:\
     - Debian-based (Ubuntu 24.04)\
     - Alpine-based (Alpine 3.21.0)\
     - RHEL-based (Oracle Linux 9.5, CentOS Stream 9, Almalinux 9.5)\
-    - OpenSUSE-based (OpenSUSE Leap 15.6)\
-    - OpenBSD-based (OpenBSD 7.6)\
+    - OpenSUSE-based (OpenSUSE Leap 15.6, OpenSUSE Tumbleweed)\
+    - OpenBSD-based (OpenBSD 7.6, OpenBSD 7.7)\
     - Archlinux-based (Archlinux 2024.08.01, Archlinux 2025.04.01)\
     - FreeBSD-based (FreeBSD 14.1, FreeBSD 14.2)
 
@@ -50,8 +50,8 @@ Regularily tested are the following:\
     - Ubuntu 24.04\
     - Alpine 3.21.3\
     - AlmaLinux 9.5\
-    - OpenSUSE Leap 15.6\
-    - OpenBSD 7.6\
+    - OpenSUSE Tumbleweed\
+    - OpenBSD 7.7\
     - Archlinux 2025.04.01\
     - FreeBSD 14.2
 

@@ -5,6 +5,7 @@
     repo: https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/webtunnel
     version: main
     dest: /tmp/webtunnel
+    force: true
 
 - name: Build WebSocket Bridge
   ansible.builtin.command:

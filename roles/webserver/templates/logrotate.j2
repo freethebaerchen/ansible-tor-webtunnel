@@ -1,0 +1,31 @@
+{{ webserver.error_log }} {
+  missingok
+  notifempty
+  copytruncate
+  dateext
+  dateyesterday
+
+  compress
+  compresscmd /usr/bin/xz
+  uncompresscmd /usr/bin/unxz
+  compressext .xz
+
+  rotate 14
+  size 1
+}
+
+{{ webserver.access_log }} {
+  missingok
+  notifempty
+  copytruncate
+  dateext
+  dateyesterday
+
+  compress
+  compresscmd /usr/bin/xz
+  uncompresscmd /usr/bin/unxz
+  compressext .xz
+
+  rotate 14
+  size 1
+}

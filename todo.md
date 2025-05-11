@@ -46,5 +46,5 @@
 - [ ] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
 - [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)
 - [ ] (Feature) Docker Setup (Webtunnel, Nginx)
-- [ ] (Feature) Logrotate
+- [x] (Feature) Logrotate
 - [x] (Feature) Non-LetsEncrypt SSL/TLS-Certificate

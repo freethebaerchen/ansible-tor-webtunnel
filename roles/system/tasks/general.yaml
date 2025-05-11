@@ -284,6 +284,10 @@
         state: stopped
         enabled: false
 
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+
 - name: Block for OS-Specific tasks (Archlinux)
   when: ansible_os_family == "Archlinux"
   block:

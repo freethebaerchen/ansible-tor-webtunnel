@@ -1,6 +1,6 @@
 services:
     webserver-https:
-        image: nginx
+        image: nginx:latest
         ports:
             - 443:443
         restart: always
@@ -8,13 +8,18 @@ services:
             - ./files/https.conf/:/etc/nginx/conf.d/default.conf:ro
             - ./files/webroot/:/usr/share/nginx/
             - ./files/certbot/conf/:/etc/nginx/ssl/:ro
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
     webserver-http:
-        image: nginx
+        image: nginx:latest
         ports:
             - 80:80
+        restart: always
         volumes:
             - ./files/http.conf:/etc/nginx/conf.d/default.conf:rw
             - ./files/certbot/www:/var/www/certbot/:ro
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
     certbot:
         image: certbot/certbot:latest
         depends_on:
@@ -23,6 +28,8 @@ services:
             - ./files/certbot/conf/:/etc/letsencrypt/:rw
             - ./files/certbot/www/:/var/www/certbot/:rw
         command: renew
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
     webtunnel-bridge:
         restart: always
         env_file:

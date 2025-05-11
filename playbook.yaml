@@ -29,14 +29,6 @@
     - bridge
     - webtunnel
 
-- name: Setup docker
-  hosts: all
-  become: true
-  roles:
-    - docker
-  tags:
-    - docker
-
 - name: Setup webserver
   hosts: all
   become: true
@@ -52,3 +44,11 @@
     - security
   tags:
     - security
+
+- name: Setup docker
+  hosts: all
+  become: true
+  roles:
+    - docker
+  tags:
+    - docker

@@ -3,7 +3,7 @@ from jinja2 import Template
 
 os_list = ["alpine", "archlinux", "freebsd", "openbsd", "rhel", "suse", "ubuntu"]
 webserver_list = ["apache", "caddy", "nginx", "docker"]
-docker_supported_oses = ["alpine"]  # Only generate for these OSes
+docker_supported_oses = ["alpine", "ubuntu"]  # Only generate for these OSes
 
 tld = os.getenv("TEST_SERVER_TLD")
 if tld is None:

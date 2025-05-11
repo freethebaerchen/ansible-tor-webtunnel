@@ -109,7 +109,7 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
-  create-docker:
+  create-docker-alpine:
     needs:
       - select-webserver
     runs-on: self-hosted
@@ -136,10 +136,42 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
-      - name: Start all ${{ env.OS }} servers
+      - name: Start ${{ env.OS }}-docker server
         run: |
           source venv/bin/activate
-          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+  create-docker-ubuntu:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: ubuntu
+      WEBSERVER_SOFTWARE: docker
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start ${{ env.OS }}-docker server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
 
   create-archlinux:
     needs:
@@ -304,6 +336,7 @@ jobs:
   setup-ubuntu:
     needs:
       - create-ubuntu
+      - create-docker-ubuntu
     runs-on: self-hosted
     env:
       OS: ubuntu
@@ -347,6 +380,7 @@ jobs:
   setup-alpine:
     needs:
       - create-alpine
+      - create-docker-alpine
     runs-on: self-hosted
     env:
       OS: alpine

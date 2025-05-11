@@ -5,7 +5,7 @@ server {
         server_name {{ domain }};
 
         location /.well-known/acme-challenge/ {
-                root {{ webserver.webroot }};
+                root /usr/share/nginx/html;
         }
 
         location / {

@@ -13,12 +13,18 @@
     name: docker
     state: present
 
-- name: Add all users to docker group
+- name: Add admin users to docker group
   ansible.builtin.user:
     name: "{{ item.name }}"
     append: true
     groups:
       - docker
-  loop:
-    - admins
-    - users
+  loop: admins
+
+- name: Add normal users to docker group
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    append: true
+    groups:
+      - docker
+  loop: users

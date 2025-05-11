@@ -1,15 +1,15 @@
 ---
 
-- name: Start docker
+- name: Restart docker
   ansible.builtin.service:
     name: docker
-    state: started
+    state: restarted
     enabled: true
 
 - name: Restart containers
-  community.docker.docker_compose_v2:
-    project_src: "{{ docker.directory }}/docker-compose.yml"
-    state: restarted
+  ansible.builtin.command:
+    cmd: docker compose -f {{ docker.directory }}/docker-compose.yml down --remove-orphans && docker compose -f {{ docker.directory }}/docker-compose.yml up -d
+  changed_when: true # True, so restart handler is triggered
   notify: Request SSL-Certificate
 
 - name: Request SSL-Certificate

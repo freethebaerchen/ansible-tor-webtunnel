@@ -9,19 +9,6 @@
     user: root
     job: "docker compose -f {{ docker.directory }}/docker-compose.yml -rm certbot renew"
 
-- name: Create filestructure in {{ docker.directory }}
-  ansible.builtin.file:
-    path: "{{ docker.directory }}/{{ item }}"
-    state: directory
-    mode: "0775"
-    owner: "{{ root.user }}"
-    group: docker
-  loop:
-    - files
-    - files/certbot
-    - files/certbot/www
-    - files/certbot/conf
-
 - name: Get the connection strings for testing in Tor Browser
   ansible.builtin.command:
     cmd: docker compose exec -f {{ docker.directory }}/docker-compose.yml webtunnel-bridge get-bridge-line.sh

@@ -38,6 +38,19 @@
   vars:
     webtunnel_path: "{{ random_string }}"
 
+- name: Create filestructure in {{ docker.directory }}
+  ansible.builtin.file:
+    path: "{{ docker.directory }}/{{ item }}"
+    state: directory
+    mode: "0775"
+    owner: "{{ root.user }}"
+    group: docker
+  loop:
+    - files
+    - files/certbot
+    - files/certbot/www
+    - files/certbot/conf
+
 - name: Configure http config
   ansible.builtin.template:
     src: "{{ role_path }}/templates/nginx-http.conf.j2"
@@ -54,6 +67,8 @@
     owner: "{{ root.user }}"
     group: "docker"
     mode: "0644"
+  vars:
+    webtunnel_path: "{{ random_string }}"
   notify: Restart containers
 
 - name: Configure docker-compose.yml

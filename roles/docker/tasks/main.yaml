@@ -22,3 +22,7 @@
 - name: Include setup
   ansible.builtin.include_tasks: setup.yaml
   when: use_webserver == "docker"
+
+- name: Include misc
+  ansible.builtin.include_tasks: misc.yaml
+  when: use_webserver == "docker"

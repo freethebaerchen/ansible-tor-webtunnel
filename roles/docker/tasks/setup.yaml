@@ -80,14 +80,5 @@
     mode: "0644"
   notify: Restart containers
 
-- name: Configure docker-compose.yml
-  ansible.builtin.template:
-    src: "{{ role_path }}/templates/docker-compose.yml.j2"
-    dest: "{{ docker.directory }}/docker-compose.yml"
-    owner: "{{ root.user }}"
-    group: "docker"
-    mode: "0644"
-  notify: Restart containers
-
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers

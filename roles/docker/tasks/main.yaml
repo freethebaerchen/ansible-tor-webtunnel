@@ -10,6 +10,7 @@
         - main.yaml
       paths:
         - '{{ role_path }}/vars'
+  when: use_webserver == "docker"
 
 - name: Include install
   ansible.builtin.include_tasks: install.yaml

@@ -99,6 +99,7 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
+  loop: "{{ system.packages }}"
 
 - name: Copy unattended-upgrade to server
   ansible.builtin.copy:

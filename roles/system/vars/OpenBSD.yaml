@@ -4,3 +4,14 @@ system:
   etc: /etc
   shell: /usr/local/bin/bash
   sudoers_file: sudoers
+  packages:
+    - go
+    - curl
+    - wget
+    - coreutils
+    - git
+    - sudo-1.9.16.1p0
+    - nano
+    - bash
+    - unzip-6.0p18
+    - htop

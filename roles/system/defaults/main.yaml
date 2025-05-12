@@ -8,3 +8,7 @@ system:
   etc: /etc
   shell: /bin/bash
   sudoers_file: sudoers.d/sudo
+  packages:
+    - go
+    - htop
+    - cronie

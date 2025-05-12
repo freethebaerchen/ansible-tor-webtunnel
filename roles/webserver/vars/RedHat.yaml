@@ -1,5 +1,24 @@
 ---
 
+webserver:
+  user: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- elif use_webserver == "nginx" -%}
+      nginx
+    {%- elif use_webserver == "apache" -%}
+      apache
+    {%- else -%}
+      nginx
+    {%- endif -%}
+  group: >-
+    {%- if use_webserver == "caddy" -%}
+      caddy
+    {%- elif use_webserver == "apache" -%}
+      apache
+    {%- else -%}
+      nginx
+    {%- endif -%}
 webserver_config:
   nginx:
     config_dir: /etc/nginx/conf.d

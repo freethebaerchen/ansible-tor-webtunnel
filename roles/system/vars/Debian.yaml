@@ -3,3 +3,11 @@
 root:
   user: root
   group: root
+system:
+  packages:
+    - apt-transport-https
+    - ca-certificates
+    - unattended-upgrades
+    - gpg
+    - golang
+    - htop

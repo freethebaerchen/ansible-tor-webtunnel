@@ -8,17 +8,6 @@
         upgrade: dist
         update_cache: true
 
-    - name: Install OS-specific packages
-      ansible.builtin.package:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - unattended-upgrades
-          - gpg
-          - golang
-          - htop
-        state: present
-
     - name: Configure unattended-upgrades
       ansible.builtin.copy:
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
@@ -28,12 +17,6 @@
         mode: "0644"
       when: unattended_upgrades
 
-    - name: Symlink pyhton bin to /usr/local/bin
-      ansible.builtin.file:
-        src: /usr/bin/python3
-        dest: /usr/local/bin/python3
-        state: link
-
 - name: Block for OS-Specific tasks (FreeBSD)
   when: ansible_os_family == "FreeBSD"
   block:
@@ -41,7 +24,6 @@
       ansible.builtin.package:
         name:
           - git
-          - htop
         state: present
 
     - name: Setup ports tree
@@ -63,35 +45,6 @@
         - "'is already installed' not in ports_go.stdout"
         - "'Installing go' not in ports_go.stdout"
 
-    - name: Copy unattended-upgrade to server
-      ansible.builtin.copy:
-        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-        dest: /usr/local/bin/unattended-upgrades
-        mode: 0755
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-
-    - name: Run "dist"-upgrade
-      ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      changed_when: true
-
-    - name: Create crontab entry for upgrades
-      ansible.builtin.cron:
-        name: "Fetch and install updates"
-        minute: "0"
-        hour: "14"
-        job: "/usr/local/bin/unattended-upgrades"
-        state: present
-      when: unattended_upgrades
-
-    - name: Replace hostname in rc.conf
-      ansible.builtin.lineinfile:
-        path: /etc/rc.conf
-        regexp: '^hostname='
-        line: "hostname={{ inventory_hostname }}"
-        state: present
-      notify: Restart system
-
 - name: Block for OS-Specific tasks (Alpine)
   when: ansible_os_family == "Alpine"
   block:
@@ -101,40 +54,6 @@
         regexp: '^#(.*\/community)'
         line: '\1'
         backrefs: true
-
-    - name: Install OS-specific packages
-      ansible.builtin.package:
-        name:
-          - go
-          - cronie
-        state: present
-
-    - name: Symlink pyhton bin to /usr/local/bin
-      ansible.builtin.file:
-        src: /usr/bin/python3
-        dest: /usr/local/bin/python3
-        state: link
-
-    - name: Copy unattended-upgrade to server
-      ansible.builtin.copy:
-        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-        dest: /usr/local/bin/unattended-upgrades
-        mode: 0755
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-
-    - name: Run "dist"-upgrade
-      ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      changed_when: true
-
-    - name: Create crontab entry for upgrades
-      ansible.builtin.cron:
-        name: "Fetch and install updates"
-        minute: "0"
-        hour: "14"
-        job: "/usr/local/bin/unattended-upgrades"
-        state: present
-      when: unattended_upgrades
 
 - name: Block for OS-Specific tasks (RedHat)
   when: ansible_os_family == "RedHat"
@@ -149,22 +68,6 @@
         name:
           - epel-release
         state: present
-
-    - name: Install OS-specific packages
-      ansible.builtin.package:
-        name:
-          - dnf-command(copr)
-          - golang
-          - dnf-automatic
-          - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-          - htop
-        state: present
-
-    - name: Symlink pyhton bin to /usr/local/bin
-      ansible.builtin.file:
-        src: /usr/bin/python3
-        dest: /usr/local/bin/python3
-        state: link
 
     - name: Copy unattended-upgrade to server
       ansible.builtin.copy:
@@ -184,110 +87,6 @@
         # noqa package-latest
         # "state: latest" needed to avoid dependency errors
 
-    - name: Disable and stop firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: stopped
-        enabled: false
-
-    - name: Disable SELinux
-      ansible.posix.selinux:
-        state: disabled
-
-- name: Block for OS-Specific tasks (OpenBSD)
-  when: ansible_os_family == "OpenBSD"
-  block:
-    - name: Install OS-specific packages
-      ansible.builtin.package:
-        name:
-          - go
-          - curl
-          - wget
-          - coreutils
-          - git
-          - sudo-1.9.16.1p0
-          - nano
-          - bash
-          - unzip-6.0p18
-          - htop
-        state: present
-
-    - name: Copy unattended-upgrade to server
-      ansible.builtin.copy:
-        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-        dest: /usr/local/bin/unattended-upgrades
-        mode: 0755
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-
-    - name: Run "dist"-upgrade
-      ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      changed_when: true
-
-    - name: Create crontab entry for upgrades
-      ansible.builtin.cron:
-        name: "Fetch and install updates"
-        minute: "0"
-        hour: "14"
-        job: "/usr/local/bin/unattended-upgrades"
-        state: present
-
-    - name: Replace hostname in /etc/myname
-      ansible.builtin.lineinfile:
-        path: /etc/myname
-        regexp: '^.*$'
-        line: "{{ inventory_hostname }}"
-        state: present
-      notify: Restart system
-
-- name: Block for OS-Specific tasks (Suse)
-  when: ansible_os_family == "Suse"
-  block:
-    - name: Install OS-specific packages
-      ansible.builtin.package:
-        name:
-          - go
-          - htop
-          - cronie
-        state: present
-
-    - name: Symlink pyhton bin to /usr/local/bin
-      ansible.builtin.file:
-        src: /usr/bin/python3
-        dest: /usr/local/bin/python3
-        state: link
-
-    - name: Copy unattended-upgrade to server
-      ansible.builtin.copy:
-        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-        dest: /usr/local/bin/unattended-upgrades
-        mode: 0755
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-
-    - name: Run "dist"-upgrade
-      ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      changed_when: true
-
-    - name: Create crontab entry for upgrades
-      ansible.builtin.cron:
-        name: "Fetch and install updates"
-        minute: "0"
-        hour: "14"
-        job: "/usr/local/bin/unattended-upgrades"
-        state: present
-      when: unattended_upgrades
-
-    - name: Disable and stop firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: stopped
-        enabled: false
-
-    - name: Disable SELinux
-      ansible.posix.selinux:
-        state: disabled
-
 - name: Block for OS-Specific tasks (Archlinux)
   when: ansible_os_family == "Archlinux"
   block:
@@ -296,74 +95,101 @@
         cmd: pacman -Sy --noconfirm
       changed_when: false # No changes will be applied. Set just for ansible-lint.
 
-    - name: Install OS-specific packages
-      ansible.builtin.package:
-        name:
-          - go
-          - htop
-          - cronie
-        state: present
+- name: Install OS-specfic packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
 
-    - name: Copy unattended-upgrade to server
-      ansible.builtin.copy:
-        src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
-        dest: /usr/local/bin/unattended-upgrades
-        mode: 0755
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
+- name: Copy unattended-upgrade to server
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
+    dest: /usr/local/bin/unattended-upgrades
+    mode: 0755
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+  when:
+    - ansible_os_family != "Debian"
+    - ansible_os_family != "RedHat"
 
-    - name: Run "dist"-upgrade
-      ansible.builtin.command: /usr/local/bin/unattended-upgrades
-      changed_when: true
+- name: Run "dist"-upgrade
+  ansible.builtin.command: /usr/local/bin/unattended-upgrades
+  changed_when: true
+  when:
+    - ansible_os_family != "Debian"
+    - ansible_os_family != "RedHat"
 
-    - name: Create crontab entry for upgrades
-      ansible.builtin.cron:
-        name: "Fetch and install updates"
-        minute: "0"
-        hour: "14"
-        job: "/usr/local/bin/unattended-upgrades"
-        state: present
-      when: unattended_upgrades
+- name: Create crontab entry for upgrades
+  ansible.builtin.cron:
+    name: "Fetch and install updates"
+    minute: "0"
+    hour: "14"
+    job: "/usr/local/bin/unattended-upgrades"
+    state: present
+  when:
+    - unattended_upgrades
+    - ansible_os_family != "Debian"
+    - ansible_os_family != "RedHat"
 
-    - name: Symlink pyhton bin to /usr/local/bin
-      ansible.builtin.file:
-        src: /usr/bin/python3
-        dest: /usr/local/bin/python3
-        state: link
+- name: Disable and stop firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: stopped
+    enabled: false
+  when: ansible_os_family == "RedHat" or ansible_os_family == "Suse"
 
-- name: Block for all hosts (except OpenBSD)
+- name: Disable SELinux
+  ansible.posix.selinux:
+    state: disabled
+  when: ansible_os_family == "RedHat" or ansible_os_family == "Suse"
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - curl
+      - wget
+      - coreutils
+      - git
+      - sudo
+      - nano
+      - bash
+      - unzip
+    state: present
+
+- name: Generate /etc/hosts file
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/hosts.j2"
+    dest: /etc/hosts
+    owner: "{{ root.user }}"
+    group: "{{ root.group }}"
+    mode: "0644"
+
+- name: Set the hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
   when: ansible_os_family != "OpenBSD"
-  block:
-    - name: Install required packages
-      ansible.builtin.package:
-        name:
-          - curl
-          - wget
-          - coreutils
-          - git
-          - sudo
-          - nano
-          - bash
-          - unzip
-        state: present
+  notify: Restart system
 
-    - name: Generate /etc/hosts file
-      ansible.builtin.template:
-        src: "{{ role_path }}/templates/hosts.j2"
-        dest: /etc/hosts
-        owner: "{{ root.user }}"
-        group: "{{ root.group }}"
-        mode: "0644"
+- name: Replace hostname in /etc/myname
+  ansible.builtin.lineinfile:
+    path: /etc/myname
+    regexp: '^.*$'
+    line: "{{ inventory_hostname }}"
+    state: present
+  when: ansible_os_family == "OpenBSD"
+  notify: Restart system
 
-    - name: Set the hostname
-      ansible.builtin.hostname:
-        name: "{{ inventory_hostname }}"
+- name: Replace hostname in rc.conf
+  ansible.builtin.lineinfile:
+    path: /etc/rc.conf
+    regexp: '^hostname='
+    line: "hostname={{ inventory_hostname }}"
+    state: present
+  notify: Restart system
+  when: ansible_os_family == "FreeBSD"
 
-    - name: Replace hostname in /etc/hostname
-      ansible.builtin.lineinfile:
-        path: /etc/hostname
-        regexp: '^.*$'
-        line: "{{ inventory_hostname }}"
-        state: present
-      notify: Restart system
-      when: ansible_os_family != "FreeBSD"
+- name: Symlink pyhton bin to /usr/local/bin
+  ansible.builtin.file:
+    src: /usr/bin/python3
+    dest: /usr/local/bin/python3
+    state: link
+  when: ansible_os_family != "FreeBSD"

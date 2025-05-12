@@ -1,8 +1,5 @@
 ---
 
-root:
-  user: root
-  group: wheel
 system:
   etc: /usr/local/etc
   shell: /usr/local/bin/bash

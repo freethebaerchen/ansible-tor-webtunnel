@@ -1,13 +1,8 @@
 ---
-root:
-  user: root
-  group: wheel
+
 webserver:
   user: www
   group: www
-  webroot: /var/www/html
-system:
-  etc: /usr/local/etc
 webserver_config:
   caddy:
     service_name: caddy
@@ -17,7 +12,6 @@ webserver_config:
     packages:
       - nginx
       - security/py-certbot
-    service_name: nginx
     config_dir: /usr/local/etc/nginx/http.d
   apache:
     packages:
@@ -27,7 +21,6 @@ webserver_config:
     server_root: /usr/local/etc/apache24
     config_dir: /usr/local/etc/apache24/Includes
     config_file: /usr/local/etc/apache24/httpd.conf
-    extra_dirs: []
     modules_config:
       - LoadModule rewrite_module /usr/local/libexec/apache24/mod_rewrite.so
       - LoadModule ssl_module /usr/local/libexec/apache24/mod_ssl.so
@@ -42,6 +35,5 @@ webserver_config:
       - LoadModule env_module /usr/local/libexec/apache24/mod_env.so
 certbot:
   config_dir: /usr/local/etc/letsencrypt
-  webroot: /var/www/certbot
 tor:
   directory: /var/db/tor

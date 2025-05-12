@@ -1,14 +1,5 @@
 ---
-root:
-  user: root
-  group: wheel
-caddy:
-  user: caddy
-  group: caddy
-system:
-  etc: /etc
-  shell: /bin/bash
+
 tor:
   user: toranon
   group: toranon
-  directory: /var/lib/tor

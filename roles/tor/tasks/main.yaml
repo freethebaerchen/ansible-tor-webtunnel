@@ -1,5 +1,10 @@
 ---
 
+- name: Check if OS-specific vars exist
+  ansible.builtin.stat:
+    path: "{{ role_path }}/vars/{{ ansible_os_family }}.yaml"
+  register: os_vars
+
 - name: Load OS-specific vars
   ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
@@ -10,6 +15,7 @@
         - main.yaml
       paths:
         - '{{ role_path }}/vars'
+  when: os_vars.stat.exists
 
 - name: Include random
   ansible.builtin.include_tasks: random.yaml

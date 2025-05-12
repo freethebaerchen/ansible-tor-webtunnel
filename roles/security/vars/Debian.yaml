@@ -3,9 +3,6 @@
 root:
   user: root
   group: root
-system:
-  etc: /etc
 security:
   packages:
-    - selinux-utils
     - policycoreutils

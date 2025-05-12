@@ -5,3 +5,6 @@ docker:
 webserver_config:
   docker:
     config_dir: /etc/nginx/conf.d
+root:
+  user: root
+  group: wheel

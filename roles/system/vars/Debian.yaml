@@ -3,7 +3,3 @@
 root:
   user: root
   group: root
-system:
-  etc: /etc
-  shell: /bin/bash
-  sudoers_file: sudoers.d/sudo

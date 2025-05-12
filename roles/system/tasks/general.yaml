@@ -193,4 +193,6 @@
     src: /usr/bin/python3
     dest: /usr/local/bin/python3
     state: link
-  when: ansible_os_family != "FreeBSD"
+  when:
+    - ansible_os_family != "FreeBSD"
+    - ansible_os_family != "OpenBSD"

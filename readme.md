@@ -54,6 +54,7 @@ Regularily tested are the following:\
     - OpenBSD 7.7\
     - Archlinux 2025.04.01\
     - FreeBSD 14.2
+    - Docker-Container Setup (on Alpine 3.21.3 and Ubuntu 24.04)
 
 ## Prerequisites
 

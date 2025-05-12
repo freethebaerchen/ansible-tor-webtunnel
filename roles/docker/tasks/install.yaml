@@ -1,0 +1,45 @@
+---
+- name: Block for non-Alpine Hosts
+  when: ansible_os_family != "Alpine"
+  block:
+    - name: Get docker setup script
+      ansible.builtin.get_url:
+        url: https://get.docker.com
+        dest: /tmp/docker-setup.sh
+        mode: "0700"
+        owner: "{{ root.user }}"
+        group: "{{ root.group }}"
+
+    - name: Run install script
+      ansible.builtin.command:
+        cmd: sh /tmp/docker-setup.sh
+      register: docker_install
+      changed_when: "'Client: Docker Engine - Community' in docker_install.stdout"
+      notify: Restart docker
+
+- name: Block for Alpine Hosts
+  when: ansible_os_family == "Alpine"
+  block:
+    - name: Install docker(-compose)
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - docker
+        - docker-cli-compose
+        - iptables-legacy
+      notify: Restart docker
+
+# - name: Symlink iptables to iptables-legacy
+#   ansible.builtin.file:
+#     src: /usr/sbin/iptables-legacy
+#     dest: /usr/sbin/iptables
+#     state: link
+#     force: true
+#
+# - name: Symlink ip6tables to ip6tables-legacy
+#   ansible.builtin.file:
+#     src: /usr/sbin/ip6tables-legacy
+#     dest: /usr/sbin/ip6tables
+#     state: link
+#     force: true

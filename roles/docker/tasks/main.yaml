@@ -1,0 +1,29 @@
+---
+
+- name: Load OS-specific vars
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_distribution }}.yaml'
+        - '{{ ansible_os_family }}.yaml'
+        - main.yaml
+      paths:
+        - '{{ role_path }}/vars'
+  when: use_webserver == "docker"
+
+- name: Include install
+  ansible.builtin.include_tasks: install.yaml
+  when: use_webserver == "docker"
+
+- name: Include configure
+  ansible.builtin.include_tasks: configure.yaml
+  when: use_webserver == "docker"
+
+- name: Include setup
+  ansible.builtin.include_tasks: setup.yaml
+  when: use_webserver == "docker"
+
+- name: Include misc
+  ansible.builtin.include_tasks: misc.yaml
+  when: use_webserver == "docker"

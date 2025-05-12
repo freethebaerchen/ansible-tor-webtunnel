@@ -29,7 +29,7 @@ hcloud:
 email: user@example.com
 
 deploy_webroot: false
-use_webserver: caddy #possible values are nginx and apache
+use_webserver: caddy #other possible values are nginx, apache and docker
 website:
   no_index: true
 

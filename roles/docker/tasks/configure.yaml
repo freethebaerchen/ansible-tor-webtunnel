@@ -1,0 +1,30 @@
+---
+
+- name: Create docker directory
+  ansible.builtin.file:
+    path: "{{ docker.directory }}"
+    owner: "{{ root.user }}"
+    group: "docker"
+    state: directory
+    mode: "0775"
+
+- name: Creat docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Add admin users to docker group
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    append: true
+    groups:
+      - docker
+  loop: "{{ admins }}"
+
+- name: Add normal users to docker group
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    append: true
+    groups:
+      - docker
+  loop: "{{ users }}"

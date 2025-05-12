@@ -14,3 +14,6 @@ security:
     modules:
       - ip_set
       - ip_set_hash_ip
+      - ip_tables
+      - iptable_nat
+      - iptable_filter

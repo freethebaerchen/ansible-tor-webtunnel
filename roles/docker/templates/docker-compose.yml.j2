@@ -1,0 +1,59 @@
+services:
+    webserver-https:
+        image: nginx:latest
+        ports:
+            - 443:443
+        restart: always
+        volumes:
+            - ./files/https.conf/:/etc/nginx/conf.d/default.conf:ro
+            - ./files/webroot/:/usr/share/nginx/
+            - ./files/certbot/conf/:/etc/nginx/ssl/:ro
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+    webserver-http:
+        image: nginx:latest
+        ports:
+            - 80:80
+        restart: always
+        volumes:
+            - ./files/http.conf:/etc/nginx/conf.d/default.conf:rw
+            - ./files/certbot/www:/var/www/certbot/:ro
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+    certbot:
+        image: certbot/certbot:latest
+        depends_on:
+            - webserver-http
+        volumes:
+            - ./files/certbot/conf/:/etc/letsencrypt/:rw
+            - ./files/certbot/www/:/var/www/certbot/:rw
+        command: renew
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+    webtunnel-bridge:
+        restart: always
+        env_file:
+            - .env
+        volumes:
+            - 'webtunnel-tor-state:/var/lib/tor'
+        user: debian-tor
+        ports:
+            - '127.0.0.1:15000:15000'
+        container_name: webtunnelBridge
+        image: 'thetorproject/webtunnel-bridge:latest'
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+    watchtower:
+        restart: always
+        image: containrrr/watchtower
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /etc/timezone:/etc/timezone:ro
+        environment:
+            - WATCHTOWER_CLEANUP=true
+            - WATCHTOWER_LABEL_ENABLE=true
+            - WATCHTOWER_INCLUDE_RESTARTING=true
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+volumes:
+  webtunnel-tor-state:

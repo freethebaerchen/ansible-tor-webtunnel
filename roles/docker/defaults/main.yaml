@@ -1,0 +1,7 @@
+---
+
+docker:
+  directory: /docker
+webserver_config:
+  docker:
+    config_dir: /etc/nginx/conf.d

@@ -109,6 +109,70 @@ jobs:
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }}'
 
+  create-docker-alpine:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: alpine
+      WEBSERVER_SOFTWARE: docker
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start ${{ env.OS }}-docker server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+  create-docker-ubuntu:
+    needs:
+      - select-webserver
+    runs-on: self-hosted
+    env:
+      OS: ubuntu
+      WEBSERVER_SOFTWARE: docker
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download venv
+        shell: bash
+        run: |
+          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+          echo "Downloaded venv successfully."
+
+      - name: Delete ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }}
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=delete-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Create ${{ env.OS }}-${{ env.WEBSERVER_SOFTWARE }} server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=create-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
+      - name: Start ${{ env.OS }}-docker server
+        run: |
+          source venv/bin/activate
+          ansible-playbook actions-playbook.yaml --tags=start-server -i actions-inventory.ini -e 'os=${{ env.OS }} webserver_software=["${{ env.WEBSERVER_SOFTWARE }}"]'
+
   create-archlinux:
     needs:
       - select-webserver
@@ -272,6 +336,7 @@ jobs:
   setup-ubuntu:
     needs:
       - create-ubuntu
+      - create-docker-ubuntu
     runs-on: self-hosted
     env:
       OS: ubuntu
@@ -315,6 +380,7 @@ jobs:
   setup-alpine:
     needs:
       - create-alpine
+      - create-docker-alpine
     runs-on: self-hosted
     env:
       OS: alpine
@@ -354,6 +420,44 @@ jobs:
         run: |
           rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-${{ env.OS }}.txt >/dev/null && \
           echo "Uploaded connection-strings-${{ env.OS }}.txt successfully."
+
+#  setup-docker:
+#    needs:
+#      - create-docker
+#    runs-on: self-hosted
+#    env:
+#      OS: alpine
+#      WEBSERVER_SOFTWARE: docker
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#
+#      - name: Download venv
+#        shell: bash
+#        run: |
+#          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+#          echo "Downloaded venv successfully."
+#
+#      - name: Download host_vars
+#        run: |
+#          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+#          echo "Downloaded venv successfully."
+#
+#      - name: Wait until the ${{ env.OS }}-docker server is reachable
+#        run: |
+#          source venv/bin/activate
+#          python3 scripts/check_hosts.py --limit ${{ env.OS }}-docker -i actions-inventory.ini
+#
+#      - name: Run Ansible Playbook Test for ${{ env.OS }}-docker
+#        run: |
+#          source venv/bin/activate
+#          ansible-playbook playbook.yaml --limit ${{ env.OS }}-docker -i actions-inventory.ini
+#
+#      - name: Upload connection-strings for docker
+#        shell: bash
+#        run: |
+#          rsync -avz --no-o --no-g --delete connection-strings.txt 10.1.0.100:connection-strings-docker.txt >/dev/null && \
+#          echo "Uploaded connection-strings-docker.txt successfully."
 
   setup-archlinux:
     needs:
@@ -695,6 +799,69 @@ jobs:
         run: |
           source venv/bin/activate
           ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+
+#  test-docker:
+#    needs:
+#      - setup-docker
+#    runs-on: self-hosted
+#    env:
+#      OS: docker
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#
+#      - name: Download venv
+#        shell: bash
+#        run: |
+#          rsync -avz --no-o --no-g --delete 10.1.0.100:venv . >/dev/null && \
+#          echo "Downloaded venv successfully."
+#
+#      - name: Download host_vars
+#        run: |
+#          rsync -avz --no-o --no-g 10.1.0.100:test_host_vars/ host_vars/ >/dev/null && \
+#          echo "Downloaded venv successfully."
+#
+#      - name: Create ${{ env.OS }} webtunnel-client
+#        run: |
+#          source venv/bin/activate
+#          ansible-playbook actions-playbook.yaml --tags=create-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
+#
+#      - name: Download connection-strings for ${{ env.OS }}
+#        shell: bash
+#        run: |
+#          rsync -avz --no-o --no-g --delete 10.1.0.100:connection-strings-${{ env.OS }}.txt ./connection-strings.txt >/dev/null && \
+#          echo "Downloaded connection-strings-${{ env.OS }}.txt successfully."
+#
+#      - name: Wait until the ${{ env.OS }} webtunnel client is reacheable
+#        run: |
+#          source venv/bin/activate
+#          python3 scripts/check_hosts.py --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+#
+#      - name: Test webtunnel connections
+#        run: |
+#          source venv/bin/activate
+#          ansible-playbook actions-playbook.yaml --tags=test-webtunnel --limit ${{ env.OS }}-webtunnel-client -i actions-inventory.ini
+#
+#      - name: Test SSH connections
+#        run: |
+#          source venv/bin/activate
+#          python3 scripts/test_ssh.py --limit ${{ env.OS }} -i actions-inventory.ini
+#
+#      - name: Test HTTP/HTTPS connections
+#        run: |
+#          source venv/bin/activate
+#          python3 scripts/test_web.py --limit ${{ env.OS }} -i actions-inventory.ini
+#
+#      - name: Shutdown ${{ env.OS }} servers
+#        run: |
+#          source venv/bin/activate
+#          ansible-playbook actions-playbook.yaml --tags=shutdown-server -i actions-inventory.ini  -e "os=${{ env.OS }}"
+#
+#      - name: Delete ${{ env.OS }} webtunnel-client
+#        if: always()
+#        run: |
+#          source venv/bin/activate
+#          ansible-playbook actions-playbook.yaml --tags=delete-webtunnel-client -i actions-inventory.ini -e "os=${{ env.OS }}"
 
   test-archlinux:
     needs:

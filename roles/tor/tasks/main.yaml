@@ -17,6 +17,8 @@
     - random
     - string
     - random-string
+  when: use_webserver != "docker"
 
 - name: Include webtunnel
   ansible.builtin.include_tasks: webtunnel.yaml
+  when: use_webserver != "docker"

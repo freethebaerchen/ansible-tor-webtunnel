@@ -7,7 +7,7 @@
     hour: "12"
     weekday: "7"
     user: root
-    job: "docker compose -f {{ docker.directory }}/docker-compose.yml -rm certbot renew"
+    job: "docker compose -f {{ docker.directory }}/docker-compose.yml run certbot renew"
 
 - name: Get the connection strings for testing in Tor Browser
   ansible.builtin.command:

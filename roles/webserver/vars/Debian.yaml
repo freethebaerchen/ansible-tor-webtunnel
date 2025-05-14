@@ -15,29 +15,12 @@ webserver:
     {%- else -%}
       www-data
     {%- endif -%}
-  webroot: /var/www/html
-system:
-  etc: /etc
 webserver_config:
-  caddy:
-    service_name: caddy
-    config_dir: /etc/caddy
-    extra_dirs: /etc/caddy/configs
   nginx:
-    packages:
-      - nginx
-      - certbot
-    service_name: nginx
     config_dir: /etc/nginx/sites-enabled
   apache:
-    packages:
-      - apache2
-      - certbot
-    service_name: apache2
-    server_root: /etc/apache2
     config_dir: /etc/apache2/sites-enabled
     config_file: /etc/apache2/apache2.conf
-    extra_dirs: []
     modules:
       - rewrite
       - ssl
@@ -46,8 +29,3 @@ webserver_config:
     modules_config:
       - IncludeOptional mods-enabled/*.load
       - IncludeOptional mods-enabled/*.conf
-certbot:
-  config_dir: /etc/letsencrypt
-  webroot: /var/www/certbot
-tor:
-  directory: /var/lib/tor

@@ -1,7 +1,5 @@
 ---
-root:
-  user: root
-  group: root
+
 webserver:
   user: >-
     {%- if use_webserver == "caddy" -%}
@@ -11,31 +9,18 @@ webserver:
     {%- elif use_webserver == "apache" -%}
       apache
     {%- else -%}
-      www-data
+      nginx
     {%- endif -%}
   group: >-
     {%- if use_webserver == "caddy" -%}
       caddy
-    {%- elif use_webserver == "nginx" -%}
-      nginx
     {%- elif use_webserver == "apache" -%}
       apache
     {%- else -%}
-      www-data
+      nginx
     {%- endif -%}
-  webroot: /var/www/html
-system:
-  etc: /etc
 webserver_config:
-  caddy:
-    service_name: caddy
-    config_dir: /etc/caddy
-    extra_dirs: /etc/caddy/configs
   nginx:
-    packages:
-      - nginx
-      - certbot
-    service_name: nginx
     config_dir: /etc/nginx/conf.d
   apache:
     packages:
@@ -51,8 +36,3 @@ webserver_config:
       - conf
     modules_config:
       - Include conf.modules.d/*.conf
-certbot:
-  config_dir: /etc/letsencrypt
-  webroot: /var/www/certbot
-tor:
-  directory: /var/lib/tor

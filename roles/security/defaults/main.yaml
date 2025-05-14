@@ -1,4 +1,14 @@
 ---
+
+root:
+  user: root
+  group: wheel
+system:
+  etc: /etc
+security:
+  packages: []
+  kernel:
+    modules: []
 # Internal service, that should be accessible from the outside
 local_services: []
 # Example

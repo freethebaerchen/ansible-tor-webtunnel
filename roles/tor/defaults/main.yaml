@@ -1,8 +1,16 @@
 ---
-
+root:
+  user: root
+  group: wheel
+system:
+  etc: /etc
+  shell: /bin/bash
 email: user@example.com
 tor:
   nickname: somenickname
   distribution_method: HTTPS
+  user: tor
+  group: tor
+  directory: /var/lib/tor
 dir:
   webroot: /var/www/html

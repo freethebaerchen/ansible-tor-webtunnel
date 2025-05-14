@@ -1,10 +1,5 @@
 ---
 
-root:
-  user: root
-  group: wheel
-system:
-  etc: /etc
 security:
   packages:
     - linux

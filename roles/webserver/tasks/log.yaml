@@ -23,19 +23,3 @@
     owner: "{{ webserver.user }}"
     group: "{{ webserver.group }}"
     mode: "0644"
-
-# - name: Block for OS-specific (RedHat)
-#   when:
-#     - ansible_os_family == "RedHat"
-#     - use_webserver == "caddy"
-#   block:
-#     - name: Ensure SELinux file context for Caddy log directory
-#       community.general.sefcontext:
-#         target: "/var/log/caddy(/.*)?"
-#         setype: httpd_log_t
-#         state: present
-#
-#     - name: Apply SELinux context to /var/log/caddy
-#       ansible.builtin.command: restorecon -Rv /var/log/caddy
-#       register: caddy_selinux
-#       changed_when: "'' not in caddy_selinux.stdout"

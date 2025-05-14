@@ -26,6 +26,7 @@
     groups:
       - "{{ root.group }}"
     append: true
+    password_lock: false
     shell: "{{ system.shell }}"
   loop: "{{ admins }}"
   loop_control:
@@ -34,6 +35,7 @@
 - name: "Add normal users"
   ansible.builtin.user:
     name: "{{ item.name }}"
+    password_lock: false
     shell: "{{ system.shell }}"
   loop: "{{ users }}"
   loop_control:

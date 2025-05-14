@@ -1,12 +1,6 @@
 ---
-root:
-  user: root
-  group: wheel
-caddy:
-  user: _caddy
-  group: _caddy
+
 system:
-  etc: /etc
   shell: /usr/local/bin/bash
 tor:
   user: _tor

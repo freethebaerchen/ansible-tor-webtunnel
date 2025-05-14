@@ -20,7 +20,6 @@
 - [ ] NixOS
 - [ ] MacOS
 
-
 ## Other
 - [x] Change from root to tor user
 - [x] Change SSH-Key setup to template
@@ -42,8 +41,8 @@
 - [ ] (Feature) Grafana Monitoring -> [Metrics Documentation](https://support.torproject.org/relay-operators/relay-bridge-overloaded/)
 - [ ] (Feature) Auto-Update Report via Mail
 - [ ] (Feature) Security SElinux/AppArmor
-- [ ] (Refactor) Cleanup (defaults/group_vars/host_vars/...)
-- [ ] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
+- [x] (Refactor) Cleanup (defaults/group_vars/host_vars/...)
+- [x] (Refactor) Tasks (OS-Vars, instead of ansible_os_family blocks)
 - [ ] (Feature) [Build tor from source](https://gitlab.torproject.org/tpo/core/tor)
 - [x] (Feature) Docker Setup (Webtunnel, Nginx)
 - [x] (Feature) Logrotate

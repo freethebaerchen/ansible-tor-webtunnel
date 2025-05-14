@@ -12,6 +12,7 @@ roles/hetzner/files/*
 inventory.ini
 host_vars/*
 !host_vars/your-bridge-*-0.yaml
+!host_vars/*.yaml.example
 host_files/*
 !host_files/your-bridge-*-0
 roles/tor/files/*

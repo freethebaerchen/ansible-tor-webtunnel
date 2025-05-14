@@ -89,11 +89,13 @@ Set the reverse-proxy value to true and configure the domain you want to reverse
 ## preparation of the code
 1. Copy the [group_vars example file](group_vars/all-example.yaml) to the [group_vars](group_vars) named all.yaml\
     1.1 Change the username\
-    1.2 Modify the servers to your fit\
-    1.3 Change the SSH public key(s).
-    1.4 Change the E-Mail you want to use for the certificate request AND as contact address for the bridge\
+    1.2 Change the SSH public key(s).\
+    1.3 Change the E-Mail you want to use for the certificate request AND as contact address for the bridge\
     Info: For the bridge address the @ and . symbol will be replaced with [at] and [dot]\
-    1.5 Change the tor.nickname to your fit
+    1.4 Change the tor.nickname to your fit
+2. Copy the [host_vars localhost exmaple file](host_vars/localhost.yaml.example) to the [host_vars](host_vars) named localhost.yaml\
+    2.1 Change the SSH public key.\
+    2.2 Change the server names.\
 2. Copy the [env file](.env) to .env.local (optinal)\
     2.1 Exchange the comment with your HCloud API-Token from the [prerequisites](#hetzner) step
 3. Copy the [example host_var file](host_vars/your-bridge-0.yaml) to host_vars/<name-in-inventory.ini>.yaml

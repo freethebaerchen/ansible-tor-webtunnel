@@ -59,27 +59,6 @@
   notify:
     - Validate nginx
 
-# - name: Block for RedHat (SElinux)
-#   when: ansible_os_family == "RedHat"
-#   block:
-#     - name: Change SELinux for nginx
-#       community.general.sefcontext:
-#         target: "{{ webserver.webroot }}(/.*)?"
-#         setype: httpd_sys_rw_content_t
-#         state: present
-#       when: not reverse_proxy
-#
-#     - name: Apply SELinux file context changes (webroot)
-#       ansible.builtin.command: restorecon -Rv {{ webserver.webroot }}
-#       register: apply_selinux
-#       changed_when: "'' not in apply_selinux.stdout"
-#       when: not reverse_proxy
-#
-#     - name: Apply SELinux file context changes (letsencrypt)
-#       ansible.builtin.command: restorecon -Rv {{ certbot.config_dir }}
-#       register: apply_selinux
-#       changed_when: "'' not in apply_selinux.stdout"
-
 - name: Include certificate request
   ansible.builtin.include_tasks: certificate.yaml
 

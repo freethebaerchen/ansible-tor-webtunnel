@@ -2,10 +2,6 @@
 root:
   user: root
   group: root
-system:
-  etc: /etc
-  shell: /bin/bash
 tor:
   user: debian-tor
   group: debian-tor
-  directory: /var/lib/tor

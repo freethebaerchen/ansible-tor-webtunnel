@@ -1,0 +1,24 @@
+---
+
+hcloud:
+  sshkey:
+    - name: "fallback-key"
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5"
+      state: present
+  servers:
+    - name: your-bridge-nbg-0
+      location: nbg1
+      image: ubuntu-24.04
+      type: cax11
+    - name: your-bridge-fsn-0
+      location: fsn1
+      image: ubuntu-24.04
+      type: cax11
+    - name: your-bridge-hel-0
+      location: hel1
+      image: ubuntu-24.04
+      type: cax11
+    - name: your-bridge-hel-1
+      location: hel1
+      image: ubuntu-24.04
+      type: cax11

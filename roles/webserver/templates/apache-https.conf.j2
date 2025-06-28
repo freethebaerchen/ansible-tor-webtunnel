@@ -27,7 +27,11 @@
     RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
     RequestHeader set X-Forwarded-Proto https
 
+{% if webserver.access_log_enabled %}
     CustomLog {{ webserver.access_log }} combined
+{% else %}
+    CustomLog /dev/null combined
+{% endif %}
     ErrorLog {{ webserver.error_log }}
 {% else %}
     DocumentRoot /var/www/html

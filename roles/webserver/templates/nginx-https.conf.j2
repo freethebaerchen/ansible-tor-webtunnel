@@ -43,8 +43,11 @@ server {
         index index.html index.htm;
         try_files $uri $uri/ index,html;
 {% endif %}
-
+{% if webserver.access_log_enabled %}
         access_log {{ webserver.access_log }};
+{% else %}
+        access_log /dev/null;
+{% endif %}
         error_log {{ webserver.error_log }};
 
     }

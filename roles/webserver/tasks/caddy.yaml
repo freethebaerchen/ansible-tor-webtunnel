@@ -55,18 +55,18 @@
         state: value_present
       notify: Restart portacl
 
-    - name: Build caddy from ports
-      community.general.make:
-        chdir: /usr/ports/www/caddy
-        targets:
-          - install
-          - clean
-        params:
-          -DBATCH:
-      register: ports_caddy
-      failed_when:
-        - "'is already installed' not in ports_caddy.stdout"
-        - "'Installing caddy' not in ports_caddy.stdout"
+#    - name: Build caddy from ports
+#      community.general.make:
+#        chdir: /usr/ports/www/caddy
+#        targets:
+#          - install
+#          - clean
+#        params:
+#          -DBATCH:
+#      register: ports_caddy
+#      failed_when:
+#        - "'is already installed' not in ports_caddy.stdout"
+#        - "'Installing caddy' not in ports_caddy.stdout"
 
 - name: Block for OS-spcific tasks (RedHat)
   when: ansible_os_family == "RedHat"
@@ -79,7 +79,6 @@
   ansible.builtin.package:
     name:
       - caddy
-  when: ansible_os_family != "FreeBSD"
 
 - name: Include webroot
   ansible.builtin.include_tasks: webroot.yaml

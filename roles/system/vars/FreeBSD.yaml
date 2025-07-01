@@ -6,3 +6,4 @@ system:
   sudoers_file: sudoers.d/sudo
   packages:
     - htop
+    - go

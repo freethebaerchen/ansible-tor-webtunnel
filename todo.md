@@ -52,3 +52,4 @@
 - [ ] (Feature) Support for Wildcard on Certbot
 - [ ] (Feature) Mutliple SANs for Certbot
 - [ ] (Feature) Allow other Servers for Certbot Certificates
+- [ ] (Refactor) Testing of OS's and Webserver Software

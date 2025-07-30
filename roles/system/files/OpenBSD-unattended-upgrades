@@ -9,7 +9,7 @@ echo "=== Unattended Upgrade started: $(date) ==="
 
 # Step 1: Apply base system patches
 echo "Running syspatch..."
-syspatch
+REBOOT_REQUIRED=$(syspatch)
 
 # Step 2: Upgrade installed packages
 UPDATES=$(pkg_add -un)
@@ -25,4 +25,13 @@ fi
 echo "Cleaning up old packages..."
 pkg_delete -a
 
-echo "=== Unattended Upgrade completed: $(date) ==="
+echo "=== Unattended Upgrade completed: $(date), rebooting if required ==="
+
+echo "$REBOOT_REQUIRED" | grep -q "reboot to load the new kernel"
+
+if [ $? -eq 0 ]; then
+  echo "System requires a reboot, rebooting now"
+  shutdown -r now
+else
+  echo "No reboot needed."
+fi

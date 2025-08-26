@@ -3,6 +3,7 @@ tmp
 *.local
 .ansible
 .terraform*
+*.tfvars
 roles/*/library/__pycache__
 
 group_vars/*

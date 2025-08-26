@@ -11,3 +11,4 @@ repos:
     hooks:
       - id: terraform_validate
         files: \.tf$
+        args: [--args=-chdir=.tests/infra]

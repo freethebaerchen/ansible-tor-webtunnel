@@ -1,14 +1,15 @@
 ---
 repos:
   - repo: https://github.com/ansible/ansible-lint.git
-    rev: v6.22.1
+    rev: v25.8.2
     hooks:
       - id: ansible-lint
         files: \.(yaml|yml)$
 
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.88.0
+  - repo: https://github.com/tofuutils/pre-commit-opentofu
+    rev: v2.2.1
     hooks:
-      - id: terraform_validate
+      - id: tofu_fmt
+      - id: tofu_docs
+      - id: tofu_validate
         files: \.tf$
-        args: [--args=-chdir=.tests/infra]

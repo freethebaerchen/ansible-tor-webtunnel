@@ -39,9 +39,9 @@ jobs:
       - name: Determine webserver based on GITHUB_RUN_NUMBER
         id: select-webserver
         run: |
-          WEBSERVERS=("caddy" "nginx" "apache")
-          RANDOM_INDEX=$((GITHUB_RUN_NUMBER % 3))
-          WEBSERVER_SOFTWARE=${WEBSERVERS[$RANDOM_INDEX]}
+          WEBSERVERS=("apache" "caddy" "nginx")
+          WEBSERVER_INDEX=$(((GITHUB_RUN_NUMBER + GITHUB_RUN_ATTEMPT) % 3))
+          WEBSERVER_SOFTWARE=${WEBSERVERS[$WEBSERVER_INDEX]}
           echo "webserver=$WEBSERVER_SOFTWARE" >> "$GITHUB_OUTPUT"
           echo "Using webserver: $WEBSERVER_SOFTWARE"
 

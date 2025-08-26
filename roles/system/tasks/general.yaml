@@ -17,33 +17,33 @@
         mode: "0644"
       when: unattended_upgrades
 
-- name: Block for OS-Specific tasks (FreeBSD)
-  when: ansible_os_family == "FreeBSD"
-  block:
-    - name: Install OS-specific packages (FreeBSD)
-      ansible.builtin.package:
-        name:
-          - git
-        state: present
+# - name: Block for OS-Specific tasks (FreeBSD)
+#   when: ansible_os_family == "FreeBSD"
+#   block:
+#     - name: Install OS-specific packages (FreeBSD)
+#       ansible.builtin.package:
+#         name:
+#           - git
+#         state: present
 
-    - name: Setup ports tree
-      ansible.builtin.git:
-        repo: https://git.FreeBSD.org/ports.git
-        version: main
-        dest: /usr/ports
+#     - name: Setup ports tree
+#       ansible.builtin.git:
+#         repo: https://git.FreeBSD.org/ports.git
+#         version: main
+#         dest: /usr/ports
 
-    - name: Build go from ports
-      community.general.make:
-        chdir: /usr/ports/lang/go
-        targets:
-          - install
-          - clean
-        params:
-          -DBATCH:
-      register: ports_go
-      failed_when:
-        - "'is already installed' not in ports_go.stdout"
-        - "'Installing go' not in ports_go.stdout"
+#     - name: Build go from ports
+#       community.general.make:
+#         chdir: /usr/ports/lang/go
+#         targets:
+#           - install
+#           - clean
+#         params:
+#           -DBATCH:
+#       register: ports_go
+#       failed_when:
+#         - "'is already installed' not in ports_go.stdout"
+#         - "'Installing go' not in ports_go.stdout"
 
 - name: Block for OS-Specific tasks (Alpine)
   when: ansible_os_family == "Alpine"

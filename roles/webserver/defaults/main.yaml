@@ -28,6 +28,7 @@ webserver:
   webroot: /var/www/html
   error_log: "/var/log/{{ webserver_config[use_webserver].service_name }}/error.log"
   access_log: "/var/log/{{ webserver_config[use_webserver].service_name }}/access.log"
+  access_log_enabled: false
 webserver_config:
   caddy:
     service_name: caddy

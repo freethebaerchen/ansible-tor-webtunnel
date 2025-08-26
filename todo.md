@@ -47,3 +47,9 @@
 - [x] (Feature) Docker Setup (Webtunnel, Nginx)
 - [x] (Feature) Logrotate
 - [x] (Feature) Non-LetsEncrypt SSL/TLS-Certificate
+- [x] (Feature) Enable/Disbale Logging for non-Webtunnel Webserver-Access
+- [ ] (Feature) Multiple SSL-Certificates
+- [ ] (Feature) Support for Wildcard on Certbot
+- [ ] (Feature) Mutliple SANs for Certbot
+- [ ] (Feature) Allow other Servers for Certbot Certificates
+- [ ] (Refactor) Testing of OS's and Webserver Software

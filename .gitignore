@@ -2,6 +2,7 @@ venv
 tmp
 *.local
 .ansible
+.terraform*
 roles/*/library/__pycache__
 
 group_vars/*

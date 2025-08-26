@@ -38,23 +38,23 @@ You can disable them by setting `unattended_upgrades: no`or `unattended_upgrades
 This Project supports, as of right now the following distributions:\
     - Debian-based (Ubuntu 24.04)\
     - Alpine-based (Alpine 3.21.0)\
-    - RHEL-based (Oracle Linux 9.5, CentOS Stream 9, Almalinux 9.5)\
+    - RHEL-based (Oracle Linux 9.5, CentOS Stream 9, AlmaLinux 9)\
     - OpenSUSE-based (OpenSUSE Leap 15.6, OpenSUSE Tumbleweed)\
     - OpenBSD-based (OpenBSD 7.6, OpenBSD 7.7)\
-    - Archlinux-based (Archlinux 2024.08.01, Archlinux 2025.04.01)\
+    - Archlinux-based (Archlinux 2024.08.01, Archlinux 2025.02.01, Archlinux 2025.04.01)\
     - FreeBSD-based (FreeBSD 14.1, FreeBSD 14.2)
 
 The OS-Version in Brackets were tested.\
 
 Regularily tested are the following:\
-    - Ubuntu 24.04\
-    - Alpine 3.21.3\
-    - AlmaLinux 9.5\
-    - OpenSUSE Tumbleweed\
-    - OpenBSD 7.7\
-    - Archlinux 2025.04.01\
-    - FreeBSD 14.2
-    - Docker-Container Setup (on Alpine 3.21.3 and Ubuntu 24.04)
+    - Ubuntu 24.04 (Arm64 and x86_64)\
+    - Alpine 3.22.1 (Arm64 and x86_64)\
+    - AlmaLinux 9 (Arm64 and x86_64)\
+    - OpenSUSE Leap 15.7 (Arm64 and x86_64)\
+    - OpenBSD 7.7 (Arm64 and x86_64)\
+    - Archlinux 2025.02.01 (x86_64)\
+    - FreeBSD 14.3 (Arm64 and x86_64)\
+    - Docker-Container Setup (on Alpine 3.22.1 and Ubuntu 24.04 on Arm64 and x86_64)
 
 ## Prerequisites
 

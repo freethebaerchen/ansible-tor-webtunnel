@@ -1,12 +1,16 @@
 ## Setup Ubuntu Arm64-Servers
 resource "hcloud_server" "ubuntu-arm-apache" {
-  name         = "ubuntu-arm-apache"
-  image        = "ubuntu-24.04"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "ubuntu-arm-apache"
+  image              = "ubuntu-24.04"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "root"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -18,13 +22,17 @@ resource "hcloud_server" "ubuntu-arm-apache" {
 }
 
 resource "hcloud_server" "ubuntu-arm-caddy" {
-  name         = "ubuntu-arm-caddy"
-  image        = "ubuntu-24.04"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "ubuntu-arm-caddy"
+  image              = "ubuntu-24.04"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "root"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -36,13 +44,17 @@ resource "hcloud_server" "ubuntu-arm-caddy" {
 }
 
 resource "hcloud_server" "ubuntu-arm-nginx" {
-  name         = "ubuntu-arm-nginx"
-  image        = "ubuntu-24.04"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "ubuntu-arm-nginx"
+  image              = "ubuntu-24.04"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "root"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -55,13 +67,17 @@ resource "hcloud_server" "ubuntu-arm-nginx" {
 
 ## Setup Ubuntu x86_64-Servers
 resource "hcloud_server" "ubuntu-x86-apache" {
-  name         = "ubuntu-x86-apache"
-  image        = "ubuntu-24.04"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "ubuntu-x86-apache"
+  image              = "ubuntu-24.04"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "root"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -73,13 +89,17 @@ resource "hcloud_server" "ubuntu-x86-apache" {
 }
 
 resource "hcloud_server" "ubuntu-x86-caddy" {
-  name         = "ubuntu-x86-caddy"
-  image        = "ubuntu-24.04"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "ubuntu-x86-caddy"
+  image              = "ubuntu-24.04"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "root"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -91,13 +111,17 @@ resource "hcloud_server" "ubuntu-x86-caddy" {
 }
 
 resource "hcloud_server" "ubuntu-x86-nginx" {
-  name         = "ubuntu-x86-nginx"
-  image        = "ubuntu-24.04"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "ubuntu-x86-nginx"
+  image              = "ubuntu-24.04"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "root"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]

@@ -1,0 +1,17 @@
+#cloud-config
+users:
+  - name: github-runner
+    groups: ${root_group}
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUggA0DV+FM/rlca+Ct8FGVUYn0NBZDaPq6pM0sn3/6 github-runner@github-runners
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 me@Laptop
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y me@Phone
+  - name: root
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUggA0DV+FM/rlca+Ct8FGVUYn0NBZDaPq6pM0sn3/6 github-runner@github-runners
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 me@Laptop
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y me@Phone

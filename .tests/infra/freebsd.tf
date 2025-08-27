@@ -1,12 +1,13 @@
 ## Setup FreeBSD Arm64-Servers
 resource "hcloud_server" "freebsd-arm-apache" {
-  name         = "freebsd-arm-apache"
-  image        = data.hcloud_image.freebsd_arm_snapshot.id
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "freebsd-arm-apache"
+  image              = data.hcloud_image.freebsd_arm_snapshot.id
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.freebsd_arm_snapshot
@@ -19,13 +20,14 @@ resource "hcloud_server" "freebsd-arm-apache" {
 }
 
 resource "hcloud_server" "freebsd-arm-caddy" {
-  name         = "freebsd-arm-caddy"
-  image        = data.hcloud_image.freebsd_arm_snapshot.id
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "freebsd-arm-caddy"
+  image              = data.hcloud_image.freebsd_arm_snapshot.id
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.freebsd_arm_snapshot
@@ -38,13 +40,14 @@ resource "hcloud_server" "freebsd-arm-caddy" {
 }
 
 resource "hcloud_server" "freebsd-arm-nginx" {
-  name         = "freebsd-arm-nginx"
-  image        = data.hcloud_image.freebsd_arm_snapshot.id
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "freebsd-arm-nginx"
+  image              = data.hcloud_image.freebsd_arm_snapshot.id
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.freebsd_arm_snapshot
@@ -58,13 +61,14 @@ resource "hcloud_server" "freebsd-arm-nginx" {
 
 ## Setup FreeBSD x86_64-Servers
 resource "hcloud_server" "freebsd-x86-apache" {
-  name         = "freebsd-x86-apache"
-  image        = data.hcloud_image.freebsd_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "freebsd-x86-apache"
+  image              = data.hcloud_image.freebsd_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.freebsd_x86_snapshot
@@ -77,13 +81,14 @@ resource "hcloud_server" "freebsd-x86-apache" {
 }
 
 resource "hcloud_server" "freebsd-x86-caddy" {
-  name         = "freebsd-x86-caddy"
-  image        = data.hcloud_image.freebsd_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "freebsd-x86-caddy"
+  image              = data.hcloud_image.freebsd_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.freebsd_x86_snapshot
@@ -96,13 +101,14 @@ resource "hcloud_server" "freebsd-x86-caddy" {
 }
 
 resource "hcloud_server" "freebsd-x86-nginx" {
-  name         = "freebsd-x86-nginx"
-  image        = data.hcloud_image.freebsd_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "freebsd-x86-nginx"
+  image              = data.hcloud_image.freebsd_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.freebsd_x86_snapshot

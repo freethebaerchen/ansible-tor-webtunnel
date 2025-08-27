@@ -16,6 +16,12 @@ variable "location" {
   default     = "fsn1"
 }
 
+variable "placement_group_id" {
+  description = "Needs to be set, else the state is not idempotent"
+  type        = number
+  default     = 0
+}
+
 variable "dns_zone_id" {
   description = "CloudFlare DNS Zone ID"
   type        = string

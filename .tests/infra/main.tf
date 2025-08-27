@@ -37,36 +37,43 @@ resource "hcloud_firewall" "allow_testing" {
 }
 
 data "hcloud_image" "alpine_arm_snapshot" {
-  with_selector = "os=alpine,architecture=arm"
-  most_recent   = true
+  with_selector     = "os=alpine"
+  with_architecture = "arm"
+  most_recent       = true
 }
 
 data "hcloud_image" "alpine_x86_snapshot" {
-  with_selector = "os=alpine,architecture=x86"
-  most_recent   = true
+  with_selector     = "os=alpine"
+  with_architecture = "x86"
+  most_recent       = true
 }
 
 data "hcloud_image" "freebsd_arm_snapshot" {
-  with_selector = "os=freebsd,architecture=arm"
-  most_recent   = true
+  with_selector     = "os=freebsd"
+  with_architecture = "arm"
+  most_recent       = true
 }
 
 data "hcloud_image" "freebsd_x86_snapshot" {
-  with_selector = "os=freebsd,architecture=x86"
-  most_recent   = true
+  with_selector     = "os=freebsd"
+  with_architecture = "x86"
+  most_recent       = true
 }
 
 data "hcloud_image" "openbsd_arm_snapshot" {
-  with_selector = "os=openbsd,architecture=arm"
-  most_recent   = true
+  with_selector     = "os=openbsd"
+  with_architecture = "arm"
+  most_recent       = true
 }
 
 data "hcloud_image" "openbsd_x86_snapshot" {
-  with_selector = "os=openbsd,architecture=x86"
-  most_recent   = true
+  with_selector     = "os=openbsd"
+  with_architecture = "x86"
+  most_recent       = true
 }
 
 data "hcloud_image" "archlinux_x86_snapshot" {
-  with_selector = "os=archlinux,architecture=x86"
-  most_recent   = true
+  with_selector     = "os=archlinux"
+  with_architecture = "x86"
+  most_recent       = true
 }

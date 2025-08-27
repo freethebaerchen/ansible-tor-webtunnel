@@ -1,12 +1,13 @@
 ## Setup Archlinux x86_64-Servers
 resource "hcloud_server" "archlinux-x86-apache" {
-  name         = "archlinux-x86-apache"
-  image        = data.hcloud_image.archlinux_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "archlinux-x86-apache"
+  image              = data.hcloud_image.archlinux_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.archlinux_x86_snapshot
@@ -19,13 +20,14 @@ resource "hcloud_server" "archlinux-x86-apache" {
 }
 
 resource "hcloud_server" "archlinux-x86-caddy" {
-  name         = "archlinux-x86-caddy"
-  image        = data.hcloud_image.archlinux_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "archlinux-x86-caddy"
+  image              = data.hcloud_image.archlinux_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.archlinux_x86_snapshot
@@ -38,13 +40,14 @@ resource "hcloud_server" "archlinux-x86-caddy" {
 }
 
 resource "hcloud_server" "archlinux-x86-nginx" {
-  name         = "archlinux-x86-nginx"
-  image        = data.hcloud_image.archlinux_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "archlinux-x86-nginx"
+  image              = data.hcloud_image.archlinux_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.archlinux_x86_snapshot

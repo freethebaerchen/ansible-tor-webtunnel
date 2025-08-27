@@ -1,13 +1,14 @@
 
 ## Setup OpenBSD Arm64-Servers
 resource "hcloud_server" "openbsd-arm-apache" {
-  name         = "openbsd-arm-apache"
-  image        = data.hcloud_image.openbsd_arm_snapshot.id
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "openbsd-arm-apache"
+  image              = data.hcloud_image.openbsd_arm_snapshot.id
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.openbsd_arm_snapshot
@@ -20,13 +21,14 @@ resource "hcloud_server" "openbsd-arm-apache" {
 }
 
 resource "hcloud_server" "openbsd-arm-caddy" {
-  name         = "openbsd-arm-caddy"
-  image        = data.hcloud_image.openbsd_arm_snapshot.id
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "openbsd-arm-caddy"
+  image              = data.hcloud_image.openbsd_arm_snapshot.id
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.openbsd_arm_snapshot
@@ -39,13 +41,14 @@ resource "hcloud_server" "openbsd-arm-caddy" {
 }
 
 resource "hcloud_server" "openbsd-arm-nginx" {
-  name         = "openbsd-arm-nginx"
-  image        = data.hcloud_image.openbsd_arm_snapshot.id
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "openbsd-arm-nginx"
+  image              = data.hcloud_image.openbsd_arm_snapshot.id
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.openbsd_arm_snapshot
@@ -59,13 +62,14 @@ resource "hcloud_server" "openbsd-arm-nginx" {
 
 ## Setup OpenBSD x86_64-Servers
 resource "hcloud_server" "openbsd-x86-apache" {
-  name         = "openbsd-x86-apache"
-  image        = data.hcloud_image.openbsd_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "openbsd-x86-apache"
+  image              = data.hcloud_image.openbsd_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.openbsd_x86_snapshot
@@ -78,13 +82,14 @@ resource "hcloud_server" "openbsd-x86-apache" {
 }
 
 resource "hcloud_server" "openbsd-x86-caddy" {
-  name         = "openbsd-x86-caddy"
-  image        = data.hcloud_image.openbsd_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "openbsd-x86-caddy"
+  image              = data.hcloud_image.openbsd_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.openbsd_x86_snapshot
@@ -97,13 +102,14 @@ resource "hcloud_server" "openbsd-x86-caddy" {
 }
 
 resource "hcloud_server" "openbsd-x86-nginx" {
-  name         = "openbsd-x86-nginx"
-  image        = data.hcloud_image.openbsd_x86_snapshot.id
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "openbsd-x86-nginx"
+  image              = data.hcloud_image.openbsd_x86_snapshot.id
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
   depends_on = [
     hcloud_firewall.allow_testing,
     data.hcloud_image.openbsd_x86_snapshot

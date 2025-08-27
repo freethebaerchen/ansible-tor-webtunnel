@@ -1,12 +1,16 @@
 ## Setup OpenSuse Leap Arm64-Servers
 resource "hcloud_server" "suse-arm-apache" {
-  name         = "suse-arm-apache"
-  image        = "opensuse-15"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "suse-arm-apache"
+  image              = "opensuse-15"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -18,13 +22,17 @@ resource "hcloud_server" "suse-arm-apache" {
 }
 
 resource "hcloud_server" "suse-arm-caddy" {
-  name         = "suse-arm-caddy"
-  image        = "opensuse-15"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "suse-arm-caddy"
+  image              = "opensuse-15"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -36,13 +44,17 @@ resource "hcloud_server" "suse-arm-caddy" {
 }
 
 resource "hcloud_server" "suse-arm-nginx" {
-  name         = "suse-arm-nginx"
-  image        = "opensuse-15"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "suse-arm-nginx"
+  image              = "opensuse-15"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -55,13 +67,17 @@ resource "hcloud_server" "suse-arm-nginx" {
 
 ## Setup OpenSuse Leap x86_64-Servers
 resource "hcloud_server" "suse-x86-apache" {
-  name         = "suse-x86-apache"
-  image        = "opensuse-15"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "suse-x86-apache"
+  image              = "opensuse-15"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -73,13 +89,17 @@ resource "hcloud_server" "suse-x86-apache" {
 }
 
 resource "hcloud_server" "suse-x86-caddy" {
-  name         = "suse-x86-caddy"
-  image        = "opensuse-15"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "suse-x86-caddy"
+  image              = "opensuse-15"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -91,13 +111,17 @@ resource "hcloud_server" "suse-x86-caddy" {
 }
 
 resource "hcloud_server" "suse-x86-nginx" {
-  name         = "suse-x86-nginx"
-  image        = "opensuse-15"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "suse-x86-nginx"
+  image              = "opensuse-15"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]

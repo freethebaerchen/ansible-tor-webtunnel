@@ -1,12 +1,16 @@
 ## Setup AlmaLinux Arm64-Servers
 resource "hcloud_server" "rhel-arm-apache" {
-  name         = "rhel-arm-apache"
-  image        = "alma-10"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "rhel-arm-apache"
+  image              = "alma-10"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -18,13 +22,17 @@ resource "hcloud_server" "rhel-arm-apache" {
 }
 
 resource "hcloud_server" "rhel-arm-caddy" {
-  name         = "rhel-arm-caddy"
-  image        = "alma-10"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "rhel-arm-caddy"
+  image              = "alma-10"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -36,13 +44,17 @@ resource "hcloud_server" "rhel-arm-caddy" {
 }
 
 resource "hcloud_server" "rhel-arm-nginx" {
-  name         = "rhel-arm-nginx"
-  image        = "alma-10"
-  server_type  = var.arm_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "rhel-arm-nginx"
+  image              = "alma-10"
+  server_type        = var.arm_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -55,13 +67,17 @@ resource "hcloud_server" "rhel-arm-nginx" {
 
 ## Setup AlmaLinux x86_64-Servers
 resource "hcloud_server" "rhel-x86-apache" {
-  name         = "rhel-x86-apache"
-  image        = "alma-10"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "rhel-x86-apache"
+  image              = "alma-10"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -73,13 +89,17 @@ resource "hcloud_server" "rhel-x86-apache" {
 }
 
 resource "hcloud_server" "rhel-x86-caddy" {
-  name         = "rhel-x86-caddy"
-  image        = "alma-10"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "rhel-x86-caddy"
+  image              = "alma-10"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]
@@ -91,13 +111,17 @@ resource "hcloud_server" "rhel-x86-caddy" {
 }
 
 resource "hcloud_server" "rhel-x86-nginx" {
-  name         = "rhel-x86-nginx"
-  image        = "alma-10"
-  server_type  = var.x86_small
-  location     = var.location
-  firewall_ids = [hcloud_firewall.allow_testing.id]
-  backups      = false
-  keep_disk    = false
+  name               = "rhel-x86-nginx"
+  image              = "alma-10"
+  server_type        = var.x86_small
+  location           = var.location
+  firewall_ids       = [hcloud_firewall.allow_testing.id]
+  backups            = false
+  keep_disk          = false
+  placement_group_id = var.placement_group_id
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    root_group = "wheel"
+  })
   depends_on = [
     hcloud_firewall.allow_testing
   ]

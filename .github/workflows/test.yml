@@ -3,26 +3,27 @@
 name: Test Ansible Playbook
 
 on:
-  push:
-    branches-ignore:
-      - main
-    paths-ignore:
-      - '.github/workflows/venv.yml'
-      - '.github/workflows/hostvars.yml'
-      - '.github/ISSUE_TEMPLATE/*'
-      - '.github/CODEOWNERS'
-      - 'requirements.txt'
-      - 'requirements.yaml'
-      - 'todo.md'
-      - 'readme.md'
-      - '.env'
-      - '.yamllint'
-      - '.ansible-lint'
-      - '.pre-commit-config.yaml'
-      - '.gitignore'
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+#  push:
+#    branches-ignore:
+#      - main
+#    paths-ignore:
+#      - '.github/workflows/venv.yml'
+#      - '.github/workflows/hostvars.yml'
+#      - '.github/ISSUE_TEMPLATE/*'
+#      - '.github/CODEOWNERS'
+#      - 'requirements.txt'
+#      - 'requirements.yaml'
+#      - 'todo.md'
+#      - 'readme.md'
+#      - '.env'
+#      - '.yamllint'
+#      - '.ansible-lint'
+#      - '.pre-commit-config.yaml'
+#      - '.gitignore'
+#  pull_request:
+#    branches:
+#      - main
 
 env:
   ANSIBLE_USER_PASSWORD: ${{ secrets.ANSIBLE_USER_PASSWORD }}

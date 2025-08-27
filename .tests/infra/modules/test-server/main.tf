@@ -1,11 +1,17 @@
 # Test Server Module
 # This module creates a test server with DNS records and host_vars generation
 
+resource "hcloud_ssh_key" "root_key" {
+  name       = "root_ssh_key"
+  public_key = file("~/.ssh/id_ed25519.pub")
+}
+
 # Create the server
 resource "hcloud_server" "test_server" {
   name               = var.server_config.name
   image              = var.server_config.image
   server_type        = var.server_config.server_type
+  ssh_keys           = [hcloud_ssh_key.root_key.id]
   location           = var.server_config.location
   firewall_ids       = var.server_config.firewall_ids
   backups            = false

@@ -1,10 +1,63 @@
 #cloud-config
 users:
   - name: github-runner
-    groups: ${root_group}
-    shell: /bin/bash
+    groups: %{ if os == "ubuntu" || os == "debian" }sudo%{ else }wheel%{ endif }
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUggA0DV+FM/rlca+Ct8FGVUYn0NBZDaPq6pM0sn3/6 github-runner@github-runners
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 me@Laptop
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y me@Phone
+%{ if os == "alpine" }
+# Alpine Linux network configuration
+write_files:
+  - path: /etc/network/interfaces
+    content: |
+      auto lo
+      iface lo inet loopback
+      
+      auto eth0
+      iface eth0 inet dhcp
+      iface eth0 inet6 static
+        address ${hcloud_server.test_server.ipv6_address}
+        gateway fe80::1
+        netmask 64
+        dns-nameservers 2a01:4ff:ff00::add:2 2a01:4ff:ff00::add:1
+%{ endif }
+
+%{ if os == "archlinux" }
+# Arch Linux network configuration
+write_files:
+  - path: /etc/systemd/network/20-wired.network
+    content: |
+      [Match]
+      Name=eth0
+      
+      [Network]
+      DHCP=yes
+      IPv6AcceptRA=no
+      Address=${hcloud_server.test_server.ipv6_address}/64
+      Gateway=fe80::1
+      DNS=2a01:4ff:ff00::add:2 2a01:4ff:ff00::add:1
+%{ endif }
+
+%{ if os == "freebsd" }
+# FreeBSD network configuration
+write_files:
+  - path: /etc/rc.conf
+    append: true
+    content: |
+      ifconfig_vtnet0="DHCP"
+      ifconfig_vtnet0_ipv6="inet6 ${hcloud_server.test_server.ipv6_address} prefixlen 64"
+      ipv6_defaultrouter="fe80::1"
+      ipv6_autoconf="NO"
+%{ endif }
+
+%{ if os == "openbsd" }
+# OpenBSD network configuration
+write_files:
+  - path: /etc/hostname.vio0
+    content: |
+      dhcp
+      inet6 ${hcloud_server.test_server.ipv6_address} 64
+      !route add -inet6 default fe80::1
+%{ endif }

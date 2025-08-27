@@ -11,7 +11,10 @@ resource "hcloud_server" "test_server" {
   backups            = false
   keep_disk          = false
   placement_group_id = var.server_config.placement_group_id
-  user_data          = var.server_config.user_data
+  user_data = templatefile("${path.module}/templates/user_data.tftpl", {
+    os            = var.server_config.os
+    hcloud_server = hcloud_server.test_server
+  })
 
   labels = {
     "os"        = var.server_config.os

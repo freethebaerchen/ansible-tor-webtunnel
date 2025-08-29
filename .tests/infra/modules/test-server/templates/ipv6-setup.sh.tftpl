@@ -1,0 +1,54 @@
+#!/bin/sh
+
+%{if os == "alpine"}
+IPV6=$(curl -s http://169.254.169.254/hetzner/v1/metadata \
+  | grep -v mac_address \
+  | grep -Eo '\''address: [0-9a-f:]+'\'' \
+  | head -n1 \
+  | awk '\''{print $2}'\'')
+echo "iface eth0 inet6 static" >> /etc/network/interfaces
+echo "  address $IPV6" >> /etc/network/interfaces
+echo "  netmask 64" >> /etc/network/interfaces
+echo "  gateway fe80::1 dev eth0" >> /etc/network/interfaces
+service networking restart
+%{endif}
+
+%{if os == "archlinux"}
+IPV6=$(curl -s http://169.254.169.254/hetzner/v1/metadata \
+  | grep -oE '\''address: [0-9a-f:]+/64'\'' \
+  | grep -v mac_address \
+  | head -n1 \
+  | awk '\''{print $2}'\'')
+cat <<'EOT' >/etc/systemd/network/20-wired.network
+[Match]
+Name=enp1s0
+
+[Network]
+DHCP=ipv4
+Address=$IPV6
+Gateway=fe80::1
+EOT
+systemctl restart systemd-networkd
+%{endif}
+
+%{if os == "freebsd"}
+IPV6=$(curl -s http://169.254.169.254/hetzner/v1/metadata \
+  | grep 'address:' \
+  | grep -v 'mac_address' \
+  | awk '\''{print $2}'\'' \
+  | head -n1)
+echo "ifconfig_vtnet0_ipv6='\''inet6 $IPV6'\''" | sudo tee -a /etc/rc.conf
+echo "ipv6_defaultrouter='\''fe80::1%vtnet0'\''" | sudo tee -a /etc/rc.conf
+sudo shutdown -r now
+%{endif}
+
+%{if os == "openbsd"}
+IPV6=$(curl -s http://169.254.169.254/hetzner/v1/metadata \
+  | grep -v mac_address \
+  | grep address: \
+  | sed -n '\''s/.*address: \([0-9a-f:]*\)/\1/p'\'' \
+  | head -n1)
+echo "inet6 $IPV6" >> /etc/hostname.vio0
+echo "!route -n add -inet6 default fe80::1%vio0" >> /etc/hostname.vio0
+sh /etc/netstart vio0
+%{endif}

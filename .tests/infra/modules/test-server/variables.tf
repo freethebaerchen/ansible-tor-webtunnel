@@ -8,6 +8,7 @@ variable "server_config" {
     image              = string
     server_type        = string
     location           = string
+    ssh_keys           = list(string)
     firewall_ids       = list(string)
     placement_group_id = string
     user_data          = optional(string)

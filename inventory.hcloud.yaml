@@ -5,7 +5,3 @@ plugin: hetzner.hcloud.hcloud
 compose:
   ansible_host: ipv4
   inventory_hostname: name
-
-keyed_groups:
-  - key: location
-    parent_group: hcloud

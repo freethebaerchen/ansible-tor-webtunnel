@@ -1,7 +1,7 @@
 ## Backend configuration
 terraform {
   backend "s3" {
-    bucket                      = "ansible-tor-webtunnel-testing-terraform-state"
+    bucket                      = "ansible-tor-webtunnel-testing"
     key                         = "terraform.tfstate"
     region                      = "main"
     skip_credentials_validation = true

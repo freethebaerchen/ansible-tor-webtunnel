@@ -1,3 +1,24 @@
+## Backend configuration
+terraform {
+  backend "s3" {
+    bucket                      = "ansible-tor-webtunnel-testing-terraform-state"
+    key                         = "terraform.tfstate"
+    region                      = "main"
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    use_path_style              = true
+    use_lockfile                = true
+  }
+}
+
+## SSH-Key
+resource "hcloud_ssh_key" "default" {
+  name       = "default"
+  public_key = file("~/.ssh/id_ed25519.pub")
+}
+
 ## Firewall for testing
 resource "hcloud_firewall" "allow_testing" {
   name = "firewall-allow-testing"
@@ -392,7 +413,7 @@ locals {
   }
 }
 
-# Create all test servers using the module
+## Create all test servers using the module
 module "test_servers" {
   source = "./modules/test-server"
 
@@ -406,6 +427,7 @@ module "test_servers" {
     image              = each.value.image
     server_type        = each.value.server_type
     location           = var.location
+    ssh_keys           = [hcloud_ssh_key.default.id]
     firewall_ids       = [hcloud_firewall.allow_testing.id]
     placement_group_id = var.placement_group_id
     user_data          = lookup(each.value, "user_data", null)

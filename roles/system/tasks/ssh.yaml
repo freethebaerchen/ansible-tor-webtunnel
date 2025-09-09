@@ -46,7 +46,7 @@
     path: "/home/{{ item.name }}/.ssh"
     state: directory
     owner: "{{ item.name }}"
-    mode: 0700
+    mode: "0700"
   loop: "{{ admins }}"
   loop_control:
     label: "{{ item.name }}"
@@ -56,7 +56,7 @@
     src: ./authorized_keys.j2
     dest: "/home/{{ item.name }}/.ssh/authorized_keys"
     owner: "{{ item.name }}"
-    mode: 0600
+    mode: "0600"
   with_items: "{{ admins }}"
 
 - name: Create .ssh directory for normal users
@@ -64,7 +64,7 @@
     path: "/home/{{ item.name }}/.ssh"
     state: directory
     owner: "{{ item.name }}"
-    mode: 0700
+    mode: "0700"
   loop: "{{ users }}"
   loop_control:
     label: "{{ item.name }}"
@@ -74,7 +74,7 @@
     src: ./authorized_keys.j2
     dest: "/home/{{ item.name }}/.ssh/authorized_keys"
     owner: "{{ item.name }}"
-    mode: 0600
+    mode: "0600"
   with_items: "{{ users }}"
 
 - name: "Add sudoers config for sudo group"
@@ -82,4 +82,4 @@
     content: |
       %{{ root.group }}   ALL=(ALL)   NOPASSWD:ALL
     dest: "{{ system.etc }}/{{ system.sudoers_file }}"
-    mode: 0440
+    mode: "0440"

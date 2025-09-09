@@ -73,7 +73,7 @@
       ansible.builtin.copy:
         src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
         dest: "{{ system.etc }}/dnf/automatic.conf"
-        mode: 0755
+        mode: "0755"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
       notify: Restart dnf-automatic
@@ -105,7 +105,7 @@
   ansible.builtin.copy:
     src: "{{ role_path }}/files/{{ ansible_os_family }}-unattended-upgrades"
     dest: /usr/local/bin/unattended-upgrades
-    mode: 0755
+    mode: "0755"
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
   when:

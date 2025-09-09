@@ -21,6 +21,6 @@
         line: "{{ random_string }}"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
-        mode: 0500
+        mode: "0400"
         create: true
       when: not random_string_file.stat.exists

@@ -5,3 +5,12 @@ plugin: hetzner.hcloud.hcloud
 compose:
   ansible_host: ipv4
   inventory_hostname: name
+
+groups:
+  alpine: "'alpine' in labels.os"
+  archlinux: "'archlinux' in labels.os"
+  freebsd: "'freebsd' in labels.os"
+  openbsd: "'openbsd' in labels.os"
+  rhel: "'rhel' in labels.os"
+  suse: "'suse' in labels.os"
+  ubuntu: "'ubuntu' in labels.os"

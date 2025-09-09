@@ -33,4 +33,4 @@
     dest: /etc/motd
     owner: "{{ root.user }}"
     group: "{{ root.group }}"
-    mode: 0644
+    mode: "0644"

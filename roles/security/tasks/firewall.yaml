@@ -36,7 +36,7 @@
         dest: "{{ system.etc }}/pf.conf"
         owner: "{{ root.user }}"
         group: "{{ root.group }}"
-        mode: 0640
+        mode: "0640"
       notify:
         - Start pf (FreeBSD)
         - Start pf (OpenBSD)

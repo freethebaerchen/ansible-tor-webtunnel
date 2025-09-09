@@ -10,6 +10,5 @@ repos:
     rev: v2.2.1
     hooks:
       - id: tofu_fmt
-      # - id: tofu_docs
       - id: tofu_validate
         files: \.tf$

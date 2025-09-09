@@ -1,15 +1,5 @@
 ---
 
-- name: Setup Infrastructure in HCloud
-  hosts: localhost
-  become: false
-  roles:
-    - hetzner
-  tags:
-    - infrastructure
-    - hetzner
-    - hcloud
-
 - name: Setup general system
   hosts: all
   become: true

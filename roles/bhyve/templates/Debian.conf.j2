@@ -1,9 +1,0 @@
-loader="grub"
-grub_run_partition="2"
-cpu=2
-memory=3G
-network0_type="virtio-net"
-network0_switch="{{ vm.networking.lan_interface }}"
-network0_mac="{{ vm[os].mac_address[item] }}"
-disk0_type="virtio-blk"
-disk0_name="disk0.img"

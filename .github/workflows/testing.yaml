@@ -1,0 +1,130 @@
+---
+name: Test Ansible Playbook
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches-ignore:
+  #     - main
+  #   paths-ignore:
+  #     - '.github/workflows/venv.yml'
+  #     - '.github/workflows/hostvars.yml'
+  #     - '.github/ISSUE_TEMPLATE/*'
+  #     - '.github/CODEOWNERS'
+  #     - 'requirements.txt'
+  #     - 'requirements.yaml'
+  #     - 'todo.md'
+  #     - 'readme.md'
+  #     - '.env'
+  #     - '.yamllint'
+  #     - '.ansible-lint'
+  #     - '.pre-commit-config.yaml'
+  #     - '.gitignore'
+  # pull_request:
+  #   branches:
+  #     - main
+
+env:
+  PY_COLORS: 1
+  ANSIBLE_FORCE_COLOR: 1
+  TEST_SERVER_TLD: ${{ secrets.TEST_SERVER_TLD }}
+  HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+
+jobs:
+  create-test-server-infra:
+    runs-on: arc-runner-set
+    container:
+      image: bubatzlegal/tofu-mc:latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Init Tofu Project
+        run: |
+          cd .tests/infra
+          tofu init
+
+      - name: Create Test-Infrastructure
+        run: |
+          cd .tests/infra
+          tofu apply --auto-approve
+
+      - name: Store host_vars
+        run: |
+          mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          mc cp host_vars/ testrun-bucket-alias/ansible-tor-webtunnel-testing/host_vars/
+
+  run-test-server-setup:
+    runs-on: arc-runner-set
+    needs: create-test-server-infra
+    container:
+      image: python3:13
+    strategy:
+      matrix:
+        os: [alpine, archlinux, freebsd, openbsd, rhel, suse, ubuntu]
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup minio client
+        run: |
+          curl https://dl.min.io/client/mc/release/linux-arm64/mc \
+            --create-dirs \
+            -o /usr/local/bin/mc
+          chmod +x /usr/local/bin/mc
+
+      - name: Get host_vars
+        run: |
+          mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          mc cp testrun-bucket-alias/ansible-tor-webtunnel-testing/host_vars/${{ matrix.os }}*.yaml host_vars/
+
+      - name: Initialize venv
+        run: source .envrc
+
+      - name: Wait until the webtunnel client is reachable
+        run: |
+          source venv/bin/activate
+          python3 scripts/check_hosts.py -i inventory.hcloud.yaml --limit=${{ matrix.os }}
+
+      - name: Test ${{ matrix.os }} Server
+        run: |
+          ansible-playbook playbook.yaml -i inventory.hcloud.yaml --limit=${{ matrix.os }}
+
+      - name: Upload connection strings
+        run: |
+          mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          mc cp connection-strings.txt testrun-bucket-alias/ansible-tor-webtunnel-testing/connection-strings-${{ matrix.os }}.txt
+
+  # test-web-conection: # TODO: Write tests for Web, SSH and Webtunnel connectivity
+  #   runs-on: arc-runner-set
+
+  delete-test-server-infra:
+    runs-on: arc-runner-set
+    needs: run-test-server-setup
+    # if: always()
+    container:
+      image: ghcr.io/opentofu/opentofu:minimal
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Init Tofu Project
+        run: |
+          cd .tests/infra
+          tofu init
+
+      - name: Destroy Test-Infrastructure
+        run: |
+          cd .tests/infra
+          tofu destroy --auto-approve

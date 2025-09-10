@@ -101,12 +101,100 @@ jobs:
           mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           mc cp connection-strings.txt testrun-bucket-alias/ansible-tor-webtunnel-testing/connection-strings-${{ matrix.os }}.txt
 
-  # test-web-conection: # TODO: Write tests for Web, SSH and Webtunnel connectivity
-  #   runs-on: arc-runner-set
+  test-webtunnel-conection:
+    runs-on: arc-runner-set
+    needs: run-test-server-setup
+    container:
+      image: python3:13
+    strategy:
+      matrix:
+        os: [alpine, archlinux, freebsd, openbsd, rhel, suse, ubuntu]
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Get host_vars
+        run: |
+          mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          mc cp testrun-bucket-alias/ansible-tor-webtunnel-testing/connections-strings-${{ matrix.os }}.txt connections-strings-${{ matrix.os }}.txt
+
+      - name: Run scripts for testing the webtunnel connections
+        run: |
+          test-webtunnel-connections.sh connections-strings-${{ matrix.os }}.txt
+
+  test-web-connection:
+    runs-on: arc-runner-set
+    needs: create-test-server-infra
+    container:
+      image: python3:13
+    strategy:
+      matrix:
+        os: [alpine, archlinux, freebsd, openbsd, rhel, suse, ubuntu]
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup minio client
+        run: |
+          curl https://dl.min.io/client/mc/release/linux-arm64/mc \
+            --create-dirs \
+            -o /usr/local/bin/mc
+          chmod +x /usr/local/bin/mc
+
+      - name: Get host_vars
+        run: |
+          mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          mc cp testrun-bucket-alias/ansible-tor-webtunnel-testing/host_vars/${{ matrix.os }}*.yaml host_vars/
+
+      - name: Initialize venv
+        run: source .envrc
+
+      - name: Check if HTTP/HTTPS work fine
+        run: |
+          source venv/bin/activate
+          python3 scripts/test-web.py -i inventory.hcloud.yaml --limit=${{ matrix.os }}
+
+  test-ssh-connection:
+    runs-on: arc-runner-set
+    needs: create-test-server-infra
+    container:
+      image: python3:13
+    strategy:
+      matrix:
+        os: [alpine, archlinux, freebsd, openbsd, rhel, suse, ubuntu]
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup minio client
+        run: |
+          curl https://dl.min.io/client/mc/release/linux-arm64/mc \
+            --create-dirs \
+            -o /usr/local/bin/mc
+          chmod +x /usr/local/bin/mc
+
+      - name: Get host_vars
+        run: |
+          mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          mc cp testrun-bucket-alias/ansible-tor-webtunnel-testing/host_vars/${{ matrix.os }}*.yaml host_vars/
+
+      - name: Initialize venv
+        run: source .envrc
+
+      - name: Check if SSH work fine
+        run: |
+          source venv/bin/activate
+          python3 scripts/test-ssh.py -i inventory.hcloud.yaml --limit=${{ matrix.os }}
 
   delete-test-server-infra:
     runs-on: arc-runner-set
-    needs: run-test-server-setup
+    needs:
+      - test-webtunnel-conection
+      - test-web-connection
+      - test-ssh-connection
     # if: always()
     container:
       image: ghcr.io/opentofu/opentofu:minimal

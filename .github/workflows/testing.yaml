@@ -125,7 +125,7 @@ jobs:
 
   test-web-connection:
     runs-on: arc-runner-set
-    needs: create-test-server-infra
+    needs: run-test-server-setup
     container:
       image: python3:13
     strategy:
@@ -158,7 +158,7 @@ jobs:
 
   test-ssh-connection:
     runs-on: arc-runner-set
-    needs: create-test-server-infra
+    needs: run-test-server-setup
     container:
       image: python3:13
     strategy:

@@ -4,6 +4,6 @@ users:
     groups: %{ if os == "ubuntu" || os == "debian" }sudo%{ else }wheel%{ endif }
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
-        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUggA0DV+FM/rlca+Ct8FGVUYn0NBZDaPq6pM0sn3/6 github-runner@github-runners
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHp6r56jX9Ow2siEVx4S/EchnBTnLjyP/evS+nHZ/P4J github-runner@arc-system
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW2jR2whDuND6SZPYrX6hU5lCjPdyJ8eYy5qp6xLYQ5 me@Laptop
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEWBZo2WYZxQd7szdTHDg8O4CyWwfe+VXsAzobE10v8y me@Phone

@@ -59,6 +59,7 @@ jobs:
 
       - name: Create Test-Infrastructure
         run: |
+          ssh-add
           cd .tests/infra
           tofu apply --auto-approve
 
@@ -244,5 +245,6 @@ jobs:
 
       - name: Destroy Test-Infrastructure
         run: |
+          ssh-add
           cd .tests/infra
           tofu destroy --auto-approve

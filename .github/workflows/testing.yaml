@@ -51,6 +51,9 @@ jobs:
 
       - name: Create Test-Infrastructure
         run: |
+          echo ~
+          ls -la ~/.ssh/id_ed25519.pub
+          cat ~/.ssh/id_ed25519.pub
           cd .tests/infra
           tofu apply --auto-approve
 

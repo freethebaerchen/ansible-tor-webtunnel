@@ -30,9 +30,6 @@ env:
   TEST_SERVER_TLD: ${{ secrets.TEST_SERVER_TLD }}
   HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   create-test-server-infra:
@@ -65,7 +62,7 @@ jobs:
       - name: Store host_vars
         run: |
           mc alias set testrun-bucket-alias ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          mc cp host_vars/ testrun-bucket-alias/ansible-tor-webtunnel-testing/host_vars/
+          mc cp --recursive host_vars/ testrun-bucket-alias/ansible-tor-webtunnel-testing/host_vars/
 
   run-test-server-setup:
     runs-on: arc-runner-set

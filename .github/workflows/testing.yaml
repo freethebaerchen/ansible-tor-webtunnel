@@ -59,8 +59,6 @@ jobs:
 
       - name: Create Test-Infrastructure
         run: |
-          eval $(ssh-agent)
-          ssh-add
           cd .tests/infra
           tofu apply --auto-approve
 
@@ -110,8 +108,6 @@ jobs:
 
       - name: Test ${{ matrix.os }} Server
         run: |
-          eval $(ssh-agent)
-          ssh-add
           ansible-playbook playbook.yaml -i inventory.hcloud.yaml --limit=${{ matrix.os }}
 
       - name: Upload connection strings
@@ -216,8 +212,6 @@ jobs:
 
       - name: Check if SSH work fine
         run: |
-          eval $(ssh-agent)
-          ssh-add
           source venv/bin/activate
           python3 scripts/test-ssh.py -i inventory.hcloud.yaml --limit=${{ matrix.os }}
 
@@ -250,7 +244,5 @@ jobs:
 
       - name: Destroy Test-Infrastructure
         run: |
-          eval $(ssh-agent)
-          ssh-add
           cd .tests/infra
           tofu destroy --auto-approve

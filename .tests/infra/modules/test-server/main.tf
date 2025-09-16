@@ -24,11 +24,11 @@ resource "hcloud_server" "test_server" {
       "sudo /tmp/ipv6-setup.sh"
     ]
     connection {
-      type    = "ssh"
-      host    = self.ipv4_address
-      user    = "github-runner"
-      agent   = true
-      timeout = "5m"
+      type        = "ssh"
+      host        = self.ipv4_address
+      user        = "github-runner"
+      private_key = file("~/.ssh/id_ed25519")
+      timeout     = "5m"
     }
   }
 }

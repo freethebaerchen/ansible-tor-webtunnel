@@ -45,7 +45,7 @@ def run_ssh_command(host, ip, command):
     """Run an SSH command on a remote host and return the output."""
     try:
         process = subprocess.Popen(
-            ["ssh", "-o", "StrictHostKeyChecking=no", ip, command],
+            ["ssh", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/id_ed25519", ip, command],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True

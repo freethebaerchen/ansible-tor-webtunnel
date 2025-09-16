@@ -2,7 +2,7 @@
 domain: ${ dns_name }.{{ lookup('env', 'TEST_SERVER_TLD') }}
 id: "${ os }${ arch }${ webserver }"
 reverse_proxy: true
-reverse_proxy_url: {{ lookup('env', 'TEST_SERVER_TLD') }}
+reverse_proxy_url: "{{ lookup('env', 'TEST_SERVER_TLD') }}"
 deploy_webroot: false
 use_webserver: ${ webserver }
 tor:

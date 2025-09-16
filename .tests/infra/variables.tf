@@ -13,7 +13,7 @@ variable "x86_small" {
 variable "location" {
   description = "Hetzner Cloud location"
   type        = string
-  default     = "fsn1"
+  default     = "hel1"
 }
 
 variable "placement_group_id" {

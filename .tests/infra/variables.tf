@@ -11,7 +11,7 @@ variable "x86_small" {
 }
 
 variable "location" {
-  description = "Hetzner Cloud location."
+  description = "Hetzner Cloud location"
   type        = string
   default     = "fsn1"
 }

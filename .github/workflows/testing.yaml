@@ -221,7 +221,7 @@ jobs:
       - test-webtunnel-conection
       - test-web-connection
       - test-ssh-connection
-    # if: always()
+    if: always()
     container:
       image: bubatzlegal/tofu-mc:ubuntu
     env:

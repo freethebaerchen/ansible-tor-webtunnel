@@ -35,7 +35,7 @@ jobs:
   create-test-server-infra:
     runs-on: arc-runner-set
     container:
-      image: bubatzlegal/tofu-mc:latest
+      image: bubatzlegal/tofu-mc:ubuntu
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_dns_zone_id: ${{ secrets.TF_VAR_dns_zone_id }}
@@ -220,7 +220,7 @@ jobs:
       - test-ssh-connection
     # if: always()
     container:
-      image: ghcr.io/opentofu/opentofu:minimal
+      image: bubatzlegal/tofu-mc:ubuntu
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_dns_zone_id: ${{ secrets.TF_VAR_dns_zone_id }}

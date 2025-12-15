@@ -78,7 +78,11 @@ pass in proto tcp from any to {{ ansible_default_ipv4.address }} port 443 flags 
 table <tor_ddos6_15000> persist
 
 # Allow IPv6 Multicast
-pass in proto udp from fe80::/10 to ff02::/80
+pass in proto udp from fe80::/10 to ff02::/16
+
+# Fix IPv6 connectivity: allow all ICMPv6 (mandatory) and outbound traffic
+pass inet6 proto icmp6 all keep state
+pass out inet6 all keep state
 
 # Rate-limited ICMP (IPv6)
 pass in inet6 proto icmp6 icmp6-type echoreq keep state (max-src-conn-rate 6/10)

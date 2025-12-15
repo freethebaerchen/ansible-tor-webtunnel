@@ -40,6 +40,7 @@
       notify:
         - Start pf (FreeBSD)
         - Start pf (OpenBSD)
+        - Apply pf rules
 
 - name: Block for all (Linux) hosts (IPv4)
   when:
